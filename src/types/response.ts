@@ -13,3 +13,18 @@ export interface ApiError {
     status: number;
   };
 }
+
+export interface RobotConfig {
+  id: number;
+  name: string;
+  active: boolean;
+  number_of_locations: number;
+  created_at: Date;
+  updated_at: Date;
+  run_time: string;
+  unlogged_booking: boolean;
+  users: {
+    clubready_username: string;
+    clubready_password: string;
+  };
+}

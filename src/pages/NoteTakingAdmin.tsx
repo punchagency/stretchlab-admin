@@ -91,7 +91,7 @@ export const NoteTakingAdmin = () => {
   };
   const userColumns: ColumnDef<Payment>[] = [
     {
-      accessorKey: "name",
+      accessorKey: "full_name",
       header: "Name",
     },
     {
@@ -257,7 +257,7 @@ export const NoteTakingAdmin = () => {
           </motion.div>
         </AnimatePresence>
       )}
-      <div className="px-10">
+      <div>
         <DataTable
           handleModal={() => setShowModal(true)}
           columns={userColumns}

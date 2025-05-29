@@ -53,7 +53,7 @@ export const Home = () => {
         </SidebarFooter>
         <SidebarRail />
       </Sidebar>
-      <div className="flex-1">
+      <div className="flex-1 py-5 px-7">
         <SidebarTrigger />
         <Outlet />
       </div>

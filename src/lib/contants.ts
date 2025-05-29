@@ -17,7 +17,7 @@ export const menuList = [
   {
     title: "Robot Process Automation",
     icon: "robot",
-    link: "/rpa",
+    link: "/robot-automation",
   },
   {
     title: "Settings",

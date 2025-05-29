@@ -6,12 +6,13 @@ type Props = {
   label?: string;
   icon?: SvgIconName;
   type: string;
-  placeholder: string;
+  placeholder?: string;
   value: string;
   name?: string;
   checking?: boolean;
   error?: string;
   success?: string;
+  helperText?: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 } & React.InputHTMLAttributes<HTMLInputElement>;
 
@@ -26,6 +27,7 @@ export const Input = ({
   error,
   checking,
   success,
+  helperText,
   ...inputProps
 }: Props) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -65,7 +67,7 @@ export const Input = ({
           value={value}
           onChange={onChange}
           {...inputProps}
-          className="outline-none bg-transparent flex-1 placeholder:text-grey-2 text-base"
+          className="outline-none bg-transparent flex-1 disabled:opacity-50 disabled:cursor-not-allowed placeholder:text-grey-2 text-base"
         />
         {type === "password" && (
           <button
@@ -77,6 +79,7 @@ export const Input = ({
           </button>
         )}
       </div>
+      <p className="text-xs text-gray-600 mt-2">{helperText}</p>
     </div>
   );
 };

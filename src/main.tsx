@@ -11,6 +11,7 @@ import {
   NoteTakingAdmin,
   Dashboard,
   ResetPassword,
+  RobotAutomation,
 } from "./pages";
 import { Toaster } from "./components/ui/sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
       {
         path: "note-taking-app",
         element: <NoteTakingAdmin />,
+      },
+      {
+        path: "robot-automation",
+        element: <RobotAutomation />,
       },
     ],
   },

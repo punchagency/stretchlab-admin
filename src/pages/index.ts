@@ -6,3 +6,4 @@ export * from "./ForgotPassword";
 export * from "./NoteTakingAdmin";
 export * from "./Dashboard";
 export * from "./ResetPassword";
+export * from "./RobotAutomation";
