@@ -54,12 +54,16 @@ export const RobotConfigForm = ({
         password: formData.clubReadyPassword,
       });
       if (response.status === 200) {
-        setVerified(true);
-        renderSuccessToast("ClubReady credentials verified successfully");
-        setFormData({
-          ...formData,
-          numberOfStudioLocations: response.data.locations.length,
-        });
+        if (response.data.status) {
+          setVerified(true);
+          renderSuccessToast(response.data.message);
+          setFormData({
+            ...formData,
+            numberOfStudioLocations: response.data.locations.length,
+          });
+        } else {
+          renderErrorToast(response.data.message);
+        }
       } else {
         renderErrorToast(response.data.message);
       }
