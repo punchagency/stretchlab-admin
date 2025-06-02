@@ -1,6 +1,7 @@
 import { RobotConfigForm } from "@/components/forms";
 import { ContainLoader } from "@/components/shared";
 import { getRobotConfig } from "@/service/robot";
+import { RobotHistory } from "@/components/app";
 import { useQuery } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -17,7 +18,6 @@ export const RobotAutomation = () => {
       </div>
     );
   }
-
   return (
     <div>
       {isFetching && !isPending && (
@@ -37,6 +37,10 @@ export const RobotAutomation = () => {
         refetch={refetch}
         data={data?.data.config ? data.data.robot_config : undefined}
       />
+
+      {data?.data.config && (
+        <RobotHistory configId={data?.data.robot_config.id} />
+      )}
     </div>
   );
 };

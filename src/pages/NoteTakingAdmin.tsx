@@ -244,6 +244,9 @@ export const NoteTakingAdmin = () => {
 
   return (
     <div>
+      <h3 className="text-2xl font-semibold mb-16">
+        Note Taking Admin Dashboard
+      </h3>
       {isFetching && !isPending && (
         <AnimatePresence>
           <motion.div
@@ -262,6 +265,8 @@ export const NoteTakingAdmin = () => {
           handleModal={() => setShowModal(true)}
           columns={userColumns}
           data={data.data.users}
+          note={true}
+          emptyText="No Flexologists invited yet."
         />
       </div>
 

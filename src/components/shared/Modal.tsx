@@ -5,7 +5,7 @@ type ModalProps = {
   children: React.ReactNode;
   onClose: () => void;
   show: boolean;
-  size?: "sm" | "md" | "lg";
+  size?: "sm" | "md" | "lg" | "xl" | "2xl";
 };
 
 export const Modal: React.FC<ModalProps> = ({
@@ -26,9 +26,13 @@ export const Modal: React.FC<ModalProps> = ({
           onClick={onClose}
         >
           <motion.div
-            className={`bg-white relative rounded-lg shadow-lg p-6 ${
+            className={`bg-white max-h-[90%] overflow-y-auto relative rounded-lg shadow-lg p-6 ${
               size === "sm" && "w-[30rem]"
-            } ${size === "md" && "w-[40rem]"} ${size === "lg" && "w-[50rem]"}`}
+            } ${size === "md" && "w-[40rem]"} ${
+              size === "lg" && "w-[50rem]"
+            }  ${size === "xl" && "w-[70rem]"}
+            ${size === "2xl" && "w-[90rem]"}
+            `}
             initial={{ scale: 0.8 }}
             animate={{ scale: 1 }}
             exit={{ scale: 0.8 }}

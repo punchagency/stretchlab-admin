@@ -33,16 +33,22 @@ import {
   DropdownMenuContent,
 } from "@radix-ui/react-dropdown-menu";
 import { SvgIcon } from "../shared";
-interface DataTableProps<TData, TValue> {
+interface DataTableProps<TData extends { id: number | string }, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  handleModal: () => void;
+  handleModal?: () => void;
+  note?: boolean;
+  emptyText?: string;
+  handleClick?: (id: number) => void;
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData extends { id: number | string }, TValue>({
   columns,
   data,
   handleModal,
+  handleClick,
+  note = false,
+  emptyText = "No data found",
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -65,18 +71,19 @@ export function DataTable<TData, TValue>({
   });
   return (
     <div>
-      <div className="flex items-center gap-4 justify-end py-4">
-        <Input
-          type="search"
-          icon="search"
-          placeholder="Search by email"
-          className="max-w-sm min-w-[30rem] py-3 rounded-md"
-          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
-          }
-        />
-        {/* <DropdownMenu>
+      {note && (
+        <div className="flex items-center gap-4 justify-end py-4">
+          <Input
+            type="search"
+            icon="search"
+            placeholder="Search by email"
+            className="max-w-sm min-w-[30rem] py-3 rounded-md"
+            value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+            onChange={(event) =>
+              table.getColumn("email")?.setFilterValue(event.target.value)
+            }
+          />
+          {/* <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button2 className="py-[10px] rounded-md flex items-center gap-2 text-primary-base border-2 border-primary-base">
               <SvgIcon name="filter" fill="#368591" />
@@ -152,14 +159,15 @@ export function DataTable<TData, TValue>({
           </DropdownMenuContent>
         </DropdownMenu> */}
 
-        <Button2
-          onClick={handleModal}
-          className="flex items-center gap-2 py-3 text-white bg-primary-base"
-        >
-          <SvgIcon name="email-send" fill="#fff" />
-          Invite Flexologist
-        </Button2>
-      </div>
+          <Button2
+            onClick={handleModal}
+            className="flex items-center gap-2 py-3 text-white bg-primary-base"
+          >
+            <SvgIcon name="email-send" fill="#fff" />
+            Invite Flexologist
+          </Button2>
+        </div>
+      )}
       <div className="rounded-md border">
         <Table>
           <TableHeader className="bg-primary-light">
@@ -184,6 +192,9 @@ export function DataTable<TData, TValue>({
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row, index) => (
                 <TableRow
+                  onClick={() => {
+                    handleClick?.(row.original.id as number);
+                  }}
                   key={index}
                   data-state={row.getIsSelected() && "selected"}
                 >
@@ -203,7 +214,7 @@ export function DataTable<TData, TValue>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No Flexologists invited yet.
+                  {emptyText}
                 </TableCell>
               </TableRow>
             )}

@@ -36,12 +36,39 @@ export const Config = ({
   return (
     <div className="mt-5 flex items-center justify-between w-1/2 bg-primary-secondary px-3 py-3 rounded-xl shadow-md">
       <div>
-        <h4 className="text-lg font-semibold capitalize">{data.name}</h4>
+        <div className="flex items-center gap-2">
+          <h4 className="text-lg font-semibold capitalize">{data?.name}</h4>
+          <div
+            className={`${
+              data?.active ? "bg-green-500/20" : "bg-red-500/20"
+            } text-white px-2 py-1 rounded-xl text-sm  font-semibold`}
+          >
+            {data?.active ? (
+              <span className="text-green-500 text-xs font-semibold">
+                Active
+              </span>
+            ) : (
+              <span className="text-red-500 text-xs font-semibold">
+                Disabled
+              </span>
+            )}
+          </div>
+        </div>
         <p className="text-sm font-semibold text-gray-500">
-          <span>Number of Studio Locations:</span> {data.number_of_locations}
+          <span>Number of Studio Locations:</span> {data?.number_of_locations}
         </p>
         <p className="text-sm font-semibold text-gray-500">
-          <span>Run Time:</span> {data.run_time}
+          <span>Run Time:</span> {data?.run_time} (daily)
+        </p>
+        <p className="text-sm font-semibold text-gray-500">
+          <span className="mr-1">Status:</span>
+          <span
+            className={`font-semibold ${
+              data?.status === "RUNNING" ? "text-green-500" : "text-gray-500"
+            }`}
+          >
+            {data?.status || "STOPPED"}
+          </span>
         </p>
       </div>
       <div className="flex gap-2">

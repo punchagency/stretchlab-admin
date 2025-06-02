@@ -23,6 +23,7 @@ export interface RobotConfig {
   updated_at: Date;
   run_time: string;
   unlogged_booking: boolean;
+  status: string;
   users: {
     clubready_username: string;
     clubready_password: string;

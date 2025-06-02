@@ -31,7 +31,6 @@ export const RobotConfigForm = ({
     unloggedBookings: data?.unlogged_booking ? data.unlogged_booking : false,
     dailyRunTime: data?.run_time ? data.run_time : "",
   });
-  console.log(data, "config data");
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, type, checked, value } = e.target;
     setFormData({
@@ -107,7 +106,9 @@ export const RobotConfigForm = ({
         });
       }
       if (response.status === 200) {
+        refetch();
         renderSuccessToast("Settings saved successfully");
+        setIsConfig(true);
       }
     } catch (error) {
       const apiError = error as ApiError;
@@ -247,22 +248,35 @@ export const RobotConfigForm = ({
                         </p>
                       </div>
                     )}
-                    <Button
-                      type="submit"
-                      disabled={!verified || saving}
-                      className="mt-5 bg-primary-base flex items-center justify-center gap-2 w-full text-white py-4"
-                    >
-                      {saving ? (
-                        <>
-                          <Spinner />
-                          {isEditing ? "Updating..." : "Saving..."}
-                        </>
-                      ) : isEditing ? (
-                        "Update Settings"
-                      ) : (
-                        "Save Settings"
+                    <div className="flex gap-6 items-center">
+                      {isEditing && (
+                        <Button
+                          type="button"
+                          onClick={() => {
+                            setIsConfig(true);
+                          }}
+                          className="mt-5 bg-grey-1 flex items-center justify-center gap-2 w-full text-dark-1 py-4"
+                        >
+                          Cancel
+                        </Button>
                       )}
-                    </Button>
+                      <Button
+                        type="submit"
+                        disabled={!verified || saving}
+                        className="mt-5 bg-primary-base flex items-center justify-center gap-2 w-full text-white py-4"
+                      >
+                        {saving ? (
+                          <>
+                            <Spinner />
+                            {isEditing ? "Updating..." : "Saving..."}
+                          </>
+                        ) : isEditing ? (
+                          "Update Settings"
+                        ) : (
+                          "Save Settings"
+                        )}
+                      </Button>
+                    </div>
                   </motion.div>
                 )}
               </AnimatePresence>

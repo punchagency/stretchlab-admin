@@ -39,3 +39,10 @@ export const updateRobotStatus = async (data: { status: string }) => {
   const response = await api.post("/admin/process/change-status-robot", data);
   return response;
 };
+
+export const getRobotHistory = async (configId: number, full = false) => {
+  const response = await api.get(
+    `/admin/process/get-rpa-history/${configId}${full ? "?full=true" : ""}`
+  );
+  return response;
+};
