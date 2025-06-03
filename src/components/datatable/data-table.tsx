@@ -26,12 +26,12 @@ import {
   type ColumnFiltersState,
   type VisibilityState,
 } from "@tanstack/react-table";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-} from "@radix-ui/react-dropdown-menu";
+// import {
+//   DropdownMenu,
+//   DropdownMenuTrigger,
+//   DropdownMenuCheckboxItem,
+//   DropdownMenuContent,
+// } from "@radix-ui/react-dropdown-menu";
 import { SvgIcon } from "../shared";
 interface DataTableProps<TData extends { id: number | string }, TValue> {
   columns: ColumnDef<TData, TValue>[];
