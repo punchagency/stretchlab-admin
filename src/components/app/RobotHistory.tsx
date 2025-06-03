@@ -6,7 +6,22 @@ import type { RobotHistoryType, BookingType } from "@/types/shared";
 import { Modal } from "../shared";
 import { useState } from "react";
 import { HistoryInformation } from ".";
-import { Loader2 } from "lucide-react";
+import { Filter, Loader2 } from "lucide-react";
+import { DefinedRange } from "react-date-range";
+import "react-date-range/dist/styles.css";
+import "react-date-range/dist/theme/default.css";
+import { AnimatePresence, motion } from "framer-motion";
+type DefinedRangeInput = {
+  startDate: Date;
+  endDate: Date | null;
+  key: string;
+  selection?: {
+    startDate: Date;
+    endDate: Date | null;
+    key: string;
+  };
+};
+
 const userColumns: ColumnDef<RobotHistoryType>[] = [
   {
     accessorKey: "client_name",
@@ -106,6 +121,14 @@ const unloggedColumns: ColumnDef<RobotHistoryType>[] = [
 export const RobotHistory = ({ configId }: { configId: number }) => {
   const queryClient = useQueryClient();
   const [showModal, setShowModal] = useState(false);
+  const [state, setState] = useState<DefinedRangeInput[]>([
+    {
+      startDate: new Date(),
+      endDate: null,
+      key: "selection",
+    },
+  ]);
+  const [showFilter, setShowFilter] = useState(false);
   const [bookingId, setBookingId] = useState<number | null>(null);
   const [viewMode, setViewMode] = useState<
     "noteAutomation" | "unloggedBookings"
@@ -117,11 +140,20 @@ export const RobotHistory = ({ configId }: { configId: number }) => {
   });
 
   const mutation = useMutation({
-    mutationFn: () => getRobotHistory(configId as number, true),
+    mutationFn: () =>
+      getRobotHistory(
+        configId as number,
+        state[0]?.startDate?.toISOString(),
+        state[0]?.endDate?.toISOString()
+      ),
     onSuccess: (data) => {
       queryClient.setQueryData(["robot-history", configId], data);
     },
   });
+
+  const mutating = mutation.isPending;
+
+  console.log(mutating, "kill");
 
   if (isPending) {
     return (
@@ -138,11 +170,11 @@ export const RobotHistory = ({ configId }: { configId: number }) => {
     setBookingId(id);
     setShowModal(true);
   };
-
+  console.log("sttes", state);
   return (
     <>
       <div className="mt-10">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between relative">
           <h4 className="text-lg font-semibold mb-4">
             Today's Automation History{" "}
             <span className="text-gray-500 text-sm">
@@ -156,12 +188,38 @@ export const RobotHistory = ({ configId }: { configId: number }) => {
               )
             </span>
           </h4>
-          <button
+          {/* <button
             onClick={() => mutation.mutate()}
             className="text-primary-base font-semibold cursor-pointer"
           >
             View All
-          </button>
+          </button> */}
+          <div className="relative">
+            <button
+              onClick={() => setShowFilter(!showFilter)}
+              className="text-primary-base font-semibold cursor-pointer flex items-center gap-2"
+            >
+              Filter <Filter />
+            </button>
+            {showFilter && (
+              <div className="absolute right-0 top-10 z-10">
+                <DefinedRange
+                  onChange={(item: DefinedRangeInput) => {
+                    setState([
+                      item.selection as {
+                        startDate: Date;
+                        endDate: Date | null;
+                        key: string;
+                      },
+                    ]);
+                    setShowFilter(false);
+                    mutation.mutate();
+                  }}
+                  ranges={state}
+                />
+              </div>
+            )}
+          </div>
         </div>
         <div className="flex items-center gap-4 mb-4">
           <button
@@ -183,7 +241,20 @@ export const RobotHistory = ({ configId }: { configId: number }) => {
             Unlogged Bookings
           </button>
         </div>
-        <div>
+        <div className="relative">
+          {mutating && (
+            <AnimatePresence>
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3 }}
+                className="text-center z-30 w-full absolute top-2 py-4 left-1/2 -translate-x-1/2 -translate-y-1/2 text-gray-500 font-semibold backdrop-blur-sm"
+              >
+                Fetching data...
+              </motion.div>
+            </AnimatePresence>
+          )}
           {viewMode === "noteAutomation" ? (
             <DataTable
               columns={userColumns}

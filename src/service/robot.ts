@@ -40,9 +40,15 @@ export const updateRobotStatus = async (data: { status: string }) => {
   return response;
 };
 
-export const getRobotHistory = async (configId: number, full = false) => {
+export const getRobotHistory = async (
+  configId: number,
+  startDate?: string,
+  endDate?: string
+) => {
   const response = await api.get(
-    `/admin/process/get-rpa-history/${configId}${full ? "?full=true" : ""}`
+    `/admin/process/get-rpa-history/${configId}${
+      startDate && endDate ? `?start_date=${startDate}&end_date=${endDate}` : ""
+    }`
   );
   return response;
 };

@@ -1,16 +1,9 @@
-import {
-  BadgeCheck,
-  Bell,
-  ChevronsUpDown,
-  CreditCard,
-  LogOut,
-} from "lucide-react";
+import { ChevronsUpDown, LogOut } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -81,7 +74,7 @@ export function NavUser() {
               </DropdownMenuLabel>
 
               <DropdownMenuSeparator />
-              <DropdownMenuGroup className="text-[#667185] font-medium">
+              {/* <DropdownMenuGroup className="text-[#667185] font-medium">
                 <DropdownMenuItem>
                   <BadgeCheck />
                   Account
@@ -95,7 +88,7 @@ export function NavUser() {
                   Notifications
                 </DropdownMenuItem>
               </DropdownMenuGroup>
-              <DropdownMenuSeparator />
+              <DropdownMenuSeparator /> */}
               <DropdownMenuItem onClick={() => setIsOpen(true)}>
                 <LogOut />
                 Log out

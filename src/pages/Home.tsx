@@ -12,9 +12,11 @@ import { Sidebar } from "@/components/ui/sidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import logo from "@/assets/images/stretchlab.png";
 import logoIcon from "@/assets/images/stretchlab-favicon.png";
-import { Outlet } from "react-router";
+import { Outlet, useNavigate } from "react-router";
 import { menuList } from "@/lib/contants";
 import { NavUser, SideMenuList } from "@/components/shared";
+import { useEffect } from "react";
+import { getUserCookie } from "@/utils";
 
 const SidebarLogo = () => {
   const { state } = useSidebar();
@@ -29,6 +31,13 @@ const SidebarLogo = () => {
 };
 
 export const Home = () => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    const userCookie = getUserCookie();
+    if (!userCookie) {
+      navigate("/login");
+    }
+  }, []);
   return (
     <SidebarProvider>
       <Sidebar className="p-2" collapsible="icon">

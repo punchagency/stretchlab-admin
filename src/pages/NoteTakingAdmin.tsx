@@ -24,7 +24,7 @@ import { ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { AnimatePresence, motion } from "framer-motion";
-
+import { ErrorHandle } from "@/components/app";
 export const NoteTakingAdmin = () => {
   const { data, isPending, error, isFetching, refetch } = useQuery({
     queryKey: ["users"],
@@ -45,7 +45,7 @@ export const NoteTakingAdmin = () => {
     );
   }
   if (error) {
-    return <div>Error fetching users</div>;
+    return <ErrorHandle retry={refetch} />;
   }
 
   const resendInvite = async (email: string) => {
