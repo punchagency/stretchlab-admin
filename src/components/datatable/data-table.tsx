@@ -69,15 +69,16 @@ export function DataTable<TData extends { id: number | string }, TValue>({
       columnVisibility,
     },
   });
+
   return (
     <div>
       {note && (
-        <div className="flex items-center gap-4 justify-end py-4">
+        <div className="flex flex-col-reverse md:flex-row item-start xl:items-center gap-4 justify-start xl:justify-end py-4">
           <Input
             type="search"
             icon="search"
             placeholder="Search by email"
-            className="max-w-sm min-w-[30rem] py-3 rounded-md"
+            className="max-w-sm w-full md:min-w-[30rem] py-3 rounded-md"
             value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
             onChange={(event) =>
               table.getColumn("email")?.setFilterValue(event.target.value)
@@ -161,14 +162,16 @@ export function DataTable<TData extends { id: number | string }, TValue>({
 
           <Button2
             onClick={handleModal}
-            className="flex items-center gap-2 py-3 text-white bg-primary-base"
+            className="flex items-center w-fit md:w-auto ml-auto md:ml-0 gap-2 py-3 text-white bg-primary-base"
           >
             <SvgIcon name="email-send" fill="#fff" />
             Invite Flexologist
           </Button2>
         </div>
       )}
-      <div className="rounded-md border">
+      <div
+        className={`rounded-md border w-[87vw] mx-auto md:w-full overflow-x-auto`}
+      >
         <Table>
           <TableHeader className="bg-primary-light">
             {table.getHeaderGroups().map((headerGroup, index) => (

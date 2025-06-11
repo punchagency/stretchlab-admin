@@ -22,12 +22,12 @@ export const HistoryInformation = ({ data }: { data: BookingType }) => {
   );
   return (
     <div className="">
-      <div className="flex items-center gap-8">
-        <div className="border border-grey-3 rounded-3xl p-7  w-1/2">
-          <h2 className="text-dark-1 font-semibold text-2xl">
+      <div className="flex flex-col md:flex-row items-center gap-6 md:gap-8">
+        <div className="border border-grey-3 rounded-xl md:rounded-3xl p-2 md:p-7  w-full md:w-1/2">
+          <h2 className="text-dark-1 mt-2 md:mt-0 font-semibold text-2xl">
             {data.client_name}
           </h2>
-          <div className="grid grid-cols-2 gap-4 mt-10">
+          <div className="grid grid-cols-2 gap-4 mt-6 md:mt-10">
             <div>
               <h3 className="text-[#344054] font-semibold text-lg">
                 Booking ID
@@ -82,7 +82,7 @@ export const HistoryInformation = ({ data }: { data: BookingType }) => {
             </div>
           </div>
         </div>
-        <div className="border border-grey-3 rounded-3xl p-7  w-1/2">
+        <div className="border border-grey-3 rounded-xl md:rounded-3xl p-2 md:p-7  w-full md:w-1/2">
           <h2 className="text-dark-1 font-semibold text-xl">Booking Details</h2>
           <div className="grid grid-cols-2 gap-4 mt-10">
             <div>
@@ -131,7 +131,7 @@ export const HistoryInformation = ({ data }: { data: BookingType }) => {
           </div>
         </div>
       </div>
-      <div className="mt-10 border border-grey-3 rounded-3xl p-7">
+      <div className="mt-6 md:mt-10 border border-grey-3 rounded-xl md:rounded-3xl p-2 md:p-7">
         <h3 className="text-dark-1 font-semibold text-2xl">
           Notes and Analysis
         </h3>
@@ -154,14 +154,16 @@ export const HistoryInformation = ({ data }: { data: BookingType }) => {
             </h3>
             <p className="text-dark-1 text-base mt-2">
               {data.note_analysis_improvements
-                .split("\n\n")
-                .map((line, index) => (
-                  <Fragment key={index}>
-                    - {line}
-                    <br />
-                    <br />
-                  </Fragment>
-                ))}
+                ? data.note_analysis_improvements
+                    .split("\n\n")
+                    .map((line, index) => (
+                      <Fragment key={index}>
+                        - {line}
+                        <br />
+                        <br />
+                      </Fragment>
+                    ))
+                : "N/A"}
             </p>
           </div>
           <div>
@@ -170,14 +172,16 @@ export const HistoryInformation = ({ data }: { data: BookingType }) => {
             </h3>
             <p className="text-dark-1 text-base mt-2">
               {data.note_analysis_progressive_moments
-                .split("\n\n")
-                .map((line, index) => (
-                  <Fragment key={index}>
-                    - {line}
-                    <br />
-                    <br />
-                  </Fragment>
-                ))}
+                ? data.note_analysis_progressive_moments
+                    .split("\n\n")
+                    .map((line, index) => (
+                      <Fragment key={index}>
+                        - {line}
+                        <br />
+                        <br />
+                      </Fragment>
+                    ))
+                : "N/A"}
             </p>
           </div>
         </div>

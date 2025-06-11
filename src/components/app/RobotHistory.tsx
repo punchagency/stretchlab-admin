@@ -175,9 +175,9 @@ export const RobotHistory = ({ configId }: { configId: number }) => {
     <>
       <div className="mt-10">
         <div className="flex items-center justify-between relative">
-          <h4 className="text-lg font-semibold mb-4">
+          <h4 className="text-sm md:text-lg font-semibold mb-4">
             Today's Automation History{" "}
-            <span className="text-gray-500 text-sm">
+            <span className="text-gray-500 text-xs md:text-sm">
               (
               {viewMode === "noteAutomation"
                 ? data?.data.rpa_history.length
@@ -226,7 +226,7 @@ export const RobotHistory = ({ configId }: { configId: number }) => {
             onClick={() => setViewMode("noteAutomation")}
             className={`${
               viewMode === "noteAutomation" ? "bg-primary-base" : "bg-gray-300"
-            } text-white font-semibold py-2 px-4 rounded-md`}
+            } text-white font-semibold py-2 px-4 rounded-md text-xs md:text-base`}
           >
             Note Automation
           </button>
@@ -236,7 +236,7 @@ export const RobotHistory = ({ configId }: { configId: number }) => {
               viewMode === "unloggedBookings"
                 ? "bg-primary-base"
                 : "bg-gray-300"
-            } text-white font-semibold py-2 px-4 rounded-md`}
+            } text-white font-semibold py-2 px-4 text-xs md:text-base rounded-md`}
           >
             Unlogged Bookings
           </button>

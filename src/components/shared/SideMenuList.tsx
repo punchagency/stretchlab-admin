@@ -1,7 +1,9 @@
-import { SidebarMenuButton, SidebarMenuItem } from "../ui/sidebar";
+import { SidebarMenuButton, SidebarMenuItem, useSidebar } from "../ui/sidebar";
 import { SvgIcon } from ".";
 import type { SvgIconName } from "@/types";
 import { useNavigate, useLocation } from "react-router";
+import { useIsMobile } from "@/hooks/use-mobile";
+
 export const SideMenuList = ({
   title,
   icon,
@@ -13,12 +15,18 @@ export const SideMenuList = ({
 }) => {
   const navigate = useNavigate();
   const pathname = useLocation();
+  const { toggleSidebar } = useSidebar();
+  const isMobile = useIsMobile();
+
   const handleNavigate = () => {
     if (link) {
       navigate(link);
+      if (isMobile) {
+        toggleSidebar();
+      }
     }
   };
-  console.log(pathname.pathname, link);
+
   return (
     <SidebarMenuItem className="rounded-lg">
       <SidebarMenuButton
@@ -29,7 +37,7 @@ export const SideMenuList = ({
             ? "bg-primary-base text-white hover:bg-primary-base hover:text-white"
             : ""
         }`}
-        tooltip={title}
+        tooltip={isMobile ? undefined : title}
       >
         <SvgIcon
           width={24}

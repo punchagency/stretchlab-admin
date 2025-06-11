@@ -120,13 +120,17 @@ export const RobotConfigForm = ({
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold">Robot Process Automation</h1>
+      <h1 className="text-lg md:text-2xl font-semibold">
+        Robot Process Automation
+      </h1>
       {isConfig ? (
         <Config data={data} setIsConfig={setIsConfig} refetch={refetch} />
       ) : (
-        <div className="mt-5 flex items-center gap-5 mx-auto w-full max-w-[1550px]">
-          <div className="border border-grey-1 w-1/2 rounded-3xl py-6 px-8">
-            <h2 className="text-xl font-semibold">Configuration Settings</h2>
+        <div className="mt-5 block md:flex items-center gap-5 mx-auto w-full max-w-[1550px]">
+          <div className="border border-grey-1 w-full md:w-[70%] lg:w-1/2 rounded-3xl py-6 px-4 md:px-8">
+            <h2 className="text-lg md:text-xl font-semibold">
+              Configuration Settings
+            </h2>
             <form
               className="mt-8 flex flex-col gap-5"
               onSubmit={handleSaveSettings}
@@ -164,7 +168,7 @@ export const RobotConfigForm = ({
                   <Button
                     type="button"
                     onClick={handleVerifyCredentials}
-                    className="bg-[#FFD700] text-sm flex items-center gap-2 text-white py-2"
+                    className="bg-[#FFD700] text-xs md:text-sm flex items-center gap-2 text-white py-2"
                     disabled={verifying}
                   >
                     {verifying ? (
@@ -180,7 +184,7 @@ export const RobotConfigForm = ({
               ) : (
                 <div className="flex justify-end items-center gap-2">
                   <Button
-                    className="bg-orange-500 py-2 text-white text-sm"
+                    className="bg-orange-500 py-2 text-white text-xs md:text-sm"
                     type="button"
                     onClick={() => {
                       setVerified(false);
@@ -255,7 +259,7 @@ export const RobotConfigForm = ({
                           onClick={() => {
                             setIsConfig(true);
                           }}
-                          className="mt-5 bg-grey-1 flex items-center justify-center gap-2 w-full text-dark-1 py-4"
+                          className="mt-5 bg-grey-1 flex items-center justify-center gap-2 w-full text-dark-1 py-3 md:py-4 text-xs md:text-base"
                         >
                           Cancel
                         </Button>
@@ -263,7 +267,7 @@ export const RobotConfigForm = ({
                       <Button
                         type="submit"
                         disabled={!verified || saving}
-                        className="mt-5 bg-primary-base flex items-center justify-center gap-2 w-full text-white py-4"
+                        className="mt-5 bg-primary-base flex items-center justify-center gap-2 w-full text-white py-3 md:py-4 text-xs md:text-base"
                       >
                         {saving ? (
                           <>

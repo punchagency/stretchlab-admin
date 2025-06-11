@@ -26,7 +26,7 @@ export const Modal: React.FC<ModalProps> = ({
           onClick={onClose}
         >
           <motion.div
-            className={`bg-white max-h-[90%] overflow-y-auto relative rounded-lg shadow-lg p-6 ${
+            className={`bg-white max-h-[90%] overflow-y-auto max-w-[95%] relative rounded-lg shadow-lg p-6 ${
               size === "sm" && "w-[30rem]"
             } ${size === "md" && "w-[40rem]"} ${
               size === "lg" && "w-[50rem]"

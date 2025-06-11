@@ -244,7 +244,7 @@ export const NoteTakingAdmin = () => {
 
   return (
     <div>
-      <h3 className="text-2xl font-semibold mb-16">
+      <h3 className="md:text-2xl text-lg font-semibold mb-8 md:mb-16">
         Note Taking Admin Dashboard
       </h3>
       {isFetching && !isPending && (
@@ -273,9 +273,9 @@ export const NoteTakingAdmin = () => {
       <Modal show={showModal} onClose={() => setShowModal(false)}>
         <form
           onSubmit={handleSubmit}
-          className="flex flex-col gap-4 py-4 px-10"
+          className="flex flex-col gap-4 py-4 px-2 md:px-10"
         >
-          <h1 className="text-2xl font-semibold text-center mb-4">
+          <h1 className="text-lg md:text-2xl font-semibold text-center mb-4">
             Invite Flexologist
           </h1>
           <Input

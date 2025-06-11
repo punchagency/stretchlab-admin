@@ -33,7 +33,7 @@ export const ForgotForm = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
+    <div className="flex items-center justify-center px-2 md:px-0 min-h-screen">
       <div className="absolute top-4 left-4">
         <Link
           to="/login"
@@ -43,7 +43,7 @@ export const ForgotForm = () => {
           Back
         </Link>
       </div>
-      <div className="bg-white shadow-md rounded-lg p-8 w-full border border-gray-[#E4E7EC] max-w-md text-center">
+      <div className="bg-white shadow-md rounded-lg p-4 md:p-8 w-full border border-gray-[#E4E7EC] max-w-md text-center">
         <div className="flex flex-col items-center mb-6">
           {/* <img
             src="/verify-illustration.svg"
@@ -55,7 +55,7 @@ export const ForgotForm = () => {
         <p className="text-gray-500 mb-6">
           Enter your email address to reset your password
         </p>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="mb-4">
           <div className="mb-4 relative">
             <Input
               label="Email address"
