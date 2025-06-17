@@ -1,4 +1,5 @@
 import type { AxiosResponse } from "axios";
+import type { BillingInfo } from ".";
 
 export interface DefaultResponse extends AxiosResponse {
   success: boolean;
@@ -8,6 +9,8 @@ export interface DefaultResponse extends AxiosResponse {
 export interface ApiError {
   response: {
     data: {
+      payment_id?: boolean;
+      payment_info?: BillingInfo;
       message: string;
     };
     status: number;

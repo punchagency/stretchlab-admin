@@ -9,6 +9,7 @@ export const verifyCredentials = async (data: {
 };
 
 export const saveSettings = async (data: {
+  proceed: boolean;
   numberOfStudioLocations: number;
   dailyRunTime: string;
   unloggedBookings: boolean;

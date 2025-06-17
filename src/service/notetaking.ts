@@ -5,9 +5,10 @@ export const fetchUsers = async () => {
   return response;
 };
 
-export const inviteFlexologist = async (email: string) => {
+export const inviteFlexologist = async (email: string, proceed: boolean) => {
   const response = await api.post("/admin/process/invite-user", {
     email,
+    proceed,
   });
   return response;
 };

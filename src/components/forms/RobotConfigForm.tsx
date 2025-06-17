@@ -8,7 +8,8 @@ import { useState } from "react";
 import { renderErrorToast, renderSuccessToast } from "../utils";
 import { AnimatePresence, motion } from "framer-motion";
 import type { ApiError, RobotConfig } from "@/types/response";
-import { Config } from "../app";
+import { Config, PaymentCollection } from "../app";
+import type { BillingInfo } from "@/types";
 export const RobotConfigForm = ({
   data,
   refetch,
@@ -24,6 +25,11 @@ export const RobotConfigForm = ({
   const [error, setError] = useState("");
   const [formError, setFormError] = useState("");
   const [saving, setSaving] = useState(false);
+  const [billingInfo, setBillingInfo] = useState<BillingInfo | null>(null);
+  const [paymentInfo, setPaymentInfo] = useState(false);
+  const [update, setUpdate] = useState(false);
+  const [proceed, setProceed] = useState(false);
+
   const [formData, setFormData] = useState({
     clubReadyUsername: data?.users?.clubready_username || "",
     clubReadyPassword: data?.users?.clubready_password || "",
@@ -99,6 +105,7 @@ export const RobotConfigForm = ({
         });
       } else {
         response = await saveSettings({
+          proceed,
           ...formData,
           numberOfStudioLocations: parseInt(
             formData.numberOfStudioLocations as string
@@ -112,182 +119,208 @@ export const RobotConfigForm = ({
       }
     } catch (error) {
       const apiError = error as ApiError;
-      renderErrorToast(apiError.response.data.message);
+      console.log(apiError.response.data);
+      if (apiError.response.status === 402) {
+        if (apiError.response.data.payment_id) {
+          setPaymentInfo(true);
+          setBillingInfo(apiError.response.data.payment_info as BillingInfo);
+        } else {
+          setPaymentInfo(true);
+        }
+      } else {
+        renderErrorToast(apiError.response.data.message);
+      }
     } finally {
       setSaving(false);
     }
   };
 
   return (
-    <div>
-      <h1 className="text-lg md:text-2xl font-semibold">
-        Robot Process Automation
-      </h1>
-      {isConfig ? (
-        <Config data={data} setIsConfig={setIsConfig} refetch={refetch} />
-      ) : (
-        <div className="mt-5 block md:flex items-center gap-5 mx-auto w-full max-w-[1550px]">
-          <div className="border border-grey-1 w-full md:w-[70%] lg:w-1/2 rounded-3xl py-6 px-4 md:px-8">
-            <h2 className="text-lg md:text-xl font-semibold">
-              Configuration Settings
-            </h2>
-            <form
-              className="mt-8 flex flex-col gap-5"
-              onSubmit={handleSaveSettings}
-            >
-              <Input
-                label="ClubReady Username"
-                type="text"
-                name="clubReadyUsername"
-                disabled={verified || verifying}
-                placeholder="Enter your ClubReady username"
-                value={formData.clubReadyUsername}
-                onChange={handleChange}
-                helperText="Enter your ClubReady username or create an admin ClubReady account and enter the username."
-              />
+    <>
+      <div>
+        <h1 className="text-lg md:text-2xl font-semibold">
+          Robot Process Automation
+        </h1>
+        {isConfig ? (
+          <Config data={data} setIsConfig={setIsConfig} refetch={refetch} />
+        ) : (
+          <div className="mt-5 block md:flex items-center gap-5 mx-auto w-full max-w-[1550px]">
+            <div className="border border-grey-1 w-full md:w-[70%] lg:w-1/2 rounded-3xl py-6 px-4 md:px-8">
+              <h2 className="text-lg md:text-xl font-semibold">
+                Configuration Settings
+              </h2>
+              <form
+                className="mt-8 flex flex-col gap-5"
+                onSubmit={handleSaveSettings}
+              >
+                <Input
+                  label="ClubReady Username"
+                  type="text"
+                  name="clubReadyUsername"
+                  disabled={verified || verifying}
+                  placeholder="Enter your ClubReady username"
+                  value={formData.clubReadyUsername}
+                  onChange={handleChange}
+                  helperText="Enter your ClubReady username or create an admin ClubReady account and enter the username."
+                />
 
-              <Input
-                label="ClubReady Password"
-                type="password"
-                name="clubReadyPassword"
-                disabled={verified || verifying}
-                placeholder="Enter your ClubReady password"
-                helperText="Enter your ClubReady password or create an admin ClubReady account and enter the password."
-                value={formData.clubReadyPassword}
-                onChange={handleChange}
-              />
-              {error && (
-                <div className="bg-red-100 rounded-lg px-2 py-3">
-                  <p className="text-red-500 font-medium text-sm text-center">
-                    {error}
-                  </p>
-                </div>
-              )}
-              {!verified ? (
-                <div className="flex justify-end">
-                  <Button
-                    type="button"
-                    onClick={handleVerifyCredentials}
-                    className="bg-[#FFD700] text-xs md:text-sm flex items-center gap-2 text-white py-2"
-                    disabled={verifying}
-                  >
-                    {verifying ? (
-                      <>
-                        <Spinner />
-                        Verifying...
-                      </>
-                    ) : (
-                      "Verify Credentials"
-                    )}
-                  </Button>
-                </div>
-              ) : (
-                <div className="flex justify-end items-center gap-2">
-                  <Button
-                    className="bg-orange-500 py-2 text-white text-xs md:text-sm"
-                    type="button"
-                    onClick={() => {
-                      setVerified(false);
-                    }}
-                  >
-                    Re-Verify Credentials
-                  </Button>
-                </div>
-              )}
+                <Input
+                  label="ClubReady Password"
+                  type="password"
+                  name="clubReadyPassword"
+                  disabled={verified || verifying}
+                  placeholder="Enter your ClubReady password"
+                  helperText="Enter your ClubReady password or create an admin ClubReady account and enter the password."
+                  value={formData.clubReadyPassword}
+                  onChange={handleChange}
+                />
+                {error && (
+                  <div className="bg-red-100 rounded-lg px-2 py-3">
+                    <p className="text-red-500 font-medium text-sm text-center">
+                      {error}
+                    </p>
+                  </div>
+                )}
+                {!verified ? (
+                  <div className="flex justify-end">
+                    <Button
+                      type="button"
+                      onClick={handleVerifyCredentials}
+                      className="bg-[#FFD700] text-xs md:text-sm flex items-center gap-2 text-white py-2"
+                      disabled={verifying}
+                    >
+                      {verifying ? (
+                        <>
+                          <Spinner />
+                          Verifying...
+                        </>
+                      ) : (
+                        "Verify Credentials"
+                      )}
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="flex justify-end items-center gap-2">
+                    <Button
+                      className="bg-orange-500 py-2 text-white text-xs md:text-sm"
+                      type="button"
+                      onClick={() => {
+                        setVerified(false);
+                      }}
+                    >
+                      Re-Verify Credentials
+                    </Button>
+                  </div>
+                )}
 
-              <AnimatePresence>
-                {verified && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ duration: 0.4 }}
-                  >
-                    <div>
-                      <Input
-                        label="Number of Studio Locations"
-                        type="number"
-                        disabled={!verified || !editLocation}
-                        name="numberOfStudioLocations"
-                        placeholder="Enter the number of studio locations"
-                        value={formData.numberOfStudioLocations as string}
-                        onChange={handleChange}
-                      />
-                      {/* <Button
+                <AnimatePresence>
+                  {verified && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      transition={{ duration: 0.4 }}
+                    >
+                      <div>
+                        <Input
+                          label="Number of Studio Locations"
+                          type="number"
+                          disabled={!verified || !editLocation}
+                          name="numberOfStudioLocations"
+                          placeholder="Enter the number of studio locations"
+                          value={formData.numberOfStudioLocations as string}
+                          onChange={handleChange}
+                        />
+                        {/* <Button
                       type="button"
                       className="bg-grey-5 text-white py-1 mb-2 text-xs"
                     >
                       Edit
                     </Button> */}
-                    </div>
-                    <div>
-                      <p className="text-base mb-2">Select Process</p>
-                      <div className="flex items-center gap-2 mb-4">
-                        <input
-                          id="unlogged-bookings"
-                          type="checkbox"
-                          name="unloggedBookings"
-                          className="form-checkbox w-4 h-4 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                          onChange={handleChange}
-                          checked={formData.unloggedBookings}
-                          disabled={!verified}
-                        />
-                        <label htmlFor="unlogged-bookings" className="text-sm">
-                          Unlogged Bookings
-                        </label>
                       </div>
-                    </div>
-                    <Input
-                      label="Daily Run Time"
-                      type="time"
-                      name="dailyRunTime"
-                      value={formData.dailyRunTime}
-                      disabled={!verified}
-                      onChange={handleChange}
-                    />
-                    {formError && (
-                      <div className="bg-red-100 rounded-lg px-2 py-3">
-                        <p className="text-red-500 font-medium text-sm text-center">
-                          {formError}
-                        </p>
+                      <div>
+                        <p className="text-base mb-2">Select Process</p>
+                        <div className="flex items-center gap-2 mb-4">
+                          <input
+                            id="unlogged-bookings"
+                            type="checkbox"
+                            name="unloggedBookings"
+                            className="form-checkbox w-4 h-4 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                            onChange={handleChange}
+                            checked={formData.unloggedBookings}
+                            disabled={!verified}
+                          />
+                          <label
+                            htmlFor="unlogged-bookings"
+                            className="text-sm"
+                          >
+                            Unlogged Bookings
+                          </label>
+                        </div>
                       </div>
-                    )}
-                    <div className="flex gap-6 items-center">
-                      {isEditing && (
-                        <Button
-                          type="button"
-                          onClick={() => {
-                            setIsConfig(true);
-                          }}
-                          className="mt-5 bg-grey-1 flex items-center justify-center gap-2 w-full text-dark-1 py-3 md:py-4 text-xs md:text-base"
-                        >
-                          Cancel
-                        </Button>
+                      <Input
+                        label="Daily Run Time"
+                        type="time"
+                        name="dailyRunTime"
+                        value={formData.dailyRunTime}
+                        disabled={!verified}
+                        onChange={handleChange}
+                      />
+                      {formError && (
+                        <div className="bg-red-100 rounded-lg px-2 py-3">
+                          <p className="text-red-500 font-medium text-sm text-center">
+                            {formError}
+                          </p>
+                        </div>
                       )}
-                      <Button
-                        type="submit"
-                        disabled={!verified || saving}
-                        className="mt-5 bg-primary-base flex items-center justify-center gap-2 w-full text-white py-3 md:py-4 text-xs md:text-base"
-                      >
-                        {saving ? (
-                          <>
-                            <Spinner />
-                            {isEditing ? "Updating..." : "Saving..."}
-                          </>
-                        ) : isEditing ? (
-                          "Update Settings"
-                        ) : (
-                          "Save Settings"
+                      <div className="flex gap-6 items-center">
+                        {isEditing && (
+                          <Button
+                            type="button"
+                            onClick={() => {
+                              setIsConfig(true);
+                            }}
+                            className="mt-5 bg-grey-1 flex items-center justify-center gap-2 w-full text-dark-1 py-3 md:py-4 text-xs md:text-base"
+                          >
+                            Cancel
+                          </Button>
                         )}
-                      </Button>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </form>
+                        <Button
+                          type="submit"
+                          disabled={!verified || saving}
+                          className="mt-5 bg-primary-base flex items-center justify-center gap-2 w-full text-white py-3 md:py-4 text-xs md:text-base"
+                        >
+                          {saving ? (
+                            <>
+                              <Spinner />
+                              {isEditing ? "Updating..." : "Saving..."}
+                            </>
+                          ) : isEditing ? (
+                            "Update Settings"
+                          ) : (
+                            "Save Settings"
+                          )}
+                        </Button>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </form>
+            </div>
           </div>
-        </div>
+        )}
+      </div>
+      {paymentInfo && (
+        <PaymentCollection
+          show={paymentInfo}
+          onClose={() => setPaymentInfo(false)}
+          billingInfo={billingInfo}
+          robot={true}
+          update={update}
+          setUpdate={setUpdate}
+          setProceed={setProceed}
+        />
       )}
-    </div>
+    </>
   );
 };
