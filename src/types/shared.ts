@@ -40,6 +40,7 @@ export type BookingType = {
   missed_sale_follow_up_rubric: string;
   note_analysis_improvements: string;
   note_analysis_progressive_moments: string;
+  note_oppurtunities: string;
   note_score: string;
   note_summary: string;
   pre_visit_preparation_rubric: string;

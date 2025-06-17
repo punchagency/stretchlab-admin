@@ -2,7 +2,7 @@ import type { BookingType } from "@/types/shared";
 import { Fragment } from "react/jsx-runtime";
 
 export const HistoryInformation = ({ data }: { data: BookingType }) => {
-  console.log(data);
+  if (!data) return null;
 
   const statuses: Record<string, string> = {
     completed: "Completed",
@@ -18,51 +18,51 @@ export const HistoryInformation = ({ data }: { data: BookingType }) => {
   } as const;
 
   const matchedStatus = Object.keys(statuses).find((key) =>
-    data.status.toLowerCase().includes(key)
+    data?.status.toLowerCase().includes(key)
   );
   return (
     <div className="">
       <div className="flex flex-col md:flex-row items-center gap-6 md:gap-8">
         <div className="border border-grey-3 rounded-xl md:rounded-3xl p-2 md:p-7  w-full md:w-1/2">
           <h2 className="text-dark-1 mt-2 md:mt-0 font-semibold text-2xl">
-            {data.client_name}
+            {data?.client_name}
           </h2>
           <div className="grid grid-cols-2 gap-4 mt-6 md:mt-10">
             <div>
               <h3 className="text-[#344054] font-semibold text-lg">
                 Booking ID
               </h3>
-              <p className="text-dark-1 text-base">{data.booking_id}</p>
+              <p className="text-dark-1 text-base">{data?.booking_id}</p>
             </div>
             <div>
               <h3 className="text-[#344054] font-semibold text-lg">Location</h3>
-              <p className="text-dark-1 text-base">{data.location}</p>
+              <p className="text-dark-1 text-base">{data?.location}</p>
             </div>
             <div>
               <h3 className="text-[#344054] font-semibold text-lg">
                 Member Rep Name
               </h3>
               <p className="text-dark-1 text-base">
-                {data.member_rep_name || "-"}
+                {data?.member_rep_name || "-"}
               </p>
             </div>
             <div>
               <h3 className="text-[#344054] font-semibold text-lg">
                 First Time
               </h3>
-              <p className="text-dark-1 text-base">{data.first_timer}</p>
+              <p className="text-dark-1 text-base">{data?.first_timer}</p>
             </div>
             <div>
               <h3 className="text-[#344054] font-semibold text-lg">
                 Unpaid Booking
               </h3>
-              <p className="text-dark-1 text-base">{data.unpaid_booking}</p>
+              <p className="text-dark-1 text-base">{data?.unpaid_booking}</p>
             </div>
             <div>
               <h3 className="text-[#344054] font-semibold text-lg">
                 Workout Type
               </h3>
-              <p className="text-dark-1 text-base">{data.workout_type}</p>
+              <p className="text-dark-1 text-base">{data?.workout_type}</p>
             </div>
             <div>
               <h3 className="text-[#344054] font-semibold text-lg">Status</h3>
@@ -78,7 +78,7 @@ export const HistoryInformation = ({ data }: { data: BookingType }) => {
               <h3 className="text-[#344054] font-semibold text-lg">
                 Flexologist Name
               </h3>
-              <p className="text-dark-1 text-base">{data.flexologist_name}</p>
+              <p className="text-dark-1 text-base">{data?.flexologist_name}</p>
             </div>
           </div>
         </div>
@@ -89,27 +89,27 @@ export const HistoryInformation = ({ data }: { data: BookingType }) => {
               <h3 className="text-[#344054] font-semibold text-lg">
                 Appointment Date
               </h3>
-              <p className="text-dark-1 text-base">{data.appointment_date}</p>
+              <p className="text-dark-1 text-base">{data?.appointment_date}</p>
             </div>
             <div>
               <h3 className="text-[#344054] font-semibold text-lg">
                 Booked On Date
               </h3>
-              <p className="text-dark-1 text-base">{data.booked_on_date}</p>
+              <p className="text-dark-1 text-base">{data?.booked_on_date}</p>
             </div>
 
             <div>
               <h3 className="text-[#344054] font-semibold text-lg">
                 Note Score
               </h3>
-              <p className="text-dark-1 text-base">{data.note_score}</p>
+              <p className="text-dark-1 text-base">{data?.note_score}</p>
             </div>
             <div>
               <h3 className="text-[#344054] font-semibold text-lg">
                 Pre Visit Preparation Rubric Score
               </h3>
               <p className="text-dark-1 text-base">
-                {data.pre_visit_preparation_rubric}
+                {data?.pre_visit_preparation_rubric}
               </p>
             </div>
             <div>
@@ -117,7 +117,7 @@ export const HistoryInformation = ({ data }: { data: BookingType }) => {
                 Session Notes Rubric Score
               </h3>
               <p className="text-dark-1 text-base">
-                {data.session_notes_rubric}
+                {data?.session_notes_rubric}
               </p>
             </div>
             <div>
@@ -125,7 +125,7 @@ export const HistoryInformation = ({ data }: { data: BookingType }) => {
                 Missed Sale Follow Up Rubric Score
               </h3>
               <p className="text-dark-1 text-base">
-                {data.missed_sale_follow_up_rubric}
+                {data?.missed_sale_follow_up_rubric}
               </p>
             </div>
           </div>
@@ -136,25 +136,56 @@ export const HistoryInformation = ({ data }: { data: BookingType }) => {
           Notes and Analysis
         </h3>
         <div className="flex flex-col gap-7 mt-10">
+          {data?.note_oppurtunities && (
+            <div>
+              <h3 className="text-[#344054] font-semibold text-lg">
+                Note Oppurtunities
+              </h3>
+              {JSON.parse(data?.note_oppurtunities as string).length > 0 ? (
+                <div className="flex items center gap-2 mt-2">
+                  {JSON.parse(data?.note_oppurtunities as string).map(
+                    (item: string, index: number) => (
+                      <div
+                        className={`rounded-md font-semibold text-sm px-3 py-2 ${
+                          item.toLowerCase().includes("need")
+                            ? "bg-blue-500 text-white"
+                            : item.toLowerCase().includes("session")
+                            ? "bg-green-500 text-white"
+                            : item.toLowerCase().includes("post")
+                            ? "bg-orange-500 text-white"
+                            : "bg-purple-500 text-white"
+                        }`}
+                        key={index}
+                      >
+                        {item}
+                      </div>
+                    )
+                  )}
+                </div>
+              ) : (
+                <p className="text-dark-1 text-base mt-2">N/A</p>
+              )}
+            </div>
+          )}
           <div>
             <h3 className="text-[#344054] font-semibold text-lg">Key Note</h3>
             <p className="text-dark-1 text-base mt-2">
-              {data.key_note.trim() === "" ? "N/A" : data.key_note}
+              {data?.key_note.trim() === "" ? "N/A" : data?.key_note}
             </p>
           </div>
           <div>
             <h3 className="text-[#344054] font-semibold text-lg">
               Note Summary
             </h3>
-            <p className="text-dark-1 text-base mt-2">{data.note_summary}</p>
+            <p className="text-dark-1 text-base mt-2">{data?.note_summary}</p>
           </div>
           <div>
             <h3 className="text-[#344054] font-semibold text-lg">
               Note Analysis Improvements
             </h3>
             <p className="text-dark-1 text-base mt-2">
-              {data.note_analysis_improvements
-                ? data.note_analysis_improvements
+              {data?.note_analysis_improvements
+                ? data?.note_analysis_improvements
                     .split("\n\n")
                     .map((line, index) => (
                       <Fragment key={index}>
@@ -171,8 +202,8 @@ export const HistoryInformation = ({ data }: { data: BookingType }) => {
               Note Analysis Progressive Moments
             </h3>
             <p className="text-dark-1 text-base mt-2">
-              {data.note_analysis_progressive_moments
-                ? data.note_analysis_progressive_moments
+              {data?.note_analysis_progressive_moments
+                ? data?.note_analysis_progressive_moments
                     .split("\n\n")
                     .map((line, index) => (
                       <Fragment key={index}>
