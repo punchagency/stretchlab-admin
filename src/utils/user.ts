@@ -6,6 +6,7 @@ interface CustomJwtPayload extends JwtPayload {
   email: string;
   name: string;
   role_name: string;
+  username: string;
   avatar?: string;
 }
 

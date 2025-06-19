@@ -141,7 +141,8 @@ export const HistoryInformation = ({ data }: { data: BookingType }) => {
               <h3 className="text-[#344054] font-semibold text-lg">
                 Note Oppurtunities
               </h3>
-              {JSON.parse(data?.note_oppurtunities as string).length > 0 ? (
+              {data?.note_oppurtunities !== "N/A" &&
+              JSON.parse(data?.note_oppurtunities as string).length > 0 ? (
                 <div className="flex items center gap-2 mt-2">
                   {JSON.parse(data?.note_oppurtunities as string).map(
                     (item: string, index: number) => (
