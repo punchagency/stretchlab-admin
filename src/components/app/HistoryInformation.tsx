@@ -1,8 +1,17 @@
 import type { BookingType } from "@/types/shared";
 import { Fragment } from "react/jsx-runtime";
 
-export const HistoryInformation = ({ data }: { data: BookingType }) => {
-  if (!data) return null;
+export const HistoryInformation = ({
+  data,
+  close,
+}: {
+  data: BookingType;
+  close: () => void;
+}) => {
+  if (!data) {
+    close();
+    return null;
+  }
 
   const statuses: Record<string, string> = {
     completed: "Completed",
