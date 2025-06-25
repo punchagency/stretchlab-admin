@@ -11,6 +11,7 @@ export const PasswordSection = () => {
     twoFactorSettings,
     twoFactorModal,
     isLoadingTwoFactor,
+    isLoadingPassword,
     setPasswordTab,
     handlePasswordInputChange,
     handleTwoFactorToggle,
@@ -66,16 +67,21 @@ export const PasswordSection = () => {
               labelStyle="text-sm font-medium"
             />
 
-            <Input
-              label="New password"
-              type="password"
-              name="newPassword"
-              placeholder="Enter new password"
-              value={passwordData.newPassword}
-              onChange={handlePasswordInputChange}
-              className="py-3 rounded-md"
-              labelStyle="text-sm font-medium"
-            />
+            <div className="space-y-1">
+              <Input
+                label="New password"
+                type="password"
+                name="newPassword"
+                placeholder="Enter new password"
+                value={passwordData.newPassword}
+                onChange={handlePasswordInputChange}
+                className="py-3 rounded-md"
+                labelStyle="text-sm font-medium"
+              />
+              <p className="text-xs text-muted-foreground">
+                Password must be at least 8 characters long
+              </p>
+            </div>
 
             <Input
               label="Confirm password"
@@ -91,9 +97,17 @@ export const PasswordSection = () => {
             <div className="pt-4">
               <Button
                 onClick={handleUpdatePassword}
-                className="py-3 text-white bg-primary-base hover:bg-primary-base/90 text-sm transition-colors"
+                disabled={isLoadingPassword}
+                className="py-3 text-white bg-primary-base hover:bg-primary-base/90 text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
               >
-                Update password
+                {isLoadingPassword ? (
+                  <>
+                    <Spinner className="border-white w-4 h-4" />
+                    <span>Updating...</span>
+                  </>
+                ) : (
+                  "Update password"
+                )}
               </Button>
             </div>
           </div>

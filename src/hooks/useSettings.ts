@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { getUserInfo } from "@/utils";
-import { getTwoFactorStatus, enableTwoFactor, disableTwoFactor, resendTwoFactorCode } from "@/service/settings";
+import { getTwoFactorStatus, enableTwoFactor, disableTwoFactor, resendTwoFactorCode, changePassword } from "@/service/settings";
 import { renderErrorToast, renderSuccessToast } from "@/components/utils";
 import type { ApiError } from "@/types";
 import type { ProfileFormData, PasswordFormData, TwoFactorSettings, TwoFactorModalState } from "@/types/settings";
@@ -34,6 +34,7 @@ export const useSettings = () => {
   });
 
   const [isLoadingTwoFactor, setIsLoadingTwoFactor] = useState(false);
+  const [isLoadingPassword, setIsLoadingPassword] = useState(false);
   const [hasLoadedTwoFactor, setHasLoadedTwoFactor] = useState(false);
   const loadTwoFactorStatus = useCallback(async () => {
     if (hasLoadedTwoFactor) return; 
@@ -238,19 +239,48 @@ export const useSettings = () => {
     alert("Profile changes saved successfully!"); 
   };
 
-  const handleUpdatePassword = () => {
+  const handleUpdatePassword = async () => {
     if (!passwordData.currentPassword || !passwordData.newPassword || !passwordData.confirmPassword) {
-      alert("Please fill in all password fields");
+      renderErrorToast("Please fill in all password fields");
       return;
     }
 
     if (passwordData.newPassword !== passwordData.confirmPassword) {
-      alert("New password and confirm password do not match");
+      renderErrorToast("New password and confirm password do not match");
       return;
     }
 
-    console.log("Update password clicked", passwordData);
-    alert("Password updated successfully!");
+    if (passwordData.newPassword.length < 8) {
+      renderErrorToast("New password must be at least 8 characters long");
+      return;
+    }
+
+    if (passwordData.currentPassword === passwordData.newPassword) {
+      renderErrorToast("New password must be different from current password");
+      return;
+    }
+
+    try {
+      setIsLoadingPassword(true);
+      const response = await changePassword(passwordData.currentPassword, passwordData.newPassword);
+      
+      if (response.status === 200) {
+        renderSuccessToast(response.data.message || "Password updated successfully!");
+        // Clear the form after successful update
+        setPasswordData({
+          currentPassword: "",
+          newPassword: "",
+          confirmPassword: "",
+        });
+      } else {
+        renderErrorToast(response.data.message || "Failed to update password");
+      }
+    } catch (error) {
+      const apiError = error as ApiError;
+      renderErrorToast(apiError.response?.data.message || "Failed to update password");
+    } finally {
+      setIsLoadingPassword(false);
+    }
   };
 
   return {
@@ -263,6 +293,7 @@ export const useSettings = () => {
     twoFactorSettings,
     twoFactorModal,
     isLoadingTwoFactor,
+    isLoadingPassword,
     setActiveSection,
     setPasswordTab,
     handleProfileInputChange,

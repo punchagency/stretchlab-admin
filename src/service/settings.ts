@@ -28,4 +28,12 @@ export const verifyTwoFactorDisable = async (code: string) => {
 export const resendTwoFactorCode = async () => {
   const response = await api.get("/admin/settings/two-factor-auth/resend-code");
   return response;
+};
+
+export const changePassword = async (old_password: string, new_password: string) => {
+  const response = await api.post("/admin/settings/change-password", {
+    old_password,
+    new_password
+  });
+  return response;
 }; 
