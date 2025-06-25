@@ -9,3 +9,4 @@ export * from "./SuccessModal";
 export * from "./SideMenuList";
 export * from "./NavUser";
 export * from "./Modal";
+export * from "./Mainheader";

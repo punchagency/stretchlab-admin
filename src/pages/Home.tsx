@@ -2,7 +2,6 @@ import {
   SidebarContent,
   SidebarHeader,
   SidebarSeparator,
-  SidebarTrigger,
   SidebarMenu,
   SidebarFooter,
   useSidebar,
@@ -14,9 +13,10 @@ import logo from "@/assets/images/stretchlab.png";
 import logoIcon from "@/assets/images/stretchlab-favicon.png";
 import { Outlet, useNavigate } from "react-router";
 import { menuList } from "@/lib/contants";
-import { NavUser, SideMenuList } from "@/components/shared";
+import { NavUser, SideMenuList, LogoutMenu } from "@/components/shared";
 import { useEffect } from "react";
 import { getUserCookie } from "@/utils";
+import { MainHeader } from "@/components/shared";
 
 const SidebarLogo = () => {
   const { state } = useSidebar();
@@ -30,6 +30,8 @@ const SidebarLogo = () => {
   );
 };
 
+
+
 export const Home = () => {
   const navigate = useNavigate();
   useEffect(() => {
@@ -38,6 +40,7 @@ export const Home = () => {
       navigate("/login");
     }
   }, []);
+  
   return (
     <SidebarProvider>
       <Sidebar className="p-2" collapsible="icon">
@@ -55,16 +58,19 @@ export const Home = () => {
                 link={menu.link}
               />
             ))}
+            <LogoutMenu />
           </SidebarMenu>
         </SidebarContent>
-        <SidebarFooter>
+        {/* <SidebarFooter>
           <NavUser />
-        </SidebarFooter>
+        </SidebarFooter> */}
         <SidebarRail />
       </Sidebar>
-      <div className="flex-1 py-5 px-7">
-        <SidebarTrigger />
-        <Outlet />
+      <div className="flex-1 bg-gray-50">
+        <MainHeader />
+        <div>
+          <Outlet />
+        </div>
       </div>
     </SidebarProvider>
   );

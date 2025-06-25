@@ -17,6 +17,22 @@ export interface ApiError {
   };
 }
 
+export interface User {
+  email: string;
+  id: number;
+  is_verified: boolean;
+  role_id: number;
+  username: string;
+}
+
+export interface LoginResponse {
+  message: string;
+  requires_2fa?: boolean;
+  status: string;
+  token?: string; 
+  user: User;
+}
+
 export interface RobotConfig {
   id: number;
   name: string;

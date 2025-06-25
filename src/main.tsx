@@ -14,9 +14,11 @@ import {
   RobotAutomation,
   Settings,
   Analytics,
+  TwoFactorLogin,
 } from "./pages";
 import { Toaster } from "./components/ui/sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ThemeProvider } from "./contexts/ThemeContext";
 
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
@@ -59,6 +61,10 @@ const router = createBrowserRouter([
     element: <Verification />,
   },
   {
+    path: "/2fa-login",
+    element: <TwoFactorLogin />,
+  },
+  {
     path: "/reset-password/:token",
     element: <ResetPassword />,
   },
@@ -71,8 +77,10 @@ const router = createBrowserRouter([
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
-      <Toaster />
+      <ThemeProvider>
+        <RouterProvider router={router} />
+        <Toaster />
+      </ThemeProvider>
     </QueryClientProvider>
   </StrictMode>
 );

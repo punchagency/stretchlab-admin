@@ -12,6 +12,7 @@ type Props = {
   checking?: boolean;
   error?: string;
   success?: string;
+  labelStyle?: string;
   helperText?: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 } & React.InputHTMLAttributes<HTMLInputElement>;
@@ -28,6 +29,7 @@ export const Input = ({
   checking,
   success,
   helperText,
+  labelStyle,
   ...inputProps
 }: Props) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -36,7 +38,7 @@ export const Input = ({
   };
   return (
     <div>
-      <label className="flex items-center mb-1 justify-between">
+      <label className={`flex items-center mb-1 justify-between ${labelStyle}nd ${labelStyle}`}>
         {label}
         {(checking || error || success) && (
           <span
@@ -53,11 +55,11 @@ export const Input = ({
         )}
       </label>
       <div
-        className={`flex items-center gap-3 border border-grey-3 ${
+        className={`flex items-center gap-3 border border-border ${
           inputProps.className
         } ${inputProps.className?.includes("rounded") ? "" : "rounded-2xl"} ${
           inputProps.className?.includes("py-") ? "" : "py-4"
-        } px-3`}
+        } px-3 transition-colors`}
       >
         {icon && <SvgIcon name={icon} width={18} height={15} />}
         <input
@@ -67,7 +69,7 @@ export const Input = ({
           value={value}
           onChange={onChange}
           {...inputProps}
-          className="outline-none bg-transparent flex-1 disabled:opacity-50 disabled:cursor-not-allowed placeholder:text-grey-2 text-base"
+          className="outline-none bg-transparent flex-1 disabled:opacity-50 disabled:cursor-nor:text-muted-foreground text-base placeholder:text-sm text-foreground"
         />
         {type === "password" && (
           <button
@@ -79,7 +81,7 @@ export const Input = ({
           </button>
         )}
       </div>
-      <p className="text-xs text-gray-600 mt-2">{helperText}</p>
+      <p className="text-xs text-muted-foreground mt-2">{helperText}</p>
     </div>
   );
 };
