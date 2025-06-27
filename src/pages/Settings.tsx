@@ -10,7 +10,8 @@ const SETTINGS_NAV_ITEMS = [
 ] as const;
 
 export const Settings = () => {
-  const { user, activeSection, setActiveSection } = useSettings();
+  const settingsData = useSettings();
+  const { user, activeSection, setActiveSection } = settingsData;
 
   const renderContent = () => {
     if (!user) {
@@ -22,9 +23,9 @@ export const Settings = () => {
     }
     switch (activeSection) {
       case "profile":
-        return <ProfileSection />;
+        return <ProfileSection settingsData={settingsData} />;
       case "password":
-        return <PasswordSection />;
+        return <PasswordSection settingsData={settingsData} />;
       case "notification":
         return (
           <div className="text-center py-12">
@@ -32,7 +33,7 @@ export const Settings = () => {
           </div>
         );
       default:
-        return <ProfileSection />;
+        return <ProfileSection settingsData={settingsData} />;
     }
   };
 

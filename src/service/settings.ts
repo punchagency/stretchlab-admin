@@ -36,4 +36,41 @@ export const changePassword = async (old_password: string, new_password: string)
     new_password
   });
   return response;
+};
+
+export const changeEmailInitiate = async (new_email: string) => {
+  const response = await api.post("/admin/settings/change-email-initiate", {
+    new_email
+  });
+  return response;
+};
+
+export const changeEmailVerify = async (new_email: string, code: string) => {
+  const response = await api.post("/admin/settings/change-email/verify", {
+    new_email,
+    code
+  });
+  return response;
+};
+
+export const uploadProfilePicture = async (file: File) => {
+  const formData = new FormData();
+  formData.append('profile_picture', file);
+  
+  const response = await api.post("/admin/settings/change-profile-picture", formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+  return response;
+};
+
+export const getProfilePicture = async () => {
+  const response = await api.get("/admin/settings/get-profile-picture");
+  return response;
+};
+
+export const deleteProfilePicture = async () => {
+  const response = await api.delete("/admin/settings/delete-profile-picture");
+  return response;
 }; 

@@ -1,22 +1,28 @@
-import { Button, Input, SvgIcon } from "@/components/shared";
-import { Avatar } from "@/components/ui/avatar";
-import avatarImage from "@/assets/images/avatar.png";
+import { Button, Input, SvgIcon, Spinner } from "@/components/shared";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useSettings } from "@/hooks/useSettings";
+import { EmailChangeModal } from "./EmailChangeModal";
 
-export const ProfileSection = () => {
+type ProfileSectionProps = {
+  settingsData: ReturnType<typeof useSettings>;
+};
+
+export const ProfileSection = ({ settingsData }: ProfileSectionProps) => {
   const {
     user,
     profileData,
     profileImage,
+    emailChangeModal,
+    isLoadingEmailChange,
+    isLoadingProfilePicture,
+    isLoadingProfilePictureDelete,
+    hasProfileImage,
     handleProfileInputChange,
     handleImageUpload,
     handleImageDelete,
     handleSaveProfile,
-  } = useSettings();
-
-  const handleUploadToBackend = () => {
-    console.log("Uploading image to backend...");
-  };
+    handleEmailChangeModalClose,
+  } = settingsData;
 
   return (
     <div className="space-y-6">
@@ -36,27 +42,11 @@ export const ProfileSection = () => {
           <div className=" space-y-4 flex-col flex items-start">
             <div className="relative group">
               <Avatar className="w-30 h-30">
-                {profileImage ? (
-                  <img
-                    src={profileImage}
-                    alt="Profile"
-                    className="w-full h-full object-cover rounded-full"
-                  />
-                ) : user?.avatar ? (
-                  <img
-                    src={user.avatar}
-                    alt="User Profile"
-                    className="w-full h-full object-cover rounded-full"
-                  />
-                ) : (
-                  <img
-                    src={avatarImage}
-                    alt="Default Profile"
-                    className="w-full h-full object-cover rounded-full"
-                  />
-                )}
-                
-                <div 
+                <AvatarImage src={profileImage || undefined} alt="Profile" />
+                <AvatarFallback className="text-2xl font-semibold capitalize">
+                  {user?.username?.charAt(0) || "U"}
+                </AvatarFallback>
+                {/* <div 
                   className="absolute inset-0 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
                   style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)' }}
                   onClick={handleImageUpload}
@@ -67,22 +57,38 @@ export const ProfileSection = () => {
                     height={20}
                     fill="white"
                   />
-                </div>
+                </div> */}
               </Avatar>
             </div>
 
             <div className="flex space-x-3">
               <Button
-                onClick={handleUploadToBackend}
-                className="py-2 px-4 text-sm border border-primary-base text-primary-base bg-white hover:bg-primary-base hover:text-white transition-colors rounded-md"
+                onClick={handleImageUpload}
+                disabled={isLoadingProfilePicture}
+                className="py-2 px-4 text-sm border border-primary-base text-primary-base bg-white hover:bg-primary-base hover:text-white transition-colors rounded-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
               >
-                Upload image
+                {isLoadingProfilePicture ? (
+                  <>
+                    <Spinner className="border-primary-base w-4 h-4" />
+                    <span>Uploading...</span>
+                  </>
+                ) : (
+                  "Change picture"
+                )}
               </Button>
               <Button
                 onClick={handleImageDelete}
-                className="py-2 px-4 text-sm border border-red-500 text-red-500 bg-white hover:bg-red-500 hover:text-white transition-colors rounded-md"
+                disabled={isLoadingProfilePictureDelete || !hasProfileImage}
+                className="py-2 px-4 text-sm border border-red-500 text-red-500 bg-white hover:bg-red-500 hover:text-white transition-colors rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Delete picture
+                {isLoadingProfilePictureDelete ? (
+                  <div className="flex items-center gap-2">
+                    <Spinner className="border-red-500 w-4 h-4" />
+                    <span>Deleting...</span>
+                  </div>
+                ) : (
+                  "Delete picture"
+                )}
               </Button>
             </div>
           </div>
@@ -90,38 +96,61 @@ export const ProfileSection = () => {
       </div>
 
       <div className="space-y-4 px-6">
-        <Input
-          label="Username"
-          type="text"
-          name="username"
-          placeholder="Enter your username"
-          value={profileData.username}
-          onChange={handleProfileInputChange}
-          className="py-3 rounded-md"
-          labelStyle="text-sm font-medium"
-          disabled={true}
-        />
+        <div className="space-y-1">
+          <Input
+            label="Username"
+            type="text"
+            name="username"
+            placeholder="Enter your username"
+            value={profileData.username}
+            onChange={handleProfileInputChange}
+            className="py-3 rounded-md bg-gray-50"
+            labelStyle="text-sm font-medium"
+            disabled={true}
+          />
+          <p className="text-xs text-muted-foreground">
+            Username cannot be changed
+          </p>
+        </div>
 
-        <Input
-          label="Email"
-          type="email"
-          name="email"
-          placeholder="Enter your email address"
-          value={profileData.email}
-          onChange={handleProfileInputChange}
-          className="py-3 rounded-md"
-          labelStyle="text-sm font-medium"
-        />
+        <div className="space-y-1">
+          <Input
+            label="Email"
+            type="email"
+            name="email"
+            placeholder="Enter your email address"
+            value={profileData.email}
+            onChange={handleProfileInputChange}
+            className="py-3 rounded-md"
+            labelStyle="text-sm font-medium"
+          />
+          <p className="text-xs text-muted-foreground">
+            Changing your email will require verification
+          </p>
+        </div>
       </div>
 
       <div className="pt-4 px-6">
         <Button
           onClick={handleSaveProfile}
-          className="flex items-center w-fit md:w-auto gap-2 py-3 text-white bg-primary-base hover:bg-primary-base/90 text-sm transition-colors"
+          disabled={isLoadingEmailChange}
+          className="flex items-center w-fit md:w-auto gap-2 py-3 text-white bg-primary-base hover:bg-primary-base/90 text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Save changes
+          {isLoadingEmailChange ? (
+            <>
+              <Spinner className="border-white w-4 h-4" />
+              <span>Processing...</span>
+            </>
+          ) : (
+            "Save changes"
+          )}
         </Button>
       </div>
+      <EmailChangeModal
+        isOpen={emailChangeModal.isOpen}
+        onClose={handleEmailChangeModalClose}
+        newEmail={emailChangeModal.newEmail}
+      />
     </div>
   );
 }; 

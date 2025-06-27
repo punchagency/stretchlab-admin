@@ -2,10 +2,11 @@ import { Bell } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { getUserInfo } from "@/utils";
+import { useProfilePictureContext } from "@/contexts/ProfilePictureContext";
 
 export const MainHeader = () => {
     const user = getUserInfo();
-    const avatar = "https://github.com/shadcn.png";
+    const { profilePictureUrl } = useProfilePictureContext();
     return (
       <header className="flex items-center justify-between px-6 py-4 bg-white border-b border-gray-200 mb-4">
         <div className="flex items-center">
@@ -20,7 +21,7 @@ export const MainHeader = () => {
           </div>
           <div className="flex items-center gap-3">
             <Avatar className="h-8 w-8">
-              <AvatarImage src={avatar} alt="profile" />
+              <AvatarImage src={profilePictureUrl || undefined} alt="profile" />
               <AvatarFallback className="capitalize">{user?.username?.charAt(0)}</AvatarFallback>
             </Avatar>
             

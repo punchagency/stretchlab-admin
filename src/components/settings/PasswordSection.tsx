@@ -3,7 +3,11 @@ import { Switch } from "@/components/ui/switch";
 import { useSettings } from "@/hooks/useSettings";
 import { TwoFactorModal } from "./TwoFactorModal";
 
-export const PasswordSection = () => {
+type PasswordSectionProps = {
+  settingsData: ReturnType<typeof useSettings>;
+};
+
+export const PasswordSection = ({ settingsData }: PasswordSectionProps) => {
   const {
     user,
     passwordTab,
@@ -18,7 +22,7 @@ export const PasswordSection = () => {
     handleUpdatePassword,
     handleTwoFactorModalClose,
     handleTwoFactorSuccess,
-  } = useSettings();
+  } = settingsData;
 
   return (
     <div className="space-y-4">

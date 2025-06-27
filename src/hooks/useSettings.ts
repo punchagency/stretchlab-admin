@@ -1,21 +1,22 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { getUserInfo } from "@/utils";
-import { getTwoFactorStatus, enableTwoFactor, disableTwoFactor, resendTwoFactorCode, changePassword } from "@/service/settings";
+import { getTwoFactorStatus, enableTwoFactor, disableTwoFactor, resendTwoFactorCode, changePassword, changeEmailInitiate, uploadProfilePicture } from "@/service/settings";
 import { renderErrorToast, renderSuccessToast } from "@/components/utils";
 import type { ApiError } from "@/types";
 import type { ProfileFormData, PasswordFormData, TwoFactorSettings, TwoFactorModalState } from "@/types/settings";
+import { useProfilePictureContext } from "@/contexts/ProfilePictureContext";
 
 export const useSettings = () => {
   const user = useMemo(() => getUserInfo(), []);
-   const [activeSection, setActiveSection] = useState("profile");
+    const { profilePictureUrl, refreshProfilePicture, deleteProfilePicture } = useProfilePictureContext();
+  
+  const [activeSection, setActiveSection] = useState("profile");
   const [passwordTab, setPasswordTab] = useState<"password" | "2fa">("password");
   
   const [profileData, setProfileData] = useState<ProfileFormData>({
     username: user?.username || user?.name || "",
     email: user?.email || "",
   });
-  
-  const [profileImage, setProfileImage] = useState<string | null>(user?.avatar || null);
   
   const [passwordData, setPasswordData] = useState<PasswordFormData>({
     currentPassword: "",
@@ -35,10 +36,17 @@ export const useSettings = () => {
 
   const [isLoadingTwoFactor, setIsLoadingTwoFactor] = useState(false);
   const [isLoadingPassword, setIsLoadingPassword] = useState(false);
+  const [isLoadingEmailChange, setIsLoadingEmailChange] = useState(false);
+  const [isLoadingProfilePicture, setIsLoadingProfilePicture] = useState(false);
+  const [isLoadingProfilePictureDelete, setIsLoadingProfilePictureDelete] = useState(false);
   const [hasLoadedTwoFactor, setHasLoadedTwoFactor] = useState(false);
+  
+  // Email change modal state
+  const [emailChangeModal, setEmailChangeModal] = useState({
+    isOpen: false,
+    newEmail: "",
+  });
   const loadTwoFactorStatus = useCallback(async () => {
-    if (hasLoadedTwoFactor) return; 
-    
     try {
       const response = await getTwoFactorStatus();
       if (response.status === 200) {
@@ -70,13 +78,15 @@ export const useSettings = () => {
       });
       setHasLoadedTwoFactor(true);
     }
-  }, [hasLoadedTwoFactor]);
+  }, []);
 
   useEffect(() => {
     if (user && !hasLoadedTwoFactor) {
       loadTwoFactorStatus();
     }
   }, [user, hasLoadedTwoFactor, loadTwoFactorStatus]);
+
+
 
   const handleProfileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -155,8 +165,6 @@ export const useSettings = () => {
   };
 
   const handleTwoFactorSuccess = async () => {
-    setHasLoadedTwoFactor(false);
-    
     try {
       const response = await getTwoFactorStatus();
       if (response.status === 200) {
@@ -178,7 +186,6 @@ export const useSettings = () => {
           emailEnabled,
           status,
         });
-        setHasLoadedTwoFactor(true);
       }
     } catch (error) {
       console.error("Failed to refresh 2FA status:", error);
@@ -186,7 +193,6 @@ export const useSettings = () => {
         ...prev,
         emailEnabled: twoFactorModal.mode === "enable",
       }));
-      setHasLoadedTwoFactor(true);
     }
   };
 
@@ -194,49 +200,88 @@ export const useSettings = () => {
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = 'image/*';
-    input.onchange = (e) => {
+    input.onchange = async (e) => {
       const file = (e.target as HTMLInputElement).files?.[0];
       if (file) {
         if (file.size > 5 * 1024 * 1024) {
-          alert('File size must be less than 5MB');
+          renderErrorToast('File size must be less than 5MB');
           return;
         }
         
         if (!file.type.startsWith('image/')) {
-          alert('Please select a valid image file');
+          renderErrorToast('Please select a valid image file');
           return;
         }
         
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const result = e.target?.result as string;
-          setProfileImage(result);
-        };
-        reader.readAsDataURL(file);
+        try {
+          setIsLoadingProfilePicture(true);
+          const response = await uploadProfilePicture(file);
+          
+          if (response.status === 200) {
+            renderSuccessToast(response.data.message || 'Profile picture uploaded successfully');
+            // Refresh the profile picture to get the new URL
+            await refreshProfilePicture();
+          } else {
+            renderErrorToast(response.data.message || 'Failed to upload profile picture');
+          }
+        } catch (error) {
+          const apiError = error as ApiError;
+          renderErrorToast(apiError.response?.data.message || 'Failed to upload profile picture');
+        } finally {
+          setIsLoadingProfilePicture(false);
+        }
       }
     };
     input.click();
   };
 
-  const handleImageDelete = () => {
-    setProfileImage(null);
-    console.log("Profile image deleted");
+  const handleImageDelete = async () => {
+    try {
+      setIsLoadingProfilePictureDelete(true);
+      await deleteProfilePicture();
+      renderSuccessToast("Profile picture deleted successfully");
+    } catch (error) {
+      const apiError = error as ApiError;
+      renderErrorToast(apiError.response?.data.message || "Failed to delete profile picture");
+    } finally {
+      setIsLoadingProfilePictureDelete(false);
+    }
   };
 
-  const handleSaveProfile = () => {
+  const handleSaveProfile = async () => {
     if (!user) {
-      alert("User not authenticated");
+      renderErrorToast("User not authenticated");
       return;
     }
-
-    const dataToSave = {
-      ...profileData,
-      profileImage: profileImage,
-      userId: user.sub,
-    };
-    
-    console.log("Save profile changes", dataToSave);
-    alert("Profile changes saved successfully!"); 
+    const emailChanged = profileData.email !== user.email;
+    if (emailChanged) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(profileData.email)) {
+        renderErrorToast("Please enter a valid email address");
+        return;
+      }
+            try {
+        setIsLoadingEmailChange(true);
+        const response = await changeEmailInitiate(profileData.email);
+        
+        if (response.status === 200) {
+          renderSuccessToast("Verification code sent to your new email address");
+          setEmailChangeModal({
+            isOpen: true,
+            newEmail: profileData.email,
+          });
+        } else {
+          renderErrorToast(response.data.message || "Failed to initiate email change");
+        }
+      } catch (error) {
+        const apiError = error as ApiError;
+        renderErrorToast(apiError.response?.data.message || "Failed to initiate email change");
+      } finally {
+        setIsLoadingEmailChange(false);
+      }
+    } else {
+      renderErrorToast("Current email is the same as the new email");
+    }
   };
 
   const handleUpdatePassword = async () => {
@@ -266,7 +311,6 @@ export const useSettings = () => {
       
       if (response.status === 200) {
         renderSuccessToast(response.data.message || "Password updated successfully!");
-        // Clear the form after successful update
         setPasswordData({
           currentPassword: "",
           newPassword: "",
@@ -283,17 +327,33 @@ export const useSettings = () => {
     }
   };
 
+  const handleEmailChangeModalClose = () => {
+    setEmailChangeModal({
+      isOpen: false,
+      newEmail: "",
+    });
+    setProfileData(prev => ({
+      ...prev,
+      email: user?.email || "",
+    }));
+  };
+
   return {
     user,
     activeSection,
     passwordTab,
     profileData,
-    profileImage,
+    profileImage: profilePictureUrl,
     passwordData,
     twoFactorSettings,
     twoFactorModal,
+    emailChangeModal,
     isLoadingTwoFactor,
     isLoadingPassword,
+    isLoadingEmailChange,
+    isLoadingProfilePicture,
+    isLoadingProfilePictureDelete,
+    hasProfileImage: Boolean(profilePictureUrl),
     setActiveSection,
     setPasswordTab,
     handleProfileInputChange,
@@ -305,5 +365,6 @@ export const useSettings = () => {
     handleUpdatePassword,
     handleTwoFactorModalClose,
     handleTwoFactorSuccess,
+    handleEmailChangeModalClose,
   };
 }; 

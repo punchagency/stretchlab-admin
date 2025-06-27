@@ -17,6 +17,7 @@ import { NavUser, SideMenuList, LogoutMenu } from "@/components/shared";
 import { useEffect } from "react";
 import { getUserCookie } from "@/utils";
 import { MainHeader } from "@/components/shared";
+import { ProfilePictureProvider } from "@/contexts/ProfilePictureContext";
 
 const SidebarLogo = () => {
   const { state } = useSidebar();
@@ -42,36 +43,38 @@ export const Home = () => {
   }, []);
   
   return (
-    <SidebarProvider>
-      <Sidebar className="p-2" collapsible="icon">
-        <SidebarHeader className="pt-5">
-          <SidebarLogo />
-        </SidebarHeader>
-        <SidebarSeparator />
-        <SidebarContent className="py-5">
-          <SidebarMenu className="flex flex-col">
-            {menuList.map((menu) => (
-              <SideMenuList
-                key={menu.title}
-                title={menu.title}
-                icon={menu.icon}
-                link={menu.link}
-              />
-            ))}
-            <LogoutMenu />
-          </SidebarMenu>
-        </SidebarContent>
-        {/* <SidebarFooter>
-          <NavUser />
-        </SidebarFooter> */}
-        <SidebarRail />
-      </Sidebar>
-      <div className="flex-1 bg-gray-50">
-        <MainHeader />
-        <div>
-          <Outlet />
+    <ProfilePictureProvider>
+      <SidebarProvider>
+        <Sidebar className="p-2" collapsible="icon">
+          <SidebarHeader className="pt-5">
+            <SidebarLogo />
+          </SidebarHeader>
+          <SidebarSeparator />
+          <SidebarContent className="py-5">
+            <SidebarMenu className="flex flex-col">
+              {menuList.map((menu) => (
+                <SideMenuList
+                  key={menu.title}
+                  title={menu.title}
+                  icon={menu.icon}
+                  link={menu.link}
+                />
+              ))}
+              <LogoutMenu />
+            </SidebarMenu>
+          </SidebarContent>
+          {/* <SidebarFooter>
+            <NavUser />
+          </SidebarFooter> */}
+          <SidebarRail />
+        </Sidebar>
+        <div className="flex-1 bg-gray-50">
+          <MainHeader />
+          <div>
+            <Outlet />
+          </div>
         </div>
-      </div>
-    </SidebarProvider>
+      </SidebarProvider>
+    </ProfilePictureProvider>
   );
 };

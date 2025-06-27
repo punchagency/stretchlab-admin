@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Input, Spinner } from "../shared";
+import { Button, Spinner, OTPInputComponent } from "../shared";
 import { verify2FALogin, resend2FAVerificationCode } from "@/service/auth";
 import type { ApiError } from "@/types";
 import { renderSuccessToast, renderErrorToast } from "../utils";
@@ -19,6 +19,13 @@ export const TwoFactorLoginForm: React.FC<TwoFactorLoginFormProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [isResending, setIsResending] = useState(false);
   const navigate = useNavigate();
+
+  const handleCodeChange = (value: string) => {
+    setCode(value);
+    if (error) {
+      setError("");
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,15 +61,7 @@ export const TwoFactorLoginForm: React.FC<TwoFactorLoginFormProps> = ({
     }
   };
 
-  const handleCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/\D/g, '');
-    if (value.length <= 6) {
-      setCode(value);
-      if (error) {
-        setError("");
-      }
-    }
-  };
+
 
   const handleResendCode = async () => {
     try {
@@ -74,6 +73,7 @@ export const TwoFactorLoginForm: React.FC<TwoFactorLoginFormProps> = ({
       if (response.status === 200) {
         renderSuccessToast(response.data.message || "New verification code sent to your email");
         setCode("");
+        setError("");
       } else {
         renderErrorToast(response.data.message || "Failed to resend verification code");
       }
@@ -108,16 +108,13 @@ export const TwoFactorLoginForm: React.FC<TwoFactorLoginFormProps> = ({
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-2">
-              <Input
-                label="Verification Code"
-                name="code"
-                type="text"
+            <div className="space-y-4">
+              <OTPInputComponent
                 value={code}
                 onChange={handleCodeChange}
-                placeholder="000000"
-                maxLength={6}
-                className="text-center text-2xl tracking-[0.5em] font-mono font-semibold py-4"
+                error={error}
+                label="Enter Code"
+                size="lg"
               />
 
               <div className="text-center pt-2">

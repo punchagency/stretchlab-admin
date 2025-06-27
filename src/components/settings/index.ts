@@ -1,3 +1,4 @@
 export { ProfileSection } from './ProfileSection';
 export { PasswordSection } from './PasswordSection';
-export { TwoFactorModal } from './TwoFactorModal'; 
+export { TwoFactorModal } from './TwoFactorModal';
+export { EmailChangeModal } from './EmailChangeModal'; 

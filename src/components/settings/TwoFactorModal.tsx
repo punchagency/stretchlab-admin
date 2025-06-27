@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Input, Spinner, Modal } from "@/components/shared";
+import { Button, Spinner, Modal, OTPInputComponent } from "@/components/shared";
 import { verifyTwoFactorSetup, verifyTwoFactorDisable, resendTwoFactorCode } from "@/service/settings";
 import type { ApiError } from "@/types";
 import { renderSuccessToast, renderErrorToast } from "@/components/utils";
@@ -88,10 +88,10 @@ export const TwoFactorModal = ({ isOpen, onClose, mode, onSuccess }: TwoFactorMo
   const modalContent = (
     <div className="p-6 text-center">
       <div className="mb-6">
-        <h2 className="text-2xl font-bold mb-2">
+        <h2 className="text-xl font-bold mb-2">
           {mode === "disable" ? "Disable" : "Verify"} Two-Factor Authentication
         </h2>
-        <p className="text-gray-500">
+        <p className="text-gray-500 text-sm">
           {mode === "disable" 
             ? "A 6-digit verification code has been sent to your email. Please enter it below to disable two-factor authentication."
             : mode === "resend"
@@ -103,21 +103,18 @@ export const TwoFactorModal = ({ isOpen, onClose, mode, onSuccess }: TwoFactorMo
 
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
-          <Input
-            label="Verification Code"
-            name="code"
-            type="text"
+          <OTPInputComponent
             value={code}
-            onChange={(e) => {
-              const value = e.target.value.replace(/\D/g, '').slice(0, 6);
+            onChange={(value) => {
               setCode(value);
               setError("");
             }}
-            placeholder="Enter 6-digit code"
-            className="text-center text-lg tracking-widest"
+            error={error}
+            label="Verification Code"
+            size="lg"
           />
           
-          <div className="mt-2 text-center">
+          <div className="mt-4 text-center">
             <button
               type="button"
               onClick={handleResendCode}
@@ -174,7 +171,7 @@ export const TwoFactorModal = ({ isOpen, onClose, mode, onSuccess }: TwoFactorMo
   );
 
   return (
-    <Modal show={isOpen} onClose={handleClose} size="md">
+    <Modal show={isOpen} onClose={handleClose} size="sm">
       {modalContent}
     </Modal>
   );
