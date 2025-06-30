@@ -19,7 +19,7 @@ export const RobotAutomation = () => {
     );
   }
   return (
-    <div>
+    <div className="px-7">
       {isFetching && !isPending && (
         <AnimatePresence>
           <motion.div

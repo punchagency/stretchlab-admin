@@ -255,7 +255,7 @@ export const NoteTakingAdmin = () => {
   };
 
   return (
-    <div>
+    <div className="px-7">
       <h3 className="md:text-2xl text-lg font-semibold mb-8 md:mb-16">
         Note Taking Admin Dashboard
       </h3>

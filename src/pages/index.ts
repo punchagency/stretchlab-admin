@@ -9,3 +9,4 @@ export * from "./ResetPassword";
 export * from "./RobotAutomation";
 export * from "./Settings";
 export * from "./Analytics";
+export * from "./TwoFactorLogin";

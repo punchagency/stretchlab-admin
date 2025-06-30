@@ -1,4 +1,5 @@
 export type SvgIconName =
+  | "menu"
   | "lock"
   | "mail"
   | "eye"
@@ -17,7 +18,11 @@ export type SvgIconName =
   | "search"
   | "filter"
   | "settings"
-  | "robot";
+  | "robot"
+  | "fax"
+  | "cancel"
+  | "logout"
+  | "edit";
 
 export type RobotHistoryType = {
   id: number;
