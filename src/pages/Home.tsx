@@ -3,7 +3,6 @@ import {
   SidebarHeader,
   SidebarSeparator,
   SidebarMenu,
-  SidebarFooter,
   useSidebar,
   SidebarRail,
 } from "@/components/ui/sidebar";
@@ -13,7 +12,7 @@ import logo from "@/assets/images/stretchlab.png";
 import logoIcon from "@/assets/images/stretchlab-favicon.png";
 import { Outlet, useNavigate } from "react-router";
 import { menuList } from "@/lib/contants";
-import { NavUser, SideMenuList, LogoutMenu } from "@/components/shared";
+import { SideMenuList, LogoutMenu } from "@/components/shared";
 import { useEffect } from "react";
 import { getUserCookie } from "@/utils";
 import { MainHeader } from "@/components/shared";

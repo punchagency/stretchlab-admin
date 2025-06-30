@@ -1,4 +1,4 @@
-import { Button, Input, SvgIcon, Spinner } from "@/components/shared";
+import { Button, Input, Spinner } from "@/components/shared";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useSettings } from "@/hooks/useSettings";
 import { EmailChangeModal } from "./EmailChangeModal";
