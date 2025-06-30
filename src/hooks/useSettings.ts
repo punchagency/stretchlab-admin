@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { getUserInfo } from "@/utils";
-import { getTwoFactorStatus, enableTwoFactor, disableTwoFactor, resendTwoFactorCode, changePassword, changeEmailInitiate, uploadProfilePicture } from "@/service/settings";
+import { getTwoFactorStatus, enableTwoFactor, disableTwoFactor, changePassword, changeEmailInitiate, uploadProfilePicture } from "@/service/settings";
 import { renderErrorToast, renderSuccessToast } from "@/components/utils";
 import type { ApiError } from "@/types";
 import type { ProfileFormData, PasswordFormData, TwoFactorSettings, TwoFactorModalState } from "@/types/settings";
@@ -125,27 +125,14 @@ export const useSettings = () => {
             renderErrorToast(response.data.message || "Failed to initiate 2FA disable");
           }
         } else {
-          if (currentStatus === "pending") {
-            const response = await resendTwoFactorCode();
-            if (response.status === 200) {
-              setTwoFactorModal({
-                isOpen: true,
-                mode: "resend",
-              });
-              renderSuccessToast("New verification code sent successfully");
-            } else {
-              renderErrorToast(response.data.message || "Failed to resend verification code");
-            }
+          const response = await enableTwoFactor();
+          if (response.status === 200) {
+            setTwoFactorModal({
+              isOpen: true,
+              mode: "enable",
+            });
           } else {
-            const response = await enableTwoFactor();
-            if (response.status === 200) {
-              setTwoFactorModal({
-                isOpen: true,
-                mode: "enable",
-              });
-            } else {
-              renderErrorToast(response.data.message || "Failed to initiate 2FA enable");
-            }
+            renderErrorToast(response.data.message || "Failed to initiate 2FA enable");
           }
         }
       } catch (error) {
