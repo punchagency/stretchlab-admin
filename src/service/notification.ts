@@ -59,7 +59,7 @@ export const useUpdateNotification = () => {
         if (!old) return old;
         
         return {
-          ...old,
+          ...old, 
           notifications: old.notifications.map(notification => 
             notification.id === variables.notification_id
               ? { ...notification, is_read: variables.is_read }
