@@ -206,7 +206,6 @@ export const useSettings = () => {
           
           if (response.status === 200) {
             renderSuccessToast(response.data.message || 'Profile picture uploaded successfully');
-            // Refresh the profile picture to get the new URL
             await refreshProfilePicture();
           } else {
             renderErrorToast(response.data.message || 'Failed to upload profile picture');

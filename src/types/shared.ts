@@ -22,7 +22,8 @@ export type SvgIconName =
   | "fax"
   | "cancel"
   | "logout"
-  | "edit";
+  | "edit"
+  | "bell";
 
 export type RobotHistoryType = {
   id: number;

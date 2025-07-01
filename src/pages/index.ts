@@ -10,3 +10,4 @@ export * from "./RobotAutomation";
 export * from "./Settings";
 export * from "./Analytics";
 export * from "./TwoFactorLogin";
+export * from "./Notification";

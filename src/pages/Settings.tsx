@@ -1,12 +1,10 @@
-import { Bell, Lock, User } from "lucide-react";
+import { Lock, User } from "lucide-react";
 import { useSettings } from "@/hooks/useSettings";
 import { ProfileSection, PasswordSection } from "@/components/settings";
 
-// Settings navigation items
 const SETTINGS_NAV_ITEMS = [
   { id: "profile", label: "Profile", icon: User },
-  { id: "password", label: "Password & Security", icon: Lock },
-  { id: "notification", label: "Notification", icon: Bell },
+  { id: "password", label: "Password & Security", icon: Lock }
 ] as const;
 
 export const Settings = () => {
@@ -26,12 +24,6 @@ export const Settings = () => {
         return <ProfileSection settingsData={settingsData} />;
       case "password":
         return <PasswordSection settingsData={settingsData} />;
-      case "notification":
-        return (
-          <div className="text-center py-12">
-            <p className="text-gray-500">Notification section coming soon...</p>
-          </div>
-        );
       default:
         return <ProfileSection settingsData={settingsData} />;
     }
