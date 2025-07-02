@@ -11,3 +11,4 @@ export * from "./Settings";
 export * from "./Analytics";
 export * from "./TwoFactorLogin";
 export * from "./Notification";
+export * from "./Billing";

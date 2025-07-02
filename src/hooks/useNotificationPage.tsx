@@ -22,7 +22,24 @@ export const useNotificationPage = () => {
 
   const updateNotificationMutation = useUpdateNotification();
 
-  const notifications = notificationsResponse?.notifications?.map(transformNotification) || [];
+  const originalNotifications = notificationsResponse?.notifications || [];
+  const transformedNotifications = originalNotifications.map(transformNotification);
+  
+  // Sort notifications: unread first, then by creation date (newest first)
+  const notifications = [...transformedNotifications].sort((a, b) => {
+    if (a.isRead !== b.isRead) {
+      return a.isRead ? 1 : -1; 
+    }
+    const aOriginal = originalNotifications.find(orig => orig.id === a.id);
+    const bOriginal = originalNotifications.find(orig => orig.id === b.id);
+    if (aOriginal && bOriginal) {
+      const aDate = new Date(aOriginal.created_at).getTime();
+      const bDate = new Date(bOriginal.created_at).getTime();
+      return bDate - aDate;
+    }
+    return 0;
+  });
+  
   const unreadCount = notifications.filter((n: Notification) => !n.isRead).length;
 
   const handleMarkAsRead = (id: number) => {
@@ -37,10 +54,15 @@ export const useNotificationPage = () => {
       case "booking":
         navigate("/robot-automation");
         break;
+      case "robot automation":
+        navigate("/robot-automation");
+        break;
       case "note taking":
         navigate("/note-taking-app");
         break;
       case "payment":
+        break;
+      case "others":
         break;
       default:
         break;
@@ -126,7 +148,7 @@ export const useNotificationPage = () => {
             label: "Navigate To Page",
             icon: "angle-left",
             onClick: () => handleGoToPage(notification.type),
-            show: notification.type !== "payment",
+            show: notification.type !== "payment" && notification.type !== "others",
           },
         ];
 

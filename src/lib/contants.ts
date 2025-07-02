@@ -29,4 +29,9 @@ export const menuList = [
     icon: "bell",
     link: "/notification",
   },
+  {
+    title: "Billing",
+    icon: "billing",
+    link: "/billing",
+  },
 ];

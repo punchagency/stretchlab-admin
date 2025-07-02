@@ -16,6 +16,7 @@ import {
   Analytics,
   TwoFactorLogin,
   Notification,
+  Billing
 } from "./pages";
 import { Toaster } from "./components/ui/sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -46,6 +47,10 @@ const router = createBrowserRouter([
       {
         path: "notification",
         element: <Notification />,
+      },
+      {
+        path: "billing",
+        element: <Billing />,
       },
       {
         path: "settings",
