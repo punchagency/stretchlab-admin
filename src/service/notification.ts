@@ -27,6 +27,15 @@ export interface UpdateNotificationResponse {
   status: string;
 }
 
+export interface DeleteNotificationRequest {
+  notification_id: number;
+}
+
+export interface DeleteNotificationResponse {
+  message: string;
+  status: string;
+}
+
 export const getNotifications = async (): Promise<NotificationsApiResponse> => {
   const response = await api.get<[NotificationsApiResponse, number]>('/notification');
   return response.data[0];
@@ -37,11 +46,16 @@ export const updateNotification = async (data: UpdateNotificationRequest): Promi
   return response.data[0];
 };
 
+export const deleteNotification = async (data: DeleteNotificationRequest): Promise<DeleteNotificationResponse> => {
+  const response = await api.delete<[DeleteNotificationResponse, number]>(`/notification/delete/${data.notification_id}`);
+  return response.data[0];
+};
+
 export const useNotifications = () => {
   return useQuery({
     queryKey: ["notifications"],
     queryFn: getNotifications,
-    refetchInterval: 10000,
+    refetchInterval: 3000,
     refetchIntervalInBackground: true,
     staleTime: 0,
   });
@@ -73,11 +87,44 @@ export const useUpdateNotification = () => {
       renderSuccessToast("Notification updated successfully");
       queryClient.invalidateQueries({ queryKey: ["notifications"] });
     },
-    onError: (error: any, variables, context) => {
+    onError: (error: any, _, context) => {
       if (context?.previousNotifications) {
         queryClient.setQueryData(["notifications"], context.previousNotifications);
       }
       renderErrorToast(error?.response?.data?.message || "Failed to update notification");
+    },
+  });
+};
+
+export const useDeleteNotification = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: deleteNotification,
+    onMutate: async (variables: DeleteNotificationRequest) => {
+      await queryClient.cancelQueries({ queryKey: ["notifications"] });
+      const previousNotifications = queryClient.getQueryData(["notifications"]);
+      queryClient.setQueryData(["notifications"], (old: NotificationsApiResponse | undefined) => {
+        if (!old) return old;
+        
+        return {
+          ...old, 
+          notifications: old.notifications.filter(notification => 
+            notification.id !== variables.notification_id
+          )
+        };
+      });
+      return { previousNotifications };
+    },
+    onSuccess: () => {
+      renderSuccessToast("Notification deleted successfully");
+      queryClient.invalidateQueries({ queryKey: ["notifications"] });
+    },
+    onError: (error: any, _, context) => {
+      if (context?.previousNotifications) {
+        queryClient.setQueryData(["notifications"], context.previousNotifications);
+      }
+      renderErrorToast(error?.response?.data?.message || "Failed to delete notification");
     },
   });
 }; 

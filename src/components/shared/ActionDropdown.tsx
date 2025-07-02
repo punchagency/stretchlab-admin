@@ -8,6 +8,7 @@ export interface ActionItem {
   onClick: () => void;
   disabled?: boolean;
   show?: boolean;
+  destructive?: boolean;
 }
 
 interface ActionDropdownProps {
@@ -148,14 +149,18 @@ export const ActionDropdown = ({
               key={index}
               onClick={(e) => handleActionClick(e, item.onClick)}
               disabled={item.disabled}
-              className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 disabled:opacity-50 transition-colors"
+              className={`flex items-center gap-2 w-full px-4 py-2 text-sm hover:bg-gray-50 disabled:opacity-50 transition-colors ${
+                item.destructive 
+                  ? "text-red-600 hover:bg-red-50" 
+                  : "text-gray-700"
+              }`}
             >
               {item.icon && (
                 <SvgIcon 
                   name={item.icon} 
                   width={16} 
                   height={16} 
-                  fill="#667185" 
+                  fill={item.destructive ? "#dc2626" : "#667185"}
                   className={item.icon === "angle-left" ? "rotate-180" : undefined}
                 />
               )}

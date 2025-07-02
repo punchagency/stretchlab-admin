@@ -8,7 +8,7 @@ import {
   DropdownMenuLabel
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { useNotifications, useUpdateNotification } from "@/service/notification";
+import { useNotifications, useUpdateNotification, useDeleteNotification } from "@/service/notification";
 import { transformNotification, getTypeDisplayName, getBadgeStyles } from "@/utils/notification";
 import { useNavigate } from "react-router";
 
@@ -20,15 +20,13 @@ export const NotificationDropdown = ({ children }: NotificationDropdownProps) =>
   const navigate = useNavigate();
   const { data: notificationsResponse } = useNotifications();
   const updateNotificationMutation = useUpdateNotification();
+  const deleteNotificationMutation = useDeleteNotification();
   
   const notifications = notificationsResponse?.notifications?.map(transformNotification) || [];
   const originalNotifications = notificationsResponse?.notifications || [];
   
- 
-  const sortedNotifications = [...notifications].sort((a, b) => {
-    if (a.isRead !== b.isRead) {
-      return a.isRead ? 1 : -1; 
-    }
+  const unreadNotifications = notifications.filter(notification => !notification.isRead);
+  const sortedUnreadNotifications = [...unreadNotifications].sort((a, b) => {
     const aOriginal = originalNotifications.find(orig => orig.id === a.id);
     const bOriginal = originalNotifications.find(orig => orig.id === b.id);
     if (aOriginal && bOriginal) {
@@ -43,6 +41,12 @@ export const NotificationDropdown = ({ children }: NotificationDropdownProps) =>
     updateNotificationMutation.mutate({
       notification_id: id,
       is_read: true,
+    });
+  };
+
+  const handleDelete = (id: number) => {
+    deleteNotificationMutation.mutate({
+      notification_id: id,
     });
   };
   
@@ -76,13 +80,13 @@ export const NotificationDropdown = ({ children }: NotificationDropdownProps) =>
         <DropdownMenuSeparator />
         
         <div className="max-h-70 overflow-y-auto pb-2">
-          {notifications.length === 0 ? (
+          {unreadNotifications.length === 0 ? (
             <div className="p-4 text-center text-gray-500">
-              No notifications
+              No unread notifications
             </div>
           ) : (
             <>
-              {sortedNotifications.slice(0, 5).map((notification) => {
+              {sortedUnreadNotifications.slice(0, 5).map((notification) => {
               const originalNotification = originalNotifications.find(orig => orig.id === notification.id);
               return (
                 <div key={notification.id} className="p-3 hover:bg-gray-50 rounded-lg">
@@ -119,7 +123,11 @@ export const NotificationDropdown = ({ children }: NotificationDropdownProps) =>
                             Mark as Read
                           </DropdownMenuItem>
                         )}
-                        <DropdownMenuItem className="text-red-600">
+                        <DropdownMenuItem 
+                          onClick={() => handleDelete(notification.id)}
+                          disabled={deleteNotificationMutation.isPending}
+                          className="text-red-600"
+                        >
                           <Trash2 className="h-4 w-4 mr-2" />
                           Delete
                         </DropdownMenuItem>

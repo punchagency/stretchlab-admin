@@ -107,10 +107,6 @@ export const useSettings = () => {
   const handleTwoFactorToggle = async (field: keyof TwoFactorSettings) => {
     if (field === "emailEnabled") {
       const currentlyEnabled = twoFactorSettings.emailEnabled;
-      const currentStatus = twoFactorSettings.status;
-      console.log("currentlyEnabled", currentlyEnabled);
-      console.log("currentStatus", currentStatus);
-      
       try {
         setIsLoadingTwoFactor(true);
         

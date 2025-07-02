@@ -2,7 +2,7 @@ import { useNavigate } from "react-router";
 import { type ColumnDef } from "@tanstack/react-table";
 import { ActionDropdown, type ActionItem } from "@/components/shared";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
-import { useNotifications, useUpdateNotification } from "@/service/notification";
+import { useNotifications, useUpdateNotification, useDeleteNotification } from "@/service/notification";
 import { 
   transformNotification, 
   getBadgeStyles, 
@@ -21,6 +21,7 @@ export const useNotificationPage = () => {
   } = useNotifications();
 
   const updateNotificationMutation = useUpdateNotification();
+  const deleteNotificationMutation = useDeleteNotification();
 
   const originalNotifications = notificationsResponse?.notifications || [];
   const transformedNotifications = originalNotifications.map(transformNotification);
@@ -46,6 +47,12 @@ export const useNotificationPage = () => {
     updateNotificationMutation.mutate({
       notification_id: id,
       is_read: true,
+    });
+  };
+
+  const handleDelete = (id: number) => {
+    deleteNotificationMutation.mutate({
+      notification_id: id,
     });
   };
 
@@ -150,6 +157,14 @@ export const useNotificationPage = () => {
             onClick: () => handleGoToPage(notification.type),
             show: notification.type !== "payment" && notification.type !== "others",
           },
+          {
+            label: deleteNotificationMutation.isPending ? "Deleting..." : "Delete",
+            icon: "trash",
+            onClick: () => handleDelete(notification.id),
+            disabled: deleteNotificationMutation.isPending,
+            destructive: true,
+            show: true,
+          },
         ];
 
         return (
@@ -172,5 +187,6 @@ export const useNotificationPage = () => {
     error,
     refetch,
     updateNotificationMutation,
+    deleteNotificationMutation,
   };
 }; 
