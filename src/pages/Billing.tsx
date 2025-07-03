@@ -1,7 +1,7 @@
 import { ContainLoader } from "@/components/shared";
 import { ErrorHandle } from "@/components/app";
 import { useBilling } from "@/hooks/useBilling";
-import { BillingEmptyState, InvoiceHistory, MonthlyCharges } from "@/components/billing";
+import { BillingEmptyState, InvoiceHistory, MonthlyCharges, InvoiceHistoryTable } from "@/components/billing";
 
 export const Billing = () => {
   const {
@@ -46,24 +46,29 @@ export const Billing = () => {
         {!hasSubscriptionData ? (
           <BillingEmptyState />
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <InvoiceHistory
-              flexologistQuantity={flexologistQuantity}
-              flexologistPrice={flexologistPrice}
-              rpaPrice={rpaPrice}
-              noteTakingBillingDate={noteTakingBillingDate}
-              rpaBillingDate={rpaBillingDate}
-            />
+          <div className="space-y-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <InvoiceHistory
+                flexologistQuantity={flexologistQuantity}
+                flexologistPrice={flexologistPrice}
+                rpaPrice={rpaPrice}
+                noteTakingBillingDate={noteTakingBillingDate}
+                rpaBillingDate={rpaBillingDate}
+              />
+              
+              <MonthlyCharges
+                flexologistQuantity={flexologistQuantity}
+                flexologistPrice={flexologistPrice}
+                flexologistTotal={flexologistTotal}
+                rpaQuantity={rpaQuantity}
+                rpaPrice={rpaPrice}
+                rpaTotal={rpaTotal}
+                totalBilled={totalBilled}
+              />
+            </div>
             
-            <MonthlyCharges
-              flexologistQuantity={flexologistQuantity}
-              flexologistPrice={flexologistPrice}
-              flexologistTotal={flexologistTotal}
-              rpaQuantity={rpaQuantity}
-              rpaPrice={rpaPrice}
-              rpaTotal={rpaTotal}
-              totalBilled={totalBilled}
-            />
+            {/* Invoice History Table */}
+            <InvoiceHistoryTable />
           </div>
         )}
       </div>
