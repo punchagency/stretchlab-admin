@@ -22,7 +22,10 @@ export type SvgIconName =
   | "fax"
   | "cancel"
   | "logout"
-  | "edit";
+  | "edit"
+  | "bell"
+  | "billing"
+  | "trash";
 
 export type RobotHistoryType = {
   id: number;

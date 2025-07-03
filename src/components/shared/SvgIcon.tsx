@@ -432,7 +432,7 @@ export const SvgIcon = ({
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
         >
-          <g clip-path="url(#clip0_9256_6694)">
+          <g clipPath="url(#clip0_9256_6694)">
             <path d="M1.75859 3.22129H25.7586C26.4186 3.22129 26.9586 2.68129 26.9586 2.02129C26.9586 1.36129 26.4186 0.821289 25.7586 0.821289H1.75859C1.09859 0.821289 0.558594 1.36129 0.558594 2.02129C0.558594 2.68129 1.09859 3.22129 1.75859 3.22129Z" fill={fill} />
             <path d="M13.7586 20.8213H1.75859C1.09859 20.8213 0.558594 21.3613 0.558594 22.0213C0.558594 22.6813 1.09859 23.2213 1.75859 23.2213H13.7586C14.4186 23.2213 14.9586 22.6813 14.9586 22.0213C14.9586 21.3613 14.4186 20.8213 13.7586 20.8213Z" fill={fill} />
             <path d="M25.7586 10.8213H1.75859C1.09859 10.8213 0.558594 11.3613 0.558594 12.0213C0.558594 12.6813 1.09859 13.2213 1.75859 13.2213H25.7586C26.4186 13.2213 26.9586 12.6813 26.9586 12.0213C26.9586 11.3613 26.4186 10.8213 25.7586 10.8213Z" fill={fill} />
@@ -476,7 +476,7 @@ export const SvgIcon = ({
           xmlns="http://www.w3.org/2000/svg"
           className={className}
         >
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M10 1.77961C10 1.22736 9.55229 0.779663 9 0.779663C8.44771 0.779663 8 1.22736 8 1.77961V2.83449C3.50005 3.33191 0 7.1468 0 11.7791C0 16.7494 4.02944 20.7787 9 20.7787C13.9706 20.7787 18 16.7494 18 11.7791C18 7.1468 14.5 3.33191 10 2.83449V1.77961ZM8 4.85035V9.77923C8 10.3315 8.44771 10.7792 9 10.7792C9.55229 10.7792 10 10.3315 10 9.77923V4.85035C13.3923 5.33556 16 8.25283 16 11.7791C16 15.6449 12.866 18.7788 9 18.7788C5.13401 18.7788 2 15.6449 2 11.7791C2 8.25283 4.60771 5.33556 8 4.85035Z" fill={fill}/>
+          <path fillRule="evenodd" clipRule="evenodd" d="M10 1.77961C10 1.22736 9.55229 0.779663 9 0.779663C8.44771 0.779663 8 1.22736 8 1.77961V2.83449C3.50005 3.33191 0 7.1468 0 11.7791C0 16.7494 4.02944 20.7787 9 20.7787C13.9706 20.7787 18 16.7494 18 11.7791C18 7.1468 14.5 3.33191 10 2.83449V1.77961ZM8 4.85035V9.77923C8 10.3315 8.44771 10.7792 9 10.7792C9.55229 10.7792 10 10.3315 10 9.77923V4.85035C13.3923 5.33556 16 8.25283 16 11.7791C16 15.6449 12.866 18.7788 9 18.7788C5.13401 18.7788 2 15.6449 2 11.7791C2 8.25283 4.60771 5.33556 8 4.85035Z" fill={fill}/>
 
         </svg>
       );
@@ -492,6 +492,119 @@ export const SvgIcon = ({
         >
           <path
             d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13M18.5 2.5C18.8978 2.1022 19.4289 1.87868 20 1.87868C20.5711 1.87868 21.1022 2.1022 21.5 2.5C21.8978 2.8978 22.1213 3.42893 22.1213 4C22.1213 4.57107 21.8978 5.1022 21.5 5.5L12 15L8 16L9 12L18.5 2.5Z"
+            stroke={fill}
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      );
+    case "bell":
+      return (
+        <svg
+          width={width}
+          height={height}
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className={className}
+        >
+          <path
+            d="M18 8C18 6.4087 17.3679 4.88258 16.2426 3.75736C15.1174 2.63214 13.5913 2 12 2C10.4087 2 8.88258 2.63214 7.75736 3.75736C6.63214 4.88258 6 6.4087 6 8C6 15 3 17 3 17H21C21 17 18 15 18 8Z"
+            stroke={fill}
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M13.73 21C13.5542 21.3031 13.3019 21.5547 12.9982 21.7295C12.6946 21.9044 12.3504 21.9965 12 21.9965C11.6496 21.9965 11.3054 21.9044 11.0018 21.7295C10.6982 21.5547 10.4458 21.3031 10.27 21"
+            stroke={fill}
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      );
+    case "billing":
+      return (
+        <svg
+          width={width}
+          height={height}
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className={className}
+        >
+          <path
+            d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z"
+            stroke={fill}
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M14 2V8H20"
+            stroke={fill}
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M16 13H8"
+            stroke={fill}
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M16 17H8"
+            stroke={fill}
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M10 9H9H8"
+            stroke={fill}
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      );
+    case "trash":
+      return (
+        <svg
+          width={width}
+          height={height}
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className={className}
+        >
+          <path
+            d="M3 6H5H21"
+            stroke={fill}
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M8 6V4C8 3.46957 8.21071 2.96086 8.58579 2.58579C8.96086 2.21071 9.46957 2 10 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.96086 16 3.46957 16 4V6M19 6V20C19 20.5304 18.7893 21.0391 18.4142 21.4142C18.0391 21.7893 17.5304 22 17 22H7C6.46957 22 5.96086 21.7893 5.58579 21.4142C5.21071 21.0391 5 20.5304 5 20V6H19Z"
+            stroke={fill}
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M10 11V17"
+            stroke={fill}
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M14 11V17"
             stroke={fill}
             strokeWidth="2"
             strokeLinecap="round"
