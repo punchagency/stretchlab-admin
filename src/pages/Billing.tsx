@@ -60,6 +60,7 @@ export const Billing = () => {
                 flexologistStatus={flexologistStatus}
                 rpaStatus={rpaStatus}
                 rpaQuantity={rpaQuantity}
+                onRefresh={refetch}
               />
 
               <MonthlyCharges

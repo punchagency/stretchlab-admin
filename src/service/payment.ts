@@ -13,3 +13,10 @@ export const createPaymentMethod = async (payment_id: string) => {
   });
   return response;
 };
+
+export const cancelSubscription = async (type: "note_taking" | "robot_process_automation") => {
+  const response = await api.post("/admin/payment/cancel-subscription", {
+    type,
+  });
+  return response;
+};
