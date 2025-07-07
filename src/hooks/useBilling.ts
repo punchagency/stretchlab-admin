@@ -19,6 +19,8 @@ export interface ProcessedBillingData {
   noteTakingBillingDate: string | null;
   rpaBillingDate: string | null;
   hasSubscriptionData: boolean;
+  flexologistStatus: string | undefined;
+  rpaStatus: string | undefined;
 }
 
 export const useBilling = () => {
@@ -46,7 +48,10 @@ export const useBilling = () => {
     const rpaBillingDate = rpaData?.end_date ? formatBillingDate(rpaData.end_date) : null;
 
     const hasSubscriptionData = hasValidSubscription(subscriptions, noteTakingData, rpaData);
-
+    
+    const flexologistStatus = noteTakingData?.status;
+    const rpaStatus = rpaData?.status;
+    
     return {
       flexologistQuantity,
       flexologistPrice,
@@ -58,6 +63,8 @@ export const useBilling = () => {
       noteTakingBillingDate,
       rpaBillingDate,
       hasSubscriptionData,
+      flexologistStatus,
+      rpaStatus,
     };
   })();
 

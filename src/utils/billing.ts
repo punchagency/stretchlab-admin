@@ -1,7 +1,6 @@
 import type { SubscriptionDetails } from "@/service/billing";
 
-// Constants
-export const STRIPE_PRICE_DIVISOR = 10; // Stripe stores prices in cents
+export const STRIPE_PRICE_DIVISOR = 100;
 
 export const DEFAULT_BILLING_DATA = {
   flexologistQuantity: 0,
@@ -12,8 +11,10 @@ export const DEFAULT_BILLING_DATA = {
   rpaTotal: 0,
   totalBilled: 0,
   noteTakingBillingDate: null,
-  rpaBillingDate: null,
+  rpaBillingDate: null, 
   hasSubscriptionData: false,
+  flexologistStatus: undefined,
+  rpaStatus: undefined,
 } as const;
 
 // Utility functions

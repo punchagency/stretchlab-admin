@@ -40,6 +40,9 @@ interface DataTableProps<TData extends { id: number | string }, TValue> {
   note?: boolean;
   emptyText?: string;
   handleClick?: (id: number) => void;
+  className?: string;
+  tableContainerClassName?: string;
+  tableClassName?: string;
 }
 
 export function DataTable<TData extends { id: number | string }, TValue>({
@@ -49,6 +52,9 @@ export function DataTable<TData extends { id: number | string }, TValue>({
   handleClick,
   note = false,
   emptyText = "No data found",
+  className,
+  tableContainerClassName,
+  tableClassName,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -71,7 +77,7 @@ export function DataTable<TData extends { id: number | string }, TValue>({
   });
 
   return (
-    <div>
+    <div className={`w-full max-w-full overflow-hidden px-2 sm:px-0 ${className || ""}`}>
       {note && (
         <div className="flex flex-col-reverse md:flex-row item-start xl:items-center gap-4 justify-start xl:justify-end py-4">
           <Input
@@ -170,9 +176,9 @@ export function DataTable<TData extends { id: number | string }, TValue>({
         </div>
       )}
       <div
-        className={`rounded-md border w-[87vw] mx-auto md:w-full overflow-x-auto`}
+        className={`rounded-md border w-[85vw] mx-auto md:w-full overflow-x-auto ${tableContainerClassName || ""}`}
       >
-        <Table>
+        <Table className={tableClassName}>
           <TableHeader className="bg-primary-light">
             {table.getHeaderGroups().map((headerGroup, index) => (
               <TableRow key={index}>

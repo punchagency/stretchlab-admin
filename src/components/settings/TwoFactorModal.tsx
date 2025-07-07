@@ -3,6 +3,7 @@ import { Button, Spinner, Modal, OTPInputComponent } from "@/components/shared";
 import { verifyTwoFactorSetup, verifyTwoFactorDisable, resendTwoFactorCode } from "@/service/settings";
 import type { ApiError } from "@/types";
 import { renderSuccessToast, renderErrorToast } from "@/components/utils";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface TwoFactorModalProps {
   isOpen: boolean;
@@ -16,7 +17,7 @@ export const TwoFactorModal = ({ isOpen, onClose, mode, onSuccess }: TwoFactorMo
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isResending, setIsResending] = useState(false);
-
+  const isMobile = useIsMobile();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!code) {
@@ -71,7 +72,7 @@ export const TwoFactorModal = ({ isOpen, onClose, mode, onSuccess }: TwoFactorMo
       
       if (response.status === 200) {
         renderSuccessToast("New verification code sent successfully");
-        setCode(""); // Clear the current code
+        setCode(""); 
       } else {
         renderErrorToast(response.data.message || "Failed to resend verification code");
       }
@@ -86,7 +87,7 @@ export const TwoFactorModal = ({ isOpen, onClose, mode, onSuccess }: TwoFactorMo
   };
 
   const modalContent = (
-    <div className="p-6 text-center">
+    <div className="p-0 sm:p-5 text-center">
       <div className="mb-6">
         <h2 className="text-xl font-bold mb-2">
           {mode === "disable" ? "Disable" : "Verify"} Two-Factor Authentication
@@ -111,7 +112,7 @@ export const TwoFactorModal = ({ isOpen, onClose, mode, onSuccess }: TwoFactorMo
             }}
             error={error}
             label="Verification Code"
-            size="lg"
+            size={isMobile ? "md" : "lg"}
           />
           
           <div className="mt-4 text-center">
