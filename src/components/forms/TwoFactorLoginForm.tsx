@@ -6,6 +6,7 @@ import { renderSuccessToast, renderErrorToast } from "../utils";
 import { useNavigate } from "react-router";
 import { setUserCookie } from "@/utils";
 import logo from "@/assets/images/stretchlab.png";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface TwoFactorLoginFormProps {
   userEmail: string;
@@ -19,7 +20,7 @@ export const TwoFactorLoginForm: React.FC<TwoFactorLoginFormProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [isResending, setIsResending] = useState(false);
   const navigate = useNavigate();
-
+  const isMobile = useIsMobile();
   const handleCodeChange = (value: string) => {
     setCode(value);
     if (error) {
@@ -89,17 +90,17 @@ export const TwoFactorLoginForm: React.FC<TwoFactorLoginFormProps> = ({
 
   return (
     <div className="flex flex-col justify-center min-h-screen bg-gradient-to-br from-primary-secondary/20 to-primary-tertiary/30">
-      <div className="flex flex-col items-center justify-center px-4 py-8">
+      <div className="flex flex-col items-center justify-center px-2 sm:px-4 py-8">
         <div className="mb-8">
           <img src={logo} alt="StretchLab" className="w-40 h-auto mx-auto" />
         </div>
 
         <div className="bg-white shadow-2xl rounded-2xl p-8 w-full max-w-md border border-gray-100">
           <div className="text-center mb-8">
-            <h1 className="text-2xl font-bold text-dark-1 mb-3">
+            <h1 className="text-xl sm:text-2xl font-bold text-dark-1 mb-3">
               Two-Factor Authentication
             </h1>
-            <p className="text-grey-5 leading-3 text-base">
+            <p className="text-grey-5 leading-3 sm:leading-4 text-sm sm:text-base">
               We've sent a 6-digit verification code to
             </p>
             <p className="text-primary-base font-semibold text-base mt-1">
@@ -114,7 +115,7 @@ export const TwoFactorLoginForm: React.FC<TwoFactorLoginFormProps> = ({
                 onChange={handleCodeChange}
                 error={error}
                 label="Enter Code"
-                size="lg"
+                size={isMobile ? "md" : "lg"}
               />
 
               <div className="text-center pt-2">
@@ -169,7 +170,7 @@ export const TwoFactorLoginForm: React.FC<TwoFactorLoginFormProps> = ({
         </div>
 
         <div className="mt-6 text-center max-w-md">
-          <p className="text-xs text-grey-4 leading-relaxed">
+          <p className="text-xs text-grey-4 leading-relaxed px-1 sm:px-0">
             This extra step helps keep your account secure. Never share your verification code with anyone.
           </p>
         </div>

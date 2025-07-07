@@ -26,46 +26,34 @@ export const ProfileSection = ({ settingsData }: ProfileSectionProps) => {
 
   return (
     <div className="space-y-6">
-      <div className="border-b border-border pb-4 px-6">
+      <div className="border-b border-border pb-3 sm:pb-4 px-2 sm:px-6">
         <h2 className="text-base text-gray-900 mb-1 font-semibold">
           Change Profile Information
         </h2>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-xs sm:text-sm text-muted-foreground">
           You can invite multiple team members at a time.
         </p>
       </div>
 
-      <div className="space-y-4 px-6">
-        <div className="flex flex-col items-start space-y-3">
+      <div className="space-y-3 sm:space-y-4 px-2 sm:px-6">
+        <div className="flex flex-col items-center sm:items-start space-y-2 sm:space-y-3">
           <span className="text-sm text-muted-foreground">Profile picture</span>
 
-          <div className=" space-y-4 flex-col flex items-start">
+          <div className="space-y-3 sm:space-y-4 flex-col flex items-center sm:items-start w-full">
             <div className="relative group">
-              <Avatar className="w-30 h-30">
+              <Avatar className="w-20 h-20 md:w-24 md:h-24 lg:w-30 lg:h-30">
                 <AvatarImage src={profileImage || undefined} alt="Profile" />
-                <AvatarFallback className="text-2xl font-semibold capitalize">
+                <AvatarFallback className="text-lg sm:text-xl md:text-2xl font-semibold capitalize">
                   {user?.username?.charAt(0) || "U"}
                 </AvatarFallback>
-                {/* <div 
-                  className="absolute inset-0 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
-                  style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)' }}
-                  onClick={handleImageUpload}
-                >
-                  <SvgIcon
-                    name="edit"
-                    width={20}
-                    height={20}
-                    fill="white"
-                  />
-                </div> */}
               </Avatar>
             </div>
 
-            <div className="flex space-x-3">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
               <Button
                 onClick={handleImageUpload}
                 disabled={isLoadingProfilePicture}
-                className="py-2 px-4 text-sm border border-primary-base text-primary-base bg-white hover:bg-primary-base hover:text-white transition-colors rounded-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                className="py-2 px-4 text-sm border border-primary-base text-primary-base bg-white hover:bg-primary-base hover:text-white transition-colors rounded-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 {isLoadingProfilePicture ? (
                   <>
@@ -79,13 +67,13 @@ export const ProfileSection = ({ settingsData }: ProfileSectionProps) => {
               <Button
                 onClick={handleImageDelete}
                 disabled={isLoadingProfilePictureDelete || !hasProfileImage}
-                className="py-2 px-4 text-sm border border-red-500 text-red-500 bg-white hover:bg-red-500 hover:text-white transition-colors rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+                className="py-2 px-4 text-sm border border-red-500 text-red-500 bg-white hover:bg-red-500 hover:text-white transition-colors rounded-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 {isLoadingProfilePictureDelete ? (
-                  <div className="flex items-center gap-2">
+                  <>
                     <Spinner className="border-red-500 w-4 h-4" />
                     <span>Deleting...</span>
-                  </div>
+                  </>
                 ) : (
                   "Delete picture"
                 )}
@@ -95,7 +83,7 @@ export const ProfileSection = ({ settingsData }: ProfileSectionProps) => {
         </div>
       </div>
 
-      <div className="space-y-4 px-6">
+      <div className="space-y-4 px-2 sm:px-6">
         <div className="space-y-1">
           <Input
             label="Username"
@@ -104,7 +92,7 @@ export const ProfileSection = ({ settingsData }: ProfileSectionProps) => {
             placeholder="Enter your username"
             value={profileData.username}
             onChange={handleProfileInputChange}
-            className="py-3 rounded-md bg-gray-50"
+            className="py-3 rounded-md bg-gray-50 text-sm"
             labelStyle="text-sm font-medium"
             disabled={true}
           />
@@ -121,7 +109,7 @@ export const ProfileSection = ({ settingsData }: ProfileSectionProps) => {
             placeholder="Enter your email address"
             value={profileData.email}
             onChange={handleProfileInputChange}
-            className="py-3 rounded-md"
+            className="py-3 rounded-md text-sm"
             labelStyle="text-sm font-medium"
           />
           <p className="text-xs text-muted-foreground">
@@ -130,11 +118,11 @@ export const ProfileSection = ({ settingsData }: ProfileSectionProps) => {
         </div>
       </div>
 
-      <div className="pt-4 px-6">
+      <div className="pt-3 sm:pt-4 px-2 sm:px-6">
         <Button
           onClick={handleSaveProfile}
           disabled={isLoadingEmailChange}
-          className="flex items-center w-fit md:w-auto gap-2 py-3 text-white bg-primary-base hover:bg-primary-base/90 text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex items-center justify-center w-full sm:w-auto gap-2 py-3 text-white bg-primary-base hover:bg-primary-base/90 text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isLoadingEmailChange ? (
             <>

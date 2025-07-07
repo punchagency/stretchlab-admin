@@ -2,6 +2,9 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+* {
+  box-sizing: border-box;
+}
 @custom-variant dark (&:is(.dark *));
 @theme {
   --color-primary-base: #368591;
@@ -19,6 +22,8 @@
   --color-grey-5: #667185;
   --color-accent-base: #ED3833;
   --color-dark-1: #16151A;
+
+  --breakpoint-xs: 20rem;
 }
 
 @theme inline {

@@ -1,7 +1,7 @@
 import { ContainLoader } from "@/components/shared";
 import { ErrorHandle } from "@/components/app";
 import { useBilling } from "@/hooks/useBilling";
-import { BillingEmptyState, InvoiceHistory, MonthlyCharges } from "@/components/billing";
+import { BillingEmptyState, InvoiceHistory, MonthlyCharges, InvoiceHistoryTable } from "@/components/billing";
 
 export const Billing = () => {
   const {
@@ -18,6 +18,8 @@ export const Billing = () => {
     isLoading,
     error,
     refetch,
+    flexologistStatus,
+    rpaStatus,
   } = useBilling();
 
   if (isLoading) {
@@ -37,33 +39,38 @@ export const Billing = () => {
   }
 
   return (
-    <div className="p-6 min-h-screen bg-gray-50">
-      <div className="max-w-7xl ">
-        <div className="mb-4">
+    <div className="p-3 sm:p-6 min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto">
+        <div className="mb-4 sm:mb-6">
           <h1 className="text-2xl font-bold text-gray-900">Billing</h1>
         </div>
 
         {!hasSubscriptionData ? (
           <BillingEmptyState />
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <InvoiceHistory
-              flexologistQuantity={flexologistQuantity}
-              flexologistPrice={flexologistPrice}
-              rpaPrice={rpaPrice}
-              noteTakingBillingDate={noteTakingBillingDate}
-              rpaBillingDate={rpaBillingDate}
-            />
-            
-            <MonthlyCharges
-              flexologistQuantity={flexologistQuantity}
-              flexologistPrice={flexologistPrice}
-              flexologistTotal={flexologistTotal}
-              rpaQuantity={rpaQuantity}
-              rpaPrice={rpaPrice}
-              rpaTotal={rpaTotal}
-              totalBilled={totalBilled}
-            />
+          <div className="space-y-6 sm:space-y-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
+              <InvoiceHistory
+                flexologistQuantity={flexologistQuantity}
+                flexologistPrice={flexologistPrice}
+                rpaPrice={rpaPrice}
+                noteTakingBillingDate={noteTakingBillingDate}
+                rpaBillingDate={rpaBillingDate}
+                flexologistStatus={flexologistStatus}
+                rpaStatus={rpaStatus}
+              />
+
+              <MonthlyCharges
+                flexologistQuantity={flexologistQuantity}
+                flexologistPrice={flexologistPrice}
+                flexologistTotal={flexologistTotal}
+                rpaQuantity={rpaQuantity}
+                rpaPrice={rpaPrice}
+                rpaTotal={rpaTotal}
+                totalBilled={totalBilled}
+              />
+            </div>
+            <InvoiceHistoryTable />
           </div>
         )}
       </div>

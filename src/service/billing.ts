@@ -1,6 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
 import { api } from './api';
 
+export interface InvoiceHistoryItem {
+  id: string;
+  invoice_id: string;
+  invoice_date: string;
+  amount: number;
+  status: "paid" | "unpaid";
+  currency: string;
+  download_url?: string;
+}
+
 export interface SubscriptionDetails {
   note_taking?: {
     currency: string;
@@ -32,9 +42,27 @@ export const getBillingDetails = async (): Promise<BillingResponse> => {
     return response.data as BillingResponse;
 };
 
+export interface BillingHistoryResponse {
+  status: string;
+  billing_history: InvoiceHistoryItem[];
+}
+
+export const getBillingHistory = async (): Promise<BillingHistoryResponse> => {
+    const response = await api.get('/admin/payment/get-billing-history');
+    return response.data as BillingHistoryResponse;
+};
+
 export const useBillingDetails = () => {
   return useQuery({
     queryKey: ["billing-details"],
     queryFn: getBillingDetails,
+  });
+};
+
+export const useInvoiceHistory = () => {
+  return useQuery({
+    queryKey: ["invoice-history"],
+    queryFn: getBillingHistory,
+    select: (data) => data.billing_history || [],
   });
 }; 

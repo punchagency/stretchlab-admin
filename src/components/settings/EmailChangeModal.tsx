@@ -5,6 +5,7 @@ import type { ApiError } from "@/types";
 import { renderSuccessToast, renderErrorToast } from "@/components/utils";
 import { useNavigate } from "react-router";
 import { deleteUserCookie } from "@/utils";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface EmailChangeModalProps {
   isOpen: boolean;
@@ -17,7 +18,7 @@ export const EmailChangeModal = ({ isOpen, onClose, newEmail }: EmailChangeModal
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-
+  const isMobile = useIsMobile();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!code) {
@@ -67,7 +68,7 @@ export const EmailChangeModal = ({ isOpen, onClose, newEmail }: EmailChangeModal
   };
 
   const modalContent = (
-    <div className="p-6 text-center">
+    <div className="p-0 sm:p-5 text-center">
       <div className="mb-6">
         <h2 className="text-xl font-bold mb-2">Verify Email Change</h2>
         <p className="text-gray-500 text-sm">
@@ -86,7 +87,7 @@ export const EmailChangeModal = ({ isOpen, onClose, newEmail }: EmailChangeModal
             onChange={handleCodeChange}
             error={error}
             label="Enter Code"
-            size="lg"
+            size={isMobile ? "md" : "lg"}
           />
           
           <p className="text-xs text-gray-500 mt-2 text-center">
@@ -94,11 +95,11 @@ export const EmailChangeModal = ({ isOpen, onClose, newEmail }: EmailChangeModal
           </p>
         </div>
 
-        <div className="flex gap-3 justify-end">
+        <div className="flex gap-3 justify-end sm:flex-row flex-col">
           <Button
             type="button"
             onClick={handleClose}
-            className="px-6 py-2 border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 transition-colors"
+            className="px-6 sm:py-2 py-3 border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 transition-colors"
             disabled={isLoading}
           >
             Cancel
@@ -107,7 +108,7 @@ export const EmailChangeModal = ({ isOpen, onClose, newEmail }: EmailChangeModal
           <Button
             type="submit"
             disabled={isLoading || !code || code.length !== 6}
-            className="px-6 py-2 bg-primary-base hover:bg-primary-base/90 text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-6 sm:py-2 py-3 bg-primary-base hover:bg-primary-base/90 text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLoading ? (
               <div className="flex items-center gap-2">
