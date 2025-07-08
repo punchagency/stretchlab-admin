@@ -81,7 +81,7 @@ export const InvoiceHistory = ({
               <div className="text-gray-600 mb-2 text-sm">
                 {flexologistStatus === "trialing" ? "Trial Ends:" : flexologistStatus === "canceled" ? "Cancelled" : "Next Billing Date:"}
               </div>
-              { flexologistStatus !== "cancel" && <div className="font-medium text-gray-900 text-base">
+              { flexologistStatus !== "canceled" && <div className="font-medium text-gray-900 text-base">
                 {noteTakingBillingDate}
               </div>}
             </div>
@@ -114,7 +114,7 @@ export const InvoiceHistory = ({
                 <div className="text-gray-600 mb-2 text-sm">
                   {rpaStatus === "trialing" ? "Trial Ends:" : rpaStatus === "canceled" ? "Cancelled" : "Next Billing Date:"}
                 </div>
-                {rpaStatus !== "cancel" && <div className="font-medium text-gray-900 text-base">
+                {rpaStatus !== "canceled" && <div className="font-medium text-gray-900 text-base">
                   {rpaBillingDate}
                 </div>}
               </div>
