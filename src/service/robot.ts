@@ -15,6 +15,7 @@ export const saveSettings = async (data: {
   unloggedBookings: boolean;
   clubReadyUsername: string;
   clubReadyPassword: string;
+  studioLocations: string[];
 }) => {
   const response = await api.post("/admin/process/save-robot-config", data);
   return response;
@@ -26,6 +27,7 @@ export const updateSettings = async (data: {
   unloggedBookings: boolean;
   clubReadyUsername: string;
   clubReadyPassword: string;
+  studioLocations: string[];
 }) => {
   const response = await api.post("/admin/process/update-robot-config", data);
   return response;

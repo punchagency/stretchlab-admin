@@ -20,7 +20,7 @@ export const RobotConfigForm = ({
   const [verified, setVerified] = useState(data ? true : false);
   const [verifying, setVerifying] = useState(false);
   const [isConfig, setIsConfig] = useState(data ? true : false);
-  const [editLocation, setEditLocation] = useState(data ? false : true);
+  // const [editLocation, setEditLocation] = useState(data ? false : true);
   const isEditing = data ? true : false;
   const [error, setError] = useState("");
   const [formError, setFormError] = useState("");
@@ -36,6 +36,7 @@ export const RobotConfigForm = ({
     numberOfStudioLocations: data?.number_of_locations || "",
     unloggedBookings: data?.unlogged_booking ? data.unlogged_booking : false,
     dailyRunTime: data?.run_time ? data.run_time : "",
+    studioLocations: [],
   });
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, type, checked, value } = e.target;
@@ -46,7 +47,7 @@ export const RobotConfigForm = ({
   };
 
   const handleVerifyCredentials = async () => {
-    setEditLocation(true);
+    // setEditLocation(true);
     setError("");
     if (!formData.clubReadyUsername || !formData.clubReadyPassword) {
       setError("Please enter your ClubReady username and password");
@@ -64,6 +65,7 @@ export const RobotConfigForm = ({
           renderSuccessToast(response.data.message);
           setFormData({
             ...formData,
+            studioLocations: response.data.locations,
             numberOfStudioLocations: response.data.locations.length,
           });
         } else {
@@ -99,6 +101,7 @@ export const RobotConfigForm = ({
         response = await updateSettings({
           ...formData,
           id: data?.id,
+          studioLocations: formData.studioLocations,
           numberOfStudioLocations: parseInt(
             formData.numberOfStudioLocations as string
           ),
@@ -107,6 +110,7 @@ export const RobotConfigForm = ({
         response = await saveSettings({
           proceed,
           ...formData,
+          studioLocations: formData.studioLocations,
           numberOfStudioLocations: parseInt(
             formData.numberOfStudioLocations as string
           ),
@@ -225,7 +229,8 @@ export const RobotConfigForm = ({
                         <Input
                           label="Number of Studio Locations"
                           type="number"
-                          disabled={!verified || !editLocation}
+                          // disabled={!verified || !editLocation}
+                          disabled={true}
                           name="numberOfStudioLocations"
                           placeholder="Enter the number of studio locations"
                           value={formData.numberOfStudioLocations as string}
