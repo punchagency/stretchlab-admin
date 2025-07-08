@@ -78,7 +78,7 @@ export const Config = ({
           className="bg-grey-5 text-xs md:text-sm font-semibold py-2 text-white"
           onClick={() => {
             if (!data?.active) {
-              renderErrorToast("Robot is disabled.Enable to edit");
+              renderErrorToast("Robot is disabled. Enable to edit");
               return;
             }
             setIsConfig(false);
