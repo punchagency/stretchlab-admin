@@ -5,7 +5,6 @@ import {
   YAxis,
   CartesianGrid,
   ResponsiveContainer,
-  Cell,
 } from 'recharts';
 
 interface RechartsBarChartProps {
@@ -18,26 +17,34 @@ interface RechartsBarChartProps {
 }
 
 export const RechartsBarChart = ({ data, title, maxValue }: RechartsBarChartProps) => {
-  const max = maxValue || Math.max(...data.map(d => d.value));
+  const safeData = data.filter(d => typeof d.value === 'number' && !isNaN(d.value));
+  const max = maxValue || (safeData.length > 0 ? Math.max(...safeData.map(d => d.value)) : 100);
   
-  const chartData = data.map(item => ({
+  const chartData = safeData.map(item => ({
     name: item.label,
     value: item.value,
   }));
 
-  // Custom bar shape that renders background and foreground with brick effect
   const CustomBar = (props: any) => {
-    const { fill, payload, x, y, width, height } = props;
+    const { payload, x, y, width, height } = props;
     
-    // Calculate background bar dimensions
-    const fullHeight = (height * max) / payload.value;
-    const backgroundY = y + height - fullHeight;
+    if (!payload || typeof payload.value !== 'number' || isNaN(payload.value) || 
+        typeof x !== 'number' || isNaN(x) || 
+        typeof y !== 'number' || isNaN(y) || 
+        typeof width !== 'number' || isNaN(width) || 
+        typeof height !== 'number' || isNaN(height) ||
+        width <= 0 || height <= 0) {
+      return <g />; 
+    }
     
-    // Brick configuration
-    const brickHeight = 20; // Height of each brick
+    const fullHeight = (payload.value === 0 || max === 0) ? 0 : (height * max) / payload.value;
+    
+    const safeFullHeight = isNaN(fullHeight) || fullHeight < 0 ? 0 : Math.min(fullHeight, height * 2);
+    const backgroundY = y + height - safeFullHeight;
+    
+    const brickHeight = 20; 
     const numBricks = Math.floor(height / brickHeight);
     
-    // Create individual bricks with gradients
     const bricks = [];
     for (let i = 0; i < numBricks; i++) {
       const brickY = y + height - (i + 1) * brickHeight;
@@ -70,7 +77,7 @@ export const RechartsBarChart = ({ data, title, maxValue }: RechartsBarChartProp
           x={x}
           y={backgroundY}
           width={width}
-          height={fullHeight}
+          height={safeFullHeight}
           fill="#F2F7FF"
         />
         {/* Brick segments */}
@@ -78,6 +85,20 @@ export const RechartsBarChart = ({ data, title, maxValue }: RechartsBarChartProp
       </g>
     );
   };
+
+  // Don't render chart if no valid data
+  if (chartData.length === 0) {
+    return (
+      <div className="w-full">
+        {title && (
+          <h3 className="text-lg font-semibold text-gray-900 mb-6">{title}</h3>
+        )}
+        <div className="h-80 flex items-center justify-center">
+          <p className="text-gray-500">No data available</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full">
