@@ -7,6 +7,7 @@ export * from "./NoteTakingAdmin";
 export * from "./Dashboard";
 export * from "./ResetPassword";
 export * from "./RobotAutomation";
+export * from "./RobotSetup";
 export * from "./Settings";
 export * from "./Analytics";
 export * from "./TwoFactorLogin";

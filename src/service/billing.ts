@@ -2,13 +2,15 @@ import { useQuery } from "@tanstack/react-query";
 import { api } from './api';
 
 export interface InvoiceHistoryItem {
-  id: string;
+  id: number;
   invoice_id: string;
-  invoice_date: string;
+  created_at: string;
   amount: number;
   status: "paid" | "unpaid";
-  currency: string;
-  download_url?: string;
+  invoice_pdf_url: string;
+  invoice_url: string;
+  subscription_id: string;
+  user_id: number;
 }
 
 export interface SubscriptionDetails {

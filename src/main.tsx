@@ -12,6 +12,7 @@ import {
   Dashboard,
   ResetPassword,
   RobotAutomation,
+  RobotSetup,
   Settings,
   Analytics,
   TwoFactorLogin,
@@ -69,6 +70,10 @@ const router = createBrowserRouter([
   {
     path: "/verification",
     element: <Verification />,
+  },
+  {
+    path: "/robot-setup",
+    element: <RobotSetup />,
   },
   {
     path: "/2fa-login",

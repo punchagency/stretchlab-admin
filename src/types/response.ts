@@ -23,6 +23,7 @@ export interface User {
   is_verified: boolean;
   role_id: number;
   username: string;
+  is_clubready_verified: boolean;
 }
 
 export interface LoginResponse {
@@ -43,6 +44,8 @@ export interface RobotConfig {
   run_time: string;
   unlogged_booking: boolean;
   status: string;
+  selected_locations: string[];
+  locations: string[];
   users: {
     clubready_username: string;
     clubready_password: string;

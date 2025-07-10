@@ -14,7 +14,7 @@ import { convertStripePrice } from "@/utils/billing";
 import { motion } from "framer-motion";
 
 interface ProcessedInvoiceData {
-  id: string;
+  id: number;
   invoiceDate: string;
   invoiceId: string;
   amount: string;
@@ -27,13 +27,17 @@ export const InvoiceHistoryTable = () => {
   const [filterPeriod, setFilterPeriod] = useState("All");
   const { data: invoiceHistory = [], isLoading, error } = useInvoiceHistory();
 
-  const handleDownload = (invoiceId: string) => {
-    console.log(`Downloading invoice ${invoiceId}`);
+  const handleDownload = (invoiceId: string, downloadUrl: string) => {
+    if (downloadUrl && downloadUrl !== "#") {
+      window.open(downloadUrl, '_blank');
+    } else {
+      console.error(`No download URL available for invoice ${invoiceId}`);
+    }
   };
 
   const processedInvoiceData: ProcessedInvoiceData[] = invoiceHistory.map((invoice: InvoiceHistoryItem) => ({
     id: invoice.id,
-    invoiceDate: new Date(invoice.invoice_date).toLocaleDateString('en-US', {
+    invoiceDate: new Date(invoice.created_at).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
       day: '2-digit'
@@ -41,7 +45,7 @@ export const InvoiceHistoryTable = () => {
     invoiceId: invoice.invoice_id,
     amount: `$${convertStripePrice(invoice.amount).toFixed(2)}`,
     status: invoice.status === "paid" ? "Paid" : "Unpaid",
-    downloadUrl: invoice.download_url || "#"
+    downloadUrl: invoice.invoice_pdf_url || "#"
   }));
 
   const columns: ColumnDef<ProcessedInvoiceData>[] = [
@@ -94,8 +98,9 @@ export const InvoiceHistoryTable = () => {
       header: "Download",
       cell: ({ row }) => (
         <button
-          onClick={() => handleDownload(row.original.invoiceId)}
-          className="flex items-center gap-2 text-gray-600 text-sm"
+          onClick={() => handleDownload(row.original.invoiceId, row.original.downloadUrl)}
+          className="flex items-center gap-2 text-gray-600 text-sm hover:text-primary-base/80 transition-colors"
+          disabled={row.original.downloadUrl === "#"}
         >
           <Download className="h-4 w-4" />
           PDF
@@ -115,7 +120,7 @@ export const InvoiceHistoryTable = () => {
     if (filterPeriod !== "All") {
       const originalInvoice = invoiceHistory.find(orig => orig.id === invoice.id);
       if (originalInvoice) {
-        const invoiceDate = new Date(originalInvoice.invoice_date);
+        const invoiceDate = new Date(originalInvoice.created_at);
         const currentDate = new Date();
 
         if (filterPeriod === "Monthly") {
