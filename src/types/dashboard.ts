@@ -8,15 +8,11 @@ export interface Flexologist {
   id: number;
 }
 
-export interface Location {
-  locations: string | null;
-}
-
 export interface ChartFiltersResponse {
   data: {
     filters: FilterOption[];
     flexologists: Flexologist[];
-    locations: Location[];
+    locations: string[];
   };
   status: string;
 }

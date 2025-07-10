@@ -76,10 +76,7 @@ export const useDashboard = () => {
       
       const datasetOptions = filters.map(filter => filter.label);
       const flexologistOptions = ["All", ...flexologists.map(flex => flex.full_name)];
-      const locationOptions = ["All", ...locations
-        .filter(loc => loc.locations !== null)
-        .map(loc => loc.locations as string)
-      ];
+      const locationOptions = ["All", ...locations];
       
       filterOptions.dataset = datasetOptions;
       filterOptions.flexologist = flexologistOptions;

@@ -35,7 +35,7 @@ export const RobotConfigForm = ({
   const [paymentInfo, setPaymentInfo] = useState(false);
   const [update, setUpdate] = useState(false);
   const [proceed, setProceed] = useState(false);
-  
+
   // Parse JSON strings to arrays
   const parseLocations = (locationData: any): string[] => {
     if (Array.isArray(locationData)) return locationData;
@@ -50,7 +50,7 @@ export const RobotConfigForm = ({
     }
     return [];
   };
-  
+
   const [locations, setLocations] = useState<string[]>(parseLocations(data?.locations));
   const [selectedLocations, setSelectedLocations] = useState<string[]>(parseLocations(data?.selected_locations));
 
@@ -75,11 +75,11 @@ export const RobotConfigForm = ({
       const newSelected = prev.includes(location)
         ? prev.filter(loc => loc !== location)
         : [...prev, location];
-            setFormData(currentFormData => ({
+      setFormData(currentFormData => ({
         ...currentFormData,
         numberOfStudioLocations: newSelected.length.toString(),
       }));
-      
+
       return newSelected;
     });
   };
@@ -169,7 +169,7 @@ export const RobotConfigForm = ({
           navigate("/dashboard");
           return;
         }
-        
+
         refetch();
         setIsConfig(true);
       }
@@ -198,12 +198,12 @@ export const RobotConfigForm = ({
           <h2 className="text-2xl font-semibold mb-6 text-center">
             Robot Process Automation Setup
           </h2>
-          
+
           <form className="space-y-6" onSubmit={handleSaveSettings}>
             {/* Credentials Section */}
             <div className="space-y-4">
               <h3 className="text-lg font-medium">ClubReady Credentials</h3>
-              
+
               <Input
                 label="ClubReady Username"
                 type="text"
@@ -255,7 +255,7 @@ export const RobotConfigForm = ({
               ) : (
                 <div className="flex justify-center">
                   <Button
-                    className="bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-6 rounded-lg"
+                    className="bg-primary-base hover:bg-primary-base/80 text-white font-medium py-2 px-6 rounded-lg"
                     type="button"
                     onClick={() => setVerified(false)}
                   >
@@ -275,34 +275,32 @@ export const RobotConfigForm = ({
                   transition={{ duration: 0.4 }}
                   className="space-y-4"
                 >
-                                     <h3 className="text-lg font-medium">Select Studio Locations</h3>
-                   <p className="text-sm text-gray-600">
-                     All locations are selected by default. Unselect any locations you don't want to enable robot automation for ({locations.length} locations found)
-                   </p>
-                  
+                  <h3 className="text-lg font-medium">Select Studio Locations</h3>
+                  <p className="text-sm text-gray-600">
+                    All locations are selected by default. Unselect any locations you don't want to enable robot automation for ({locations.length} locations found)
+                  </p>
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-64 overflow-y-auto">
                     {locations.map((location, _) => (
                       <div
                         key={location}
                         onClick={() => handleLocationSelect(location)}
-                        className={`p-3 rounded-lg border-2 cursor-pointer transition-all duration-200 ${
-                          selectedLocations.includes(location)
+                        className={`p-3 rounded-lg border-2 cursor-pointer transition-all duration-200 ${selectedLocations.includes(location)
                             ? "border-green-500 bg-green-50 text-green-700"
                             : "border-gray-300 bg-white hover:border-gray-400"
-                        }`}
+                          }`}
                       >
                         <div className="flex items-center justify-between">
                           <div>
                             <h4 className="font-medium text-sm">{location}</h4>
                           </div>
-                          <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                            selectedLocations.includes(location)
+                          <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selectedLocations.includes(location)
                               ? "border-green-500 bg-green-500"
                               : "border-gray-300"
-                          }`}>
+                            }`}>
                             {selectedLocations.includes(location) && (
                               <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
+                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                               </svg>
                             )}
                           </div>
@@ -311,14 +309,14 @@ export const RobotConfigForm = ({
                     ))}
                   </div>
 
-                                     <div className="bg-blue-50 rounded-lg p-3">
-                     <p className="text-sm text-blue-700">
+                  {/* <div className="bg-primary-base/10 rounded-lg p-3">
+                     <p className="text-sm text-primary-base">
                        <strong>{selectedLocations.length} of {locations.length} location{selectedLocations.length > 1 ? 's' : ''} selected</strong>
                        {selectedLocations.length === 0 && (
                          <span className="text-red-600 ml-2">⚠️ You must select at least one location</span>
                        )}
                      </p>
-                   </div>
+                   </div> */}
 
                   <Input
                     label="Number of Studio Locations"
@@ -344,7 +342,7 @@ export const RobotConfigForm = ({
                     <Button
                       type="submit"
                       disabled={saving || selectedLocations.length === 0}
-                      className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-medium flex items-center justify-center gap-2"
+                      className="flex-1 bg-primary-base hover:bg-primary-base/80 text-white py-3 rounded-lg font-medium flex items-center justify-center gap-2"
                     >
                       {saving ? (
                         <>
@@ -369,7 +367,7 @@ export const RobotConfigForm = ({
             billingInfo={billingInfo}
             robot={true}
             update={false}
-            setUpdate={() => {}}
+            setUpdate={() => { }}
             setProceed={setProceed}
           />
         )}
@@ -475,45 +473,35 @@ export const RobotConfigForm = ({
                           helperText="This will automatically update based on your selected locations"
                         />
                       </div>
-                      
+
                       {/* Location Selection */}
                       {locations.length > 0 && (
-                        <div className="space-y-3">
-                          <div className="flex items-center justify-between">
-                            <h4 className="text-sm font-medium text-gray-700">
-                              Select Studio Locations
-                            </h4>
-                            <span className="text-xs text-gray-500">
-                              {locations.length} locations found
-                            </span>
-                          </div>
-                                                     <p className="text-xs text-gray-600">
-                             All locations are selected by default. Unselect any you don't want to enable robot automation for
-                           </p>
-                          
+                        <div className="space-y-3 mt-4">
+                          <p className="text-xs font-medium text-gray-600">
+                            {selectedLocations.length} of {locations.length} Select Studio Locations
+                          </p>
+
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-48 overflow-y-auto border rounded-lg p-2">
                             {locations.map((location, _) => (
                               <div
                                 key={location}
                                 onClick={() => handleLocationSelect(location)}
-                                className={`p-2 rounded-md border cursor-pointer transition-all duration-200 text-xs ${
-                                  selectedLocations.includes(location)
+                                className={`p-2 rounded-md border cursor-pointer transition-all duration-200 text-xs ${selectedLocations.includes(location)
                                     ? "border-green-500 bg-green-50 text-green-700"
                                     : "border-gray-200 bg-white hover:border-gray-300"
-                                }`}
+                                  }`}
                               >
                                 <div className="flex items-center justify-between">
                                   <div>
                                     <h5 className="font-medium text-xs">{location}</h5>
                                   </div>
-                                  <div className={`w-3 h-3 rounded-full border flex items-center justify-center ${
-                                    selectedLocations.includes(location)
+                                  <div className={`w-3 h-3 rounded-full border flex items-center justify-center ${selectedLocations.includes(location)
                                       ? "border-green-500 bg-green-500"
                                       : "border-gray-300"
-                                  }`}>
+                                    }`}>
                                     {selectedLocations.includes(location) && (
                                       <svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
+                                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                                       </svg>
                                     )}
                                   </div>
@@ -554,7 +542,7 @@ export const RobotConfigForm = ({
                         disabled={!verified}
                         onChange={handleChange}
                       /> */}
-                      
+
                       {formError && (
                         <div className="bg-red-100 rounded-lg px-2 py-3">
                           <p className="text-red-500 font-medium text-sm text-center">
