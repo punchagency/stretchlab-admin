@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Input, Button, Spinner } from "../shared";
 import { checkUsername, signup } from "@/service/auth";
 import type { ApiError } from "@/types";
-import { setUserCookie } from "@/utils";
+import { setTempUserCookie } from "@/utils";
 import { useNavigate } from "react-router";
 import { renderErrorToast, renderSuccessToast } from "../utils";
 export const SignupForm = () => {
@@ -93,7 +93,7 @@ export const SignupForm = () => {
         formData.username
       );
       if (response.status === 201) {
-        setUserCookie(response.data.token);
+        setTempUserCookie(response.data.token);
         renderSuccessToast("Account created successfully");
         navigate("/verification");
       }

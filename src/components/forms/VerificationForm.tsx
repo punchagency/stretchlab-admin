@@ -27,7 +27,7 @@ export const VerificationForm = () => {
       const response = await verify(code);
       if (response.status === 200) {
         renderSuccessToast(response.data.message);
-        navigate("/dashboard");
+        navigate("/robot-setup");
       } else {
         renderErrorToast(response.data.message);
       }
