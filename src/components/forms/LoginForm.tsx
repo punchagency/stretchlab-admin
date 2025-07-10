@@ -7,7 +7,6 @@ import { Link, useNavigate } from "react-router";
 import {
   renderSuccessToast,
   renderErrorToast,
-  renderWarningToast,
 } from "../utils";
 
 export const LoginForm = () => {
