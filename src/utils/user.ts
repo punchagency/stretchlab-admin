@@ -25,7 +25,7 @@ export const setTempUserCookie = (token: string): void => {
 
 export const getTempUserCookie = (): string | null => {
   return Cookies.get("temp_token") || null;
-};  
+};
 
 export const getUserCookie = (): string | null => {
   return Cookies.get("token") || null;
@@ -42,4 +42,5 @@ export const getUserInfo = (): CustomJwtPayload | null => {
 
 export const deleteUserCookie = (): void => {
   Cookies.remove("token");
+  Cookies.remove("temp_token");
 };
