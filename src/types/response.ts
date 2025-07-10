@@ -23,6 +23,7 @@ export interface User {
   is_verified: boolean;
   role_id: number;
   username: string;
+  is_clubready_verified: boolean;
 }
 
 export interface LoginResponse {

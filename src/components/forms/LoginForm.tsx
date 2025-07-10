@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Input, Button, Spinner } from "../shared";
 import { login } from "@/service/auth";
 import type { ApiError, LoginResponse } from "@/types";
-import { setUserCookie } from "@/utils";
+import { setTempUserCookie, setUserCookie } from "@/utils";
 import { Link, useNavigate } from "react-router";
 import {
   renderSuccessToast,
@@ -44,12 +44,15 @@ export const LoginForm = () => {
           return;
         }
         if (loginData.token) {
-          setUserCookie(loginData.token);
-          if (loginData.user.is_verified) {
+          if (loginData.user.is_verified && loginData.user.is_clubready_verified) {
+            setUserCookie(loginData.token);
             renderSuccessToast(loginData.message);
             navigate("/dashboard");
+          } else if (loginData.user.is_verified && !loginData.user.is_clubready_verified) {
+            setTempUserCookie(loginData.token);
+            navigate("/robot-setup");
           } else {
-            renderWarningToast(loginData.message);
+            setTempUserCookie(loginData.token);
             navigate("/verification");
           }
         } else {

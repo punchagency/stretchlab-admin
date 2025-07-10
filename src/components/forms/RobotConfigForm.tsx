@@ -10,13 +10,19 @@ import { AnimatePresence, motion } from "framer-motion";
 import type { ApiError, RobotConfig } from "@/types/response";
 import { Config, PaymentCollection } from "../app";
 import type { BillingInfo } from "@/types";
+import { getUserInfo, getTempUserCookie, setUserCookie } from "@/utils";
+import { useNavigate } from "react-router";
+
 export const RobotConfigForm = ({
   data,
   refetch,
+  isSignupFlow = false,
 }: {
-  data: RobotConfig;
+  data?: RobotConfig;
   refetch: () => void;
+  isSignupFlow?: boolean;
 }) => {
+  const navigate = useNavigate();
   const [verified, setVerified] = useState(data ? true : false);
   const [verifying, setVerifying] = useState(false);
   const [isConfig, setIsConfig] = useState(data ? true : false);
@@ -29,19 +35,38 @@ export const RobotConfigForm = ({
   const [paymentInfo, setPaymentInfo] = useState(false);
   const [update, setUpdate] = useState(false);
   const [proceed, setProceed] = useState(false);
+  const [locations, setLocations] = useState<string[]>([]);
+  const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
 
   const [formData, setFormData] = useState({
     clubReadyUsername: data?.users?.clubready_username || "",
     clubReadyPassword: data?.users?.clubready_password || "",
-    numberOfStudioLocations: data?.number_of_locations || "",
-    unloggedBookings: data?.unlogged_booking ? data.unlogged_booking : false,
-    dailyRunTime: data?.run_time ? data.run_time : "",
+    numberOfStudioLocations: data?.number_of_locations?.toString() || selectedLocations.length.toString(),
+    // unloggedBookings: data?.unlogged_booking ? data.unlogged_booking : false,
+    // dailyRunTime: data?.run_time ? data.run_time : "09:00",
   });
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, type, checked, value } = e.target;
     setFormData({
       ...formData,
       [name]: type === "checkbox" ? checked : value.trim(),
+    });
+  };
+
+  const handleLocationSelect = (location: string) => {
+    setSelectedLocations(prev => {
+      const newSelected = prev.includes(location)
+        ? prev.filter(loc => loc !== location)
+        : [...prev, location];
+      
+      // Update numberOfStudioLocations based on selected locations
+      setFormData(currentFormData => ({
+        ...currentFormData,
+        numberOfStudioLocations: newSelected.length.toString(),
+      }));
+      
+      return newSelected;
     });
   };
 
@@ -61,10 +86,13 @@ export const RobotConfigForm = ({
       if (response.status === 200) {
         if (response.data.status) {
           setVerified(true);
-          renderSuccessToast(response.data.message);
+          setLocations(response.data.locations);
+          // Automatically select all locations
+          setSelectedLocations(response.data.locations);
+          renderSuccessToast(`${response.data.message} - All ${response.data.locations.length} locations have been automatically selected.`);
           setFormData({
             ...formData,
-            numberOfStudioLocations: response.data.locations.length,
+            numberOfStudioLocations: response.data.locations.length.toString(),
           });
         } else {
           renderErrorToast(response.data.message);
@@ -85,11 +113,11 @@ export const RobotConfigForm = ({
     setFormError("");
     console.log(formData);
     if (!formData.numberOfStudioLocations) {
-      setFormError("Please enter the number of studio locations");
+      setFormError("Please select at least one location");
       return;
     }
-    if (!formData.dailyRunTime) {
-      setFormError("Please enter the daily run time");
+    if (selectedLocations.length === 0 && !isEditing) {
+      setFormError("Please select at least one location");
       return;
     }
     try {
@@ -98,10 +126,12 @@ export const RobotConfigForm = ({
       if (isEditing) {
         response = await updateSettings({
           ...formData,
-          id: data?.id,
+          id: data!.id,
           numberOfStudioLocations: parseInt(
             formData.numberOfStudioLocations as string
           ),
+          unloggedBookings: false,
+          dailyRunTime: "09:00",
         });
       } else {
         response = await saveSettings({
@@ -110,11 +140,29 @@ export const RobotConfigForm = ({
           numberOfStudioLocations: parseInt(
             formData.numberOfStudioLocations as string
           ),
+          unloggedBookings: false,
+          dailyRunTime: "09:00",
         });
       }
       if (response.status === 200) {
-        refetch();
         renderSuccessToast("Settings saved successfully");
+        
+        // Check if user is in signup flow (not fully logged in)
+        if (isSignupFlow) {
+          const user = getUserInfo();
+          if (!user) {
+            // User is in signup flow, get temp token and set as main token
+            const tempToken = getTempUserCookie();
+            if (tempToken) {
+              setUserCookie(tempToken);
+            }
+          }
+          navigate("/dashboard");
+          return;
+        }
+        
+        // Normal flow - user is already logged in
+        refetch();
         setIsConfig(true);
       }
     } catch (error) {
@@ -135,13 +183,200 @@ export const RobotConfigForm = ({
     }
   };
 
+  // If in signup flow, don't show the Config component
+  if (isSignupFlow) {
+    return (
+      <>
+        <div className="bg-white rounded-lg shadow-lg p-6 md:p-8">
+          <h2 className="text-2xl font-semibold mb-6 text-center">
+            Robot Process Automation Setup
+          </h2>
+          
+          <form className="space-y-6" onSubmit={handleSaveSettings}>
+            {/* Credentials Section */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium">ClubReady Credentials</h3>
+              
+              <Input
+                label="ClubReady Username"
+                type="text"
+                name="clubReadyUsername"
+                disabled={verified || verifying}
+                placeholder="Enter your ClubReady username"
+                value={formData.clubReadyUsername}
+                onChange={handleChange}
+                helperText="Enter your ClubReady username or create an admin ClubReady account."
+              />
+
+              <Input
+                label="ClubReady Password"
+                type="password"
+                name="clubReadyPassword"
+                disabled={verified || verifying}
+                placeholder="Enter your ClubReady password"
+                value={formData.clubReadyPassword}
+                onChange={handleChange}
+                helperText="Enter your ClubReady password."
+              />
+
+              {error && (
+                <div className="bg-red-100 rounded-lg px-4 py-3">
+                  <p className="text-red-600 text-sm font-medium text-center">
+                    {error}
+                  </p>
+                </div>
+              )}
+
+              {!verified ? (
+                <div className="flex justify-center">
+                  <Button
+                    type="button"
+                    onClick={handleVerifyCredentials}
+                    className="bg-[#FFD700] hover:bg-[#E6C200] text-black font-medium py-2 px-6 rounded-lg flex items-center gap-2"
+                    disabled={verifying}
+                  >
+                    {verifying ? (
+                      <>
+                        <Spinner />
+                        Verifying...
+                      </>
+                    ) : (
+                      "Verify Credentials"
+                    )}
+                  </Button>
+                </div>
+              ) : (
+                <div className="flex justify-center">
+                  <Button
+                    className="bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-6 rounded-lg"
+                    type="button"
+                    onClick={() => setVerified(false)}
+                  >
+                    ✓ Credentials Verified - Re-verify if needed
+                  </Button>
+                </div>
+              )}
+            </div>
+
+            {/* Location Selection Section */}
+            <AnimatePresence>
+              {verified && (
+                <motion.div
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.4 }}
+                  className="space-y-4"
+                >
+                                     <h3 className="text-lg font-medium">Select Studio Locations</h3>
+                   <p className="text-sm text-gray-600">
+                     All locations are selected by default. Unselect any locations you don't want to enable robot automation for ({locations.length} locations found)
+                   </p>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-64 overflow-y-auto">
+                    {locations.map((location, index) => (
+                      <div
+                        key={location}
+                        onClick={() => handleLocationSelect(location)}
+                        className={`p-3 rounded-lg border-2 cursor-pointer transition-all duration-200 ${
+                          selectedLocations.includes(location)
+                            ? "border-green-500 bg-green-50 text-green-700"
+                            : "border-gray-300 bg-white hover:border-gray-400"
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h4 className="font-medium text-sm">{location}</h4>
+                          </div>
+                          <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                            selectedLocations.includes(location)
+                              ? "border-green-500 bg-green-500"
+                              : "border-gray-300"
+                          }`}>
+                            {selectedLocations.includes(location) && (
+                              <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
+                              </svg>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                                     <div className="bg-blue-50 rounded-lg p-3">
+                     <p className="text-sm text-blue-700">
+                       <strong>{selectedLocations.length} of {locations.length} location{selectedLocations.length > 1 ? 's' : ''} selected</strong>
+                       {selectedLocations.length === 0 && (
+                         <span className="text-red-600 ml-2">⚠️ You must select at least one location</span>
+                       )}
+                     </p>
+                   </div>
+
+                  <Input
+                    label="Number of Studio Locations"
+                    type="number"
+                    name="numberOfStudioLocations"
+                    placeholder="Number of selected locations"
+                    value={formData.numberOfStudioLocations}
+                    onChange={handleChange}
+                    disabled={true}
+                    helperText="This will automatically update based on your selected locations"
+                  />
+
+                  {formError && (
+                    <div className="bg-red-100 rounded-lg px-4 py-3">
+                      <p className="text-red-600 text-sm font-medium text-center">
+                        {formError}
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Action Buttons */}
+                  <div className="flex gap-4 pt-4">
+                    <Button
+                      type="submit"
+                      disabled={saving || selectedLocations.length === 0}
+                      className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-medium flex items-center justify-center gap-2"
+                    >
+                      {saving ? (
+                        <>
+                          <Spinner />
+                          Saving...
+                        </>
+                      ) : (
+                        "Complete Setup"
+                      )}
+                    </Button>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </form>
+        </div>
+
+        {paymentInfo && (
+          <PaymentCollection
+            show={paymentInfo}
+            onClose={() => setPaymentInfo(false)}
+            billingInfo={billingInfo}
+            robot={true}
+            update={false}
+            setUpdate={() => {}}
+            setProceed={setProceed}
+          />
+        )}
+      </>
+    );
+  }
+
   return (
     <>
       <div>
         <h1 className="text-lg md:text-2xl font-semibold">
           Robot Process Automation
         </h1>
-        {isConfig ? (
+        {isConfig && data ? (
           <Config data={data} setIsConfig={setIsConfig} refetch={refetch} />
         ) : (
           <div className="mt-5 block md:flex items-center gap-5 mx-auto w-full max-w-[1550px]">
@@ -225,20 +460,66 @@ export const RobotConfigForm = ({
                         <Input
                           label="Number of Studio Locations"
                           type="number"
-                          disabled={!verified || !editLocation}
+                          disabled={true}
                           name="numberOfStudioLocations"
-                          placeholder="Enter the number of studio locations"
-                          value={formData.numberOfStudioLocations as string}
+                          placeholder="Number of selected locations"
+                          value={formData.numberOfStudioLocations}
                           onChange={handleChange}
+                          helperText="This will automatically update based on your selected locations"
                         />
-                        {/* <Button
-                      type="button"
-                      className="bg-grey-5 text-white py-1 mb-2 text-xs"
-                    >
-                      Edit
-                    </Button> */}
                       </div>
-                      <div>
+                      
+                      {/* Location Selection */}
+                      {locations.length > 0 && (
+                        <div className="space-y-3">
+                          <div className="flex items-center justify-between">
+                            <h4 className="text-sm font-medium text-gray-700">
+                              Select Studio Locations
+                            </h4>
+                            <span className="text-xs text-gray-500">
+                              {locations.length} locations found
+                            </span>
+                          </div>
+                                                     <p className="text-xs text-gray-600">
+                             All locations are selected by default. Unselect any you don't want to enable robot automation for
+                           </p>
+                          
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-48 overflow-y-auto border rounded-lg p-2">
+                            {locations.map((location, index) => (
+                              <div
+                                key={location}
+                                onClick={() => handleLocationSelect(location)}
+                                className={`p-2 rounded-md border cursor-pointer transition-all duration-200 text-xs ${
+                                  selectedLocations.includes(location)
+                                    ? "border-green-500 bg-green-50 text-green-700"
+                                    : "border-gray-200 bg-white hover:border-gray-300"
+                                }`}
+                              >
+                                <div className="flex items-center justify-between">
+                                  <div>
+                                    <h5 className="font-medium text-xs">{location}</h5>
+                                  </div>
+                                  <div className={`w-3 h-3 rounded-full border flex items-center justify-center ${
+                                    selectedLocations.includes(location)
+                                      ? "border-green-500 bg-green-500"
+                                      : "border-gray-300"
+                                  }`}>
+                                    {selectedLocations.includes(location) && (
+                                      <svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
+                                      </svg>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+
+                        </div>
+                      )}
+
+                      {/* Commented out sections */}
+                      {/* <div>
                         <p className="text-base mb-2">Select Process</p>
                         <div className="flex items-center gap-2 mb-4">
                           <input
@@ -265,7 +546,8 @@ export const RobotConfigForm = ({
                         value={formData.dailyRunTime}
                         disabled={!verified}
                         onChange={handleChange}
-                      />
+                      /> */}
+                      
                       {formError && (
                         <div className="bg-red-100 rounded-lg px-2 py-3">
                           <p className="text-red-500 font-medium text-sm text-center">

@@ -17,6 +17,16 @@ export const setUserCookie = (token: string): void => {
   Cookies.set("token", token, { expires: expireAt });
 };
 
+export const setTempUserCookie = (token: string): void => {
+  const expireAt = new Date();
+  expireAt.setHours(23, 59, 59, 999);
+  Cookies.set("temp_token", token, { expires: expireAt });
+};
+
+export const getTempUserCookie = (): string | null => {
+  return Cookies.get("temp_token") || null;
+};  
+
 export const getUserCookie = (): string | null => {
   return Cookies.get("token") || null;
 };
