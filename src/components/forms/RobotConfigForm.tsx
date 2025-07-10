@@ -26,7 +26,7 @@ export const RobotConfigForm = ({
   const [verified, setVerified] = useState(data ? true : false);
   const [verifying, setVerifying] = useState(false);
   const [isConfig, setIsConfig] = useState(data ? true : false);
-  const [editLocation, setEditLocation] = useState(data ? false : true);
+  // const [editLocation, setEditLocation] = useState(data ? false : true);
   const isEditing = data ? true : false;
   const [error, setError] = useState("");
   const [formError, setFormError] = useState("");
@@ -35,13 +35,29 @@ export const RobotConfigForm = ({
   const [paymentInfo, setPaymentInfo] = useState(false);
   const [update, setUpdate] = useState(false);
   const [proceed, setProceed] = useState(false);
-  const [locations, setLocations] = useState<string[]>([]);
-  const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
+  
+  // Parse JSON strings to arrays
+  const parseLocations = (locationData: any): string[] => {
+    if (Array.isArray(locationData)) return locationData;
+    if (typeof locationData === 'string') {
+      try {
+        const parsed = JSON.parse(locationData);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (e) {
+        console.error('Error parsing locations:', e);
+        return [];
+      }
+    }
+    return [];
+  };
+  
+  const [locations, setLocations] = useState<string[]>(parseLocations(data?.locations));
+  const [selectedLocations, setSelectedLocations] = useState<string[]>(parseLocations(data?.selected_locations));
 
   const [formData, setFormData] = useState({
     clubReadyUsername: data?.users?.clubready_username || "",
     clubReadyPassword: data?.users?.clubready_password || "",
-    numberOfStudioLocations: data?.number_of_locations?.toString() || selectedLocations.length.toString(),
+    numberOfStudioLocations: data?.number_of_locations?.toString() || parseLocations(data?.selected_locations).length.toString(),
     // unloggedBookings: data?.unlogged_booking ? data.unlogged_booking : false,
     // dailyRunTime: data?.run_time ? data.run_time : "09:00",
   });
@@ -59,9 +75,7 @@ export const RobotConfigForm = ({
       const newSelected = prev.includes(location)
         ? prev.filter(loc => loc !== location)
         : [...prev, location];
-      
-      // Update numberOfStudioLocations based on selected locations
-      setFormData(currentFormData => ({
+            setFormData(currentFormData => ({
         ...currentFormData,
         numberOfStudioLocations: newSelected.length.toString(),
       }));
@@ -71,7 +85,7 @@ export const RobotConfigForm = ({
   };
 
   const handleVerifyCredentials = async () => {
-    setEditLocation(true);
+    // setEditLocation(true);
     setError("");
     if (!formData.clubReadyUsername || !formData.clubReadyPassword) {
       setError("Please enter your ClubReady username and password");
@@ -87,9 +101,7 @@ export const RobotConfigForm = ({
         if (response.data.status) {
           setVerified(true);
           setLocations(response.data.locations);
-          // Automatically select all locations
           setSelectedLocations(response.data.locations);
-          renderSuccessToast(`${response.data.message} - All ${response.data.locations.length} locations have been automatically selected.`);
           setFormData({
             ...formData,
             numberOfStudioLocations: response.data.locations.length.toString(),
@@ -130,8 +142,8 @@ export const RobotConfigForm = ({
           numberOfStudioLocations: parseInt(
             formData.numberOfStudioLocations as string
           ),
-          unloggedBookings: false,
-          dailyRunTime: "09:00",
+          selectedStudioLocations: selectedLocations,
+          studioLocations: locations,
         });
       } else {
         response = await saveSettings({
@@ -140,18 +152,15 @@ export const RobotConfigForm = ({
           numberOfStudioLocations: parseInt(
             formData.numberOfStudioLocations as string
           ),
-          unloggedBookings: false,
-          dailyRunTime: "09:00",
+          selectedStudioLocations: selectedLocations,
+          studioLocations: locations,
         });
       }
       if (response.status === 200) {
         renderSuccessToast("Settings saved successfully");
-        
-        // Check if user is in signup flow (not fully logged in)
         if (isSignupFlow) {
           const user = getUserInfo();
           if (!user) {
-            // User is in signup flow, get temp token and set as main token
             const tempToken = getTempUserCookie();
             if (tempToken) {
               setUserCookie(tempToken);
@@ -161,13 +170,11 @@ export const RobotConfigForm = ({
           return;
         }
         
-        // Normal flow - user is already logged in
         refetch();
         setIsConfig(true);
       }
     } catch (error) {
       const apiError = error as ApiError;
-      console.log(apiError.response.data);
       if (apiError.response.status === 402) {
         if (apiError.response.data.payment_id) {
           setPaymentInfo(true);
@@ -274,7 +281,7 @@ export const RobotConfigForm = ({
                    </p>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-64 overflow-y-auto">
-                    {locations.map((location, index) => (
+                    {locations.map((location, _) => (
                       <div
                         key={location}
                         onClick={() => handleLocationSelect(location)}
@@ -485,7 +492,7 @@ export const RobotConfigForm = ({
                            </p>
                           
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-48 overflow-y-auto border rounded-lg p-2">
-                            {locations.map((location, index) => (
+                            {locations.map((location, _) => (
                               <div
                                 key={location}
                                 onClick={() => handleLocationSelect(location)}

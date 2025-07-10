@@ -44,6 +44,8 @@ export interface RobotConfig {
   run_time: string;
   unlogged_booking: boolean;
   status: string;
+  selected_locations: string[];
+  locations: string[];
   users: {
     clubready_username: string;
     clubready_password: string;

@@ -76,7 +76,13 @@ export const Config = ({
       <div className="flex flex-col md:flex-row gap-2">
         <Button
           className="bg-grey-5 text-xs md:text-sm font-semibold py-2 text-white"
-          onClick={() => setIsConfig(false)}
+          onClick={() => {
+            if (!data?.active) {
+              renderErrorToast("Robot is disabled. Enable to edit");
+              return;
+            }
+            setIsConfig(false);
+          }}
         >
           Edit
         </Button>
