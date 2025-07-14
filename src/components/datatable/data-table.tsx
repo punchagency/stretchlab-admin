@@ -176,12 +176,12 @@ export function DataTable<TData extends { id: number | string }, TValue>({
         </div>
       )}
       <div
-        className={`rounded-md border w-[85vw] mx-auto md:w-full overflow-x-auto ${tableContainerClassName || ""}`}
+        className={`rounded-md border w-[85vw] mx-auto md:w-full overflow-x-auto border-sidebar-border ${tableContainerClassName || ""}`}
       >
-        <Table className={tableClassName}>
-          <TableHeader className="bg-primary-light">
+        <Table className={`border-sidebar-border ${tableClassName}`}>
+          <TableHeader className="bg-primary-light ">
             {table.getHeaderGroups().map((headerGroup, index) => (
-              <TableRow key={index}>
+              <TableRow key={index} className="border-sidebar-border">
                 {headerGroup.headers.map((header, index) => {
                   return (
                     <TableHead key={index} className="pl-4 text-[#344054] py-2">
@@ -206,6 +206,7 @@ export function DataTable<TData extends { id: number | string }, TValue>({
                   }}
                   key={index}
                   data-state={row.getIsSelected() && "selected"}
+                  className="border-sidebar-border"
                 >
                   {row.getVisibleCells().map((cell, index) => (
                     <TableCell key={index} className="pl-4">
@@ -236,6 +237,7 @@ export function DataTable<TData extends { id: number | string }, TValue>({
           size="sm"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
+          className="border-sidebar-border"
         >
           Previous
         </Button>
@@ -244,6 +246,7 @@ export function DataTable<TData extends { id: number | string }, TValue>({
           size="sm"
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
+          className="border-sidebar-border"
         >
           Next
         </Button>

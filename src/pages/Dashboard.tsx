@@ -30,16 +30,17 @@ export const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-white">
       <div className="max-w-7xl">
         <div className="border-b border-gray-200 px-4 sm:px-7">
           <h1 className="text-base font-semibold mb-3 text-gray-900">
             Performance Metrics Dashboard
           </h1>
         </div>
-      
-        <div className="px-5 sm:px-7 mt-5">
-          <div className="mb-8 py-4 sm:px-6 bg-[#F5F5F5] rounded-lg shadow-md">
+
+        <div className="px-5 mt-5 flex flex-col space-y-10">
+
+          <div className="py-4 px-3 sm:px-4 bg-[#F5F5F5] rounded-lg shadow-md">
             <h2 className="text-base font-semibold text-gray-900 mb-4">Check-Out Countdown</h2>
             {isMetricsLoading ? (
               <MetricCardsSkeleton />
@@ -64,12 +65,12 @@ export const Dashboard = () => {
                 ))}
               </div>
             )}
-          </div>
-        </div>
 
-        
-        <div className="mb-8 py-4 sm:px-6">
-          <div className="bg-[#F5F5F5] rounded-lg shadow-md py-4 sm:px-6">
+          </div>
+
+
+
+          <div className="bg-[#F5F5F5] rounded-lg shadow-md py-4 px-3 sm:px-4">
             <h2 className="text-base font-semibold text-gray-900 mb-4">Check-Out Countdown</h2>
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6">
               {isFiltersLoading ? (
@@ -83,8 +84,8 @@ export const Dashboard = () => {
                 </div>
               ) : (
                 <>
-                
-                  <div className="flex flex-wrap gap-3 mb-6 justify-between">
+
+                  <div className="flex flex-wrap gap-3 mb-6 justify-between flex-col sm:flex-row">
                     <FilterDropdown
                       label="Filter By"
                       value={selectedFilters.filterBy}
@@ -105,7 +106,7 @@ export const Dashboard = () => {
                         value={selectedFilters.location}
                         options={filterOptions.location}
                         onChange={(value) => handleFilterChange('location', value)}
-                        className="flex-1"
+                        className="flex-2"
                       />
                     )}
                     {shouldShowFlexologist && (
@@ -114,7 +115,7 @@ export const Dashboard = () => {
                         value={selectedFilters.flexologist}
                         options={filterOptions.flexologist}
                         onChange={(value) => handleFilterChange('flexologist', value)}
-                        className="flex-1"
+                        className="flex-2"
                       />
                     )}
                     <FilterDropdown
@@ -126,7 +127,7 @@ export const Dashboard = () => {
                     />
                   </div>
 
-                  
+
                   <div className="p-1 relative">
                     {isChartLoading && (
                       <ChartSkeleton />
@@ -138,50 +139,52 @@ export const Dashboard = () => {
                       </div>
                     )}
                     {!chartError && !isChartLoading && (
-                      <RechartsBarChart 
-                        data={chartData} 
-                        title="" 
-                        maxValue={maxValue} 
+                      <RechartsBarChart
+                        data={chartData}
+                        title=""
+                        maxValue={maxValue}
                       />
                     )}
                   </div>
                 </>
               )}
             </div>
+
+          </div>
+
+
+
+
+          <div className="mb-8 py-4  sm:px-4 bg-[#F5F5F5] rounded-lg shadow-md">
+            <h2 className="text-base font-semibold text-gray-900 mb-4 pl-2 sm:pl-0">Flexologist</h2>
+
+            {isTableLoading ? (
+              <div className="flex justify-center items-center py-12">
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="text-primary-base font-medium"
+                >
+                  Loading users...
+                </motion.div>
+              </div>
+            ) : tableError ? (
+              <div className="flex justify-center items-center py-12">
+                <div className="text-red-500 font-medium">Failed to load users</div>
+              </div>
+            ) : (
+              <DataTable
+                columns={userTableColumns}
+                data={userTableData}
+                emptyText="No users found"
+                tableContainerClassName="bg-white"
+              />
+            )}
+
           </div>
         </div>
 
-        
-        <div className="px-5 sm:px-7 mt-5">
-          <div className="mb-8 py-4 sm:px-6 bg-[#F5F5F5] rounded-lg shadow-md">
-            <h2 className="text-base font-semibold text-gray-900 mb-4">Flexologist</h2>
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 overflow-hidden">
-              {isTableLoading ? (
-                <div className="flex justify-center items-center py-12">
-                  <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="text-primary-base font-medium"
-                  >
-                    Loading users...
-                  </motion.div>
-                </div>
-              ) : tableError ? (
-                <div className="flex justify-center items-center py-12">
-                  <div className="text-red-500 font-medium">Failed to load users</div>
-                </div>
-              ) : (
-                <DataTable
-                  columns={userTableColumns}
-                  data={userTableData}
-                  emptyText="No users found"
-                  tableContainerClassName="w-full"
-                />
-              )}
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );
