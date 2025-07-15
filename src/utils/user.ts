@@ -8,6 +8,7 @@ interface CustomJwtPayload extends JwtPayload {
   role_name: string;
   username: string;
   avatar?: string;
+  role_id?: number;
 }
 
 export const setUserCookie = (token: string): void => {

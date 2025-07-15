@@ -6,6 +6,7 @@ export * from "./ConfirmModal";
 export * from "./FullLoader";
 export * from "./CustomizeWidget";
 export * from "./FilterDropdown";
+export * from "./DateRangeFilter";
 export * from "./Header";
 export * from "./Input";
 export * from "./Mainheader";

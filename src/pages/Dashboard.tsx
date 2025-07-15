@@ -1,8 +1,9 @@
-import { MetricCard, RechartsBarChart, FilterDropdown, MetricCardsSkeleton } from "@/components/shared";
+import { MetricCard, RechartsBarChart, FilterDropdown, DateRangeFilter, MetricCardsSkeleton } from "@/components/shared";
 import { DataTable, userTableColumns } from "@/components/datatable";
 import { ChartSkeleton } from "@/components/shared/ChartSkeleton";
 import { useDashboard } from "@/hooks/useDashboard";
 import { motion } from "motion/react";
+import { getUserInfo } from "@/utils";
 
 export const Dashboard = () => {
   const {
@@ -21,10 +22,11 @@ export const Dashboard = () => {
     tableError,
     maxValue,
     handleFilterChange,
+    handleCustomRangeChange,
     shouldShowLocation,
     shouldShowFlexologist,
   } = useDashboard();
-
+  const userInfo = getUserInfo();
   const handleMetricClick = (title: string) => {
     console.log(`Clicked on ${title}`);
   };
@@ -50,7 +52,8 @@ export const Dashboard = () => {
                 <p className="text-gray-600">Please try refreshing the page</p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+              <div className={`grid grid-cols-1 md:grid-cols-2 ${userInfo?.role_id === 1 ? 'lg:grid-cols-3' : 'lg:grid-cols-2'
+                } gap-4 mb-6`}>
                 {dashboardMetrics.map((metric, index) => (
                   <MetricCard
                     key={index}
@@ -93,12 +96,13 @@ export const Dashboard = () => {
                       onChange={(value) => handleFilterChange('filterBy', value)}
                       className="flex-1"
                     />
-                    <FilterDropdown
+                    <DateRangeFilter
                       label="Duration"
-                      value={selectedFilters.duration}
+                      value={filterOptions.duration.find(opt => opt.value === selectedFilters.duration)?.label || selectedFilters.duration}
                       options={filterOptions.duration}
                       onChange={(value) => handleFilterChange('duration', value)}
-                      className="flex-1"
+                      onCustomRangeChange={handleCustomRangeChange}
+                      className="flex-2"
                     />
                     {shouldShowLocation && (
                       <FilterDropdown

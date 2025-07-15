@@ -9,18 +9,22 @@ export const getChartFilters = async () => {
 export const getChartData = async (params: ChartDataParams) => {
   const queryParams = new URLSearchParams();
   
+  // queryParams.append('duration', 'weekly');
   queryParams.append('duration', params.duration.toLowerCase());
+
   queryParams.append('dataset', params.dataset);
-    if (params.filterBy === "By Location") {
+    if (params.filterBy === "Location") {
     const locationValue = params.location && params.location !== "All" 
       ? params.location.toLowerCase() 
       : "all";
     queryParams.append('location', locationValue);
-  } else if (params.filterBy === "By Flexologist") {
+  } else if (params.filterBy === "Flexologist") {
     const flexologistValue = params.flexologist || "all";
     queryParams.append('flexologist', flexologistValue.toString());
   }
-  
+  if (params.customRange) {
+    queryParams.append('custom_range', JSON.stringify(params.customRange));
+  }
   const response = await api.get(`/admin/dashboard/second_row?${queryParams.toString()}`);
   return response.data;
 };

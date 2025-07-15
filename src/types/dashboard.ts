@@ -65,15 +65,24 @@ export interface DashboardMetricsResponse {
 
 export interface FilterState {
   filterBy: string;
-  duration: string;
+  duration: string; // This will store the value (e.g., "today", "last_7_days")
   location: string;
   flexologist: string;
   dataset: string;
+  customRange?: {
+    start: string;
+    end: string;
+  };
+}
+
+export interface DurationOption {
+  value: string;
+  label: string;
 }
 
 export interface FilterOptions {
   filterBy: string[];
-  duration: string[];
+  duration: DurationOption[];
   location: string[];
   flexologist: string[];
   dataset: string[];
@@ -85,6 +94,10 @@ export interface ChartDataParams {
   flexologist?: number;
   dataset: string;
   filterBy: string;
+  customRange?: {
+    start: string;
+    end: string;
+  };
 }
 
 export interface MetricCardData {

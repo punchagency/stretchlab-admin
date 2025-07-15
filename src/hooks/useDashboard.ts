@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getChartFilters, getChartData, getUserTableData, getDashboardMetrics } from "@/service/dashboard";
+// import { getLabels, generateDummyData } from "@/utils/dashboard";
 import type {
   ChartFiltersResponse,
   ChartDataPoint,
@@ -11,11 +12,12 @@ import type {
   FilterOptions,
   MetricCardData
 } from "@/types";
+import { getUserInfo } from "@/utils";
 
 export const useDashboard = () => {
   const [selectedFilters, setSelectedFilters] = useState<FilterState>({
-    filterBy: "By Location",
-    duration: "Weekly",
+    filterBy: "Location",
+    duration: "today",
     location: "All",
     flexologist: "All",
     dataset: "",
@@ -31,7 +33,7 @@ export const useDashboard = () => {
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
   });
-  
+  const userInfo = getUserInfo();
   const {
     data: chartFiltersData,
     isLoading: isFiltersLoading,
@@ -56,8 +58,17 @@ export const useDashboard = () => {
 
   const processFilterOptions = () => {
     const filterOptions: FilterOptions = {
-      filterBy: ["By Location", "By Flexologist"],
-      duration: ["Weekly", "Monthly", "Yearly"],
+      filterBy: ["Location", "Flexologist"],
+      duration: [
+        { value: "today", label: "Today" },
+        { value: "yesterday", label: "Yesterday" },
+        { value: "last_7_days", label: "Last 7 Days" },
+        { value: "last_30_days", label: "Last 30 Days" },
+        { value: "this_month", label: "This Month" },
+        { value: "last_month", label: "Last Month" },
+        { value: "this_year", label: "This Year" },
+        // { value: "custom", label: "Custom" },
+      ],
       location: ["All"],
       flexologist: ["All"],
       dataset: [],
@@ -103,11 +114,12 @@ export const useDashboard = () => {
       duration: selectedFilters.duration,
       dataset: filtersMap.datasetMap.get(selectedFilters.dataset) || selectedFilters.dataset,
       filterBy: selectedFilters.filterBy,
+      customRange: selectedFilters.customRange,
     };
 
-    if (selectedFilters.filterBy === "By Location") {
+    if (selectedFilters.filterBy === "Location") {
       params.location = selectedFilters.location;
-    } else if (selectedFilters.filterBy === "By Flexologist") {
+    } else if (selectedFilters.filterBy === "Flexologist") {
       if (selectedFilters.flexologist !== "All") {
         params.flexologist = filtersMap.flexologistMap.get(selectedFilters.flexologist);
       }
@@ -129,17 +141,23 @@ export const useDashboard = () => {
     refetchOnWindowFocus: false,
   });
 
-  const generateDashboardMetrics = (): MetricCardData[] => [
-    {
+  const generateDashboardMetrics = (role_id: number): MetricCardData[] => {
+    const metrics: MetricCardData[] = [];
+
+  if (role_id === 1) {
+    metrics.push({
       title: "Revenue",
-      value: dashboardMetricsData?.data?.balance_info?.month_transactions 
+      value: dashboardMetricsData?.data?.balance_info?.month_transactions
         ? `$${dashboardMetricsData.data.balance_info.month_transactions.toFixed(2)}`
         : "$0.00",
       subtitle: "This Month",
       buttonText: "View Details",
       buttonVariant: "primary",
       showCurrency: true,
-    },
+    });
+  }
+
+  metrics.push(
     {
       title: "Bookings",
       value: dashboardMetricsData?.data?.bookings_info?.bookings_in_month
@@ -160,15 +178,9 @@ export const useDashboard = () => {
       buttonVariant: "primary",
       showCurrency: false,
     }
-    // {
-    //   title: "System Uptime",
-    //   value: "+54",
-    //   subtitle: "Excellent",
-    //   buttonText: "Growth",
-    //   buttonVariant: "primary",
-    //   showCurrency: false,
-    // },
-  ];
+  );
+  return metrics;
+};
 
   const calculateMaxValue = (data: ChartDataPoint[]) => {
     if (!data || data.length === 0) return 100;
@@ -198,17 +210,35 @@ export const useDashboard = () => {
     }));
   };
 
+  const handleCustomRangeChange = (start: string, end: string) => {
+    setSelectedFilters(prev => ({
+      ...prev,
+      customRange: { start, end }
+    }));
+  };
+
+  // const generateChartData = (): ChartDataPoint[] => {
+  //   const labels = getLabels(selectedFilters.duration as any, selectedFilters.customRange);
+  //   const values = generateDummyData(labels);
+    
+  //   return labels.map((label, index) => ({
+  //     label,
+  //     value: values[index]
+  //   }));
+  // };
+
   const { filterOptions } = processFilterOptions();
-  
   const processedChartData = (chartData?.data || []).map(item => ({
     ...item,
     value: typeof item.value === 'number' && !isNaN(item.value) && item.value >= 0 ? item.value : 0,
   }));
+  // Use dummy data for now since backend hasn't been updated
+  // const processedChartData = generateChartData();
   
   const maxValue = calculateMaxValue(processedChartData);
 
   return {
-    dashboardMetrics: generateDashboardMetrics(),
+    dashboardMetrics: generateDashboardMetrics(userInfo?.role_id || 0),
     chartData: processedChartData,
     userTableData: userTableData?.data || [],
     
@@ -228,7 +258,8 @@ export const useDashboard = () => {
     maxValue,
     
     handleFilterChange,
-        shouldShowLocation: selectedFilters.filterBy === "By Location",
-    shouldShowFlexologist: selectedFilters.filterBy === "By Flexologist",
+    handleCustomRangeChange,
+    shouldShowLocation: selectedFilters.filterBy === "Location",
+    shouldShowFlexologist: selectedFilters.filterBy === "Flexologist",
   };
 }; 
