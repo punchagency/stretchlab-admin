@@ -22,7 +22,7 @@ export const usersColumns: ColumnDef<UserTableData>[] = [
   {
     id: "actions",
     header: "Actions",
-    cell: ({ row }) => {
+    cell: () => {
       return (
         <Button
           onClick={() => {}}

@@ -229,6 +229,7 @@ export const useDashboard = () => {
   const processedChartData = (chartData?.data || []).map(item => ({
     ...item,
     value: typeof item.value === 'number' && !isNaN(item.value) && item.value >= 0 ? item.value : 0,
+    
   }));
   // Use dummy data for now since backend hasn't been updated
   // const processedChartData = generateChartData();

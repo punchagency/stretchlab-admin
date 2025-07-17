@@ -1,5 +1,4 @@
 import React from 'react';
-import { MetricCard } from '../shared';
 
 interface MetricsDisplayProps {
   totalNotes: number;

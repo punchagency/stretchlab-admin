@@ -160,7 +160,7 @@ export const Dashboard = () => {
 
 
           <div className="mb-8 py-4  sm:px-4 bg-[#F5F5F5] rounded-lg shadow-md">
-            <h2 className="text-base font-semibold text-gray-900 mb-4 pl-2 sm:pl-0">Flexologist</h2>
+            <h2 className="text-base font-semibold text-gray-900 mb-4 pl-2 sm:pl-0">My Team</h2>
 
             {isTableLoading ? (
               <div className="flex justify-center items-center py-12">

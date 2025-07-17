@@ -20,6 +20,7 @@ export interface ChartFiltersResponse {
 export interface ChartDataPoint {
   label: string;
   value: number;
+  total?: number;
 }
 
 export interface ChartDataResponse {

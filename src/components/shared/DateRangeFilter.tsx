@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Calendar, ChevronDown } from "lucide-react";
-import dayjs from "dayjs";
 import type { DurationOption } from "@/types";
 
 interface DateRangeFilterProps {

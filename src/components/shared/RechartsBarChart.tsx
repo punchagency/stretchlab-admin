@@ -12,6 +12,7 @@ interface RechartsBarChartProps {
   data: Array<{
     label: string;
     value: number;
+    total?: number;
   }>;
   title?: string;
   maxValue?: number;
@@ -24,6 +25,7 @@ export const RechartsBarChart = ({ data, title, maxValue }: RechartsBarChartProp
   const chartData = safeData.map(item => ({
     name: item.label,
     value: item.value,
+    total: item.total,
   }));
 
   const CustomBar = (props: any) => {
@@ -132,6 +134,25 @@ export const RechartsBarChart = ({ data, title, maxValue }: RechartsBarChartProp
             <Tooltip
               cursor={{ fill: 'rgba(0,0,0,0.05)' }}
               contentStyle={{ fontSize: 12 }}
+              content={({ active, payload, label }) => {
+                if (active && payload && payload.length) {
+                  const data = payload[0].payload;
+                  return (
+                    <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg">
+                      <p className="font-medium text-gray-900">{label}</p>
+                      <p className="text-sm text-gray-600">
+                        Value: {data.value}
+                      </p>
+                      {data.total !== undefined && (
+                        <p className="text-sm text-gray-600">
+                          Total: {data.total}
+                        </p>
+                      )}
+                    </div>
+                  );
+                }
+                return null;
+              }}
             />
             <Bar
               dataKey="value"

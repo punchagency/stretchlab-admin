@@ -64,7 +64,6 @@ export const useAnalytics = () => {
       }
 
       const opportunityToUse = selectedOpportunity || (rpaAuditData?.note_opportunities?.[0]?.opportunity);
-      console.log({opportunityToUse}); 
       if (!opportunityToUse) return null;
 
 
@@ -130,9 +129,9 @@ export const useAnalytics = () => {
         { value: "last_7_days", label: "Last 7 Days" },
         { value: "last_30_days", label: "Last 30 Days" },
         { value: "last_90_days", label: "Last 90 Days" },
-        { value: "this_month", label: "This Month" },
-        { value: "last_month", label: "Last Month" },
-        { value: "this_year", label: "This Year" },
+        // { value: "this_month", label: "This Month" },
+        // { value: "last_month", label: "Last Month" },
+        // { value: "this_year", label: "This Year" },
         { value: "custom", label: "Custom Range" },
       ],
       location: ["All"],

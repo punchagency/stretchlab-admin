@@ -63,6 +63,7 @@ export interface RankingAnalyticsParams {
 export interface AnalyticsChartDataPoint {
   name: string;
   value: number;
+  total?: number;
 }
 
 // Drilldown Types
