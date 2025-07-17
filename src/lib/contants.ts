@@ -20,6 +20,11 @@ export const menuList = [
     link: "/robot-automation",
   },
   {
+    title: "Users",
+    icon: "users",
+    link: "/users",
+  },
+  {
     title: "Settings",
     icon: "settings",
     link: "/settings",

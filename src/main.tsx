@@ -17,7 +17,8 @@ import {
   Analytics,
   TwoFactorLogin,
   Notification,
-  Billing
+  Billing,
+  Users
 } from "./pages";
 import { Toaster } from "./components/ui/sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -44,6 +45,10 @@ const router = createBrowserRouter([
       {
         path: "robot-automation",
         element: <RobotAutomation />,
+      },
+      {
+        path: "users",
+        element: <Users />,
       },
       {
         path: "notification",

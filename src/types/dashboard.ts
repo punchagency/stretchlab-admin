@@ -65,7 +65,7 @@ export interface DashboardMetricsResponse {
 
 export interface FilterState {
   filterBy: string;
-  duration: string; // This will store the value (e.g., "today", "last_7_days")
+  duration: string;
   location: string;
   flexologist: string;
   dataset: string;
@@ -104,7 +104,9 @@ export interface MetricCardData {
   title: string;
   value: string;
   subtitle: string;
-  buttonText: string;
+  buttonText?: string;
   buttonVariant: "primary" | "secondary" | "success" | "warning";
   showCurrency: boolean;
-} 
+}
+
+ 

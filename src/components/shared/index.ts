@@ -1,6 +1,7 @@
 export * from "./ActionDropdown";
 export * from "./Button";
 export * from "./ChartSkeleton";
+export * from "./DrilldownSkeleton";
 export * from "./MetricCardSkeleton";
 export * from "./ConfirmModal";
 export * from "./FullLoader";

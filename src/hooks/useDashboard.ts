@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getChartFilters, getChartData, getUserTableData, getDashboardMetrics } from "@/service/dashboard";
-// import { getLabels, generateDummyData } from "@/utils/dashboard";
 import type {
   ChartFiltersResponse,
   ChartDataPoint,
@@ -17,7 +16,7 @@ import { getUserInfo } from "@/utils";
 export const useDashboard = () => {
   const [selectedFilters, setSelectedFilters] = useState<FilterState>({
     filterBy: "Location",
-    duration: "today",
+    duration: "yesterday",
     location: "All",
     flexologist: "All",
     dataset: "",
@@ -60,7 +59,6 @@ export const useDashboard = () => {
     const filterOptions: FilterOptions = {
       filterBy: ["Location", "Flexologist"],
       duration: [
-        { value: "today", label: "Today" },
         { value: "yesterday", label: "Yesterday" },
         { value: "last_7_days", label: "Last 7 Days" },
         { value: "last_30_days", label: "Last 30 Days" },
@@ -151,7 +149,7 @@ export const useDashboard = () => {
         ? `$${dashboardMetricsData.data.balance_info.month_transactions.toFixed(2)}`
         : "$0.00",
       subtitle: "This Month",
-      buttonText: "View Details",
+      // buttonText: "View Details",
       buttonVariant: "primary",
       showCurrency: true,
     });
@@ -166,7 +164,7 @@ export const useDashboard = () => {
       subtitle: dashboardMetricsData?.data?.bookings_info
         ? `${dashboardMetricsData.data.bookings_info.upwards_trend ? '+' : dashboardMetricsData.data.bookings_info.neutral_trend ? '' : '-'}${dashboardMetricsData.data.bookings_info.aggregation} Total`
         : "No data",
-      buttonText: "See Sessions",
+      // buttonText: "See Sessions",
       buttonVariant: "primary",
       showCurrency: false,
     },
@@ -174,7 +172,7 @@ export const useDashboard = () => {
       title: "Security Incidents",
       value: "87%",
       subtitle: "+1% Vs Last Month",
-      buttonText: "Utilization",
+      // buttonText: "Utilization",
       buttonVariant: "primary",
       showCurrency: false,
     }
