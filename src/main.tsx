@@ -17,7 +17,7 @@ import {
   Analytics,
   TwoFactorLogin,
   Notification,
-  Billing
+  Billing,
 } from "./pages";
 import { Toaster } from "./components/ui/sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";

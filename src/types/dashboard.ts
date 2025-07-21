@@ -20,6 +20,7 @@ export interface ChartFiltersResponse {
 export interface ChartDataPoint {
   label: string;
   value: number;
+  total?: number;
 }
 
 export interface ChartDataResponse {
@@ -69,11 +70,20 @@ export interface FilterState {
   location: string;
   flexologist: string;
   dataset: string;
+  customRange?: {
+    start: string;
+    end: string;
+  };
+}
+
+export interface DurationOption {
+  value: string;
+  label: string;
 }
 
 export interface FilterOptions {
   filterBy: string[];
-  duration: string[];
+  duration: DurationOption[];
   location: string[];
   flexologist: string[];
   dataset: string[];
@@ -85,13 +95,19 @@ export interface ChartDataParams {
   flexologist?: number;
   dataset: string;
   filterBy: string;
+  customRange?: {
+    start: string;
+    end: string;
+  };
 }
 
 export interface MetricCardData {
   title: string;
   value: string;
   subtitle: string;
-  buttonText: string;
+  buttonText?: string;
   buttonVariant: "primary" | "secondary" | "success" | "warning";
   showCurrency: boolean;
-} 
+}
+
+ 

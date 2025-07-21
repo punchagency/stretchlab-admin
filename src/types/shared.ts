@@ -25,7 +25,8 @@ export type SvgIconName =
   | "edit"
   | "bell"
   | "billing"
-  | "trash";
+  | "trash"
+  | "users";
 
 export type RobotHistoryType = {
   id: number;

@@ -2,7 +2,7 @@ interface MetricCardProps {
   title: string;
   value: string;
   subtitle: string;
-  buttonText: string;
+  buttonText?: string;
   buttonVariant?: "primary" | "secondary" | "success" | "warning";
   onButtonClick?: () => void;
   showCurrency?: boolean;
@@ -44,12 +44,12 @@ export const MetricCard = ({
         <div className="text-sm text-gray-500">{subtitle}</div>
       </div>
       
-      <button
+     {buttonText && <button
         onClick={onButtonClick}
         className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${getButtonClasses()}`}
       >
         {buttonText}
-      </button>
+      </button>}
     </div>
   );
 }; 

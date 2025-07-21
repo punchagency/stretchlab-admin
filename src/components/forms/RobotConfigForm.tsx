@@ -190,7 +190,6 @@ export const RobotConfigForm = ({
     }
   };
 
-  // If in signup flow, don't show the Config component
   if (isSignupFlow) {
     return (
       <>
@@ -200,7 +199,6 @@ export const RobotConfigForm = ({
           </h2>
 
           <form className="space-y-6" onSubmit={handleSaveSettings}>
-            {/* Credentials Section */}
             <div className="space-y-4">
               <h3 className="text-lg font-medium">ClubReady Credentials</h3>
 
@@ -286,8 +284,8 @@ export const RobotConfigForm = ({
                         key={location}
                         onClick={() => handleLocationSelect(location)}
                         className={`p-3 rounded-lg border-2 cursor-pointer transition-all duration-200 ${selectedLocations.includes(location)
-                            ? "border-green-500 bg-green-50 text-green-700"
-                            : "border-gray-300 bg-white hover:border-gray-400"
+                          ? "border-green-500 bg-green-50 text-green-700"
+                          : "border-gray-300 bg-white hover:border-gray-400"
                           }`}
                       >
                         <div className="flex items-center justify-between">
@@ -295,8 +293,8 @@ export const RobotConfigForm = ({
                             <h4 className="font-medium text-sm">{location}</h4>
                           </div>
                           <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selectedLocations.includes(location)
-                              ? "border-green-500 bg-green-500"
-                              : "border-gray-300"
+                            ? "border-green-500 bg-green-500"
+                            : "border-gray-300"
                             }`}>
                             {selectedLocations.includes(location) && (
                               <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
@@ -487,8 +485,8 @@ export const RobotConfigForm = ({
                                 key={location}
                                 onClick={() => handleLocationSelect(location)}
                                 className={`p-2 rounded-md border cursor-pointer transition-all duration-200 text-xs ${selectedLocations.includes(location)
-                                    ? "border-green-500 bg-green-50 text-green-700"
-                                    : "border-gray-200 bg-white hover:border-gray-300"
+                                  ? "border-green-500 bg-green-50 text-green-700"
+                                  : "border-gray-200 bg-white hover:border-gray-300"
                                   }`}
                               >
                                 <div className="flex items-center justify-between">
@@ -496,8 +494,8 @@ export const RobotConfigForm = ({
                                     <h5 className="font-medium text-xs">{location}</h5>
                                   </div>
                                   <div className={`w-3 h-3 rounded-full border flex items-center justify-center ${selectedLocations.includes(location)
-                                      ? "border-green-500 bg-green-500"
-                                      : "border-gray-300"
+                                    ? "border-green-500 bg-green-500"
+                                    : "border-gray-300"
                                     }`}>
                                     {selectedLocations.includes(location) && (
                                       <svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">

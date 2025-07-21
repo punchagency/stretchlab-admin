@@ -44,7 +44,7 @@ export const Home = () => {
   return (
     <ProfilePictureProvider>
       <SidebarProvider>
-        <Sidebar className="p-2" collapsible="icon">
+        <Sidebar className="p-2 border-sidebar-border" collapsible="icon">
           <SidebarHeader className="pt-5">
             <SidebarLogo />
           </SidebarHeader>
@@ -67,7 +67,7 @@ export const Home = () => {
           </SidebarFooter> */}
           <SidebarRail />
         </Sidebar>
-        <div className="flex-1 bg-gray-50">
+        <div className="flex-1 bg-white">
           <MainHeader />
           <div>
             <Outlet />
