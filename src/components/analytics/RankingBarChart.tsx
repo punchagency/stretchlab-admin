@@ -55,8 +55,8 @@ export const RankingBarChart: React.FC<RankingBarChartProps> = ({
     );
   }
 
-  const truncateLength = isMobile ? 15 : 25;
-  const yAxisWidth = isMobile ? 120 :170;
+  const truncateLength = isMobile ? 12 : 25;
+  const yAxisWidth = isMobile ? 100 :170;
   const fontSize = isMobile ? 11 : 12;
   const barSize = isMobile ? 25 : 35;
 
@@ -71,7 +71,7 @@ export const RankingBarChart: React.FC<RankingBarChartProps> = ({
       <BarChart
         layout="vertical"
         data={processedData}
-        margin={{ top: 20, right: 50, left: 0, bottom: 20 }}
+        margin={{ top: 20, right: 30, left: 0, bottom: 20 }}
         barSize={barSize}
       >
         <CartesianGrid strokeDasharray="3 3" />

@@ -24,6 +24,14 @@ export interface RPAAuditResponse {
   total_quality_notes: number;
 }
 
+export interface RPAAuditParams {
+  duration: string;
+  location?: string;
+  flexologist_name?: string;
+  start_date?: string;
+  end_date?: string;
+}
+
 export interface RPAAuditDetailsParams {
   opportunity: string;
   duration: string;

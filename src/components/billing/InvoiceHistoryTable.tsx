@@ -110,12 +110,9 @@ export const InvoiceHistoryTable = () => {
   ];
 
   const filteredData = processedInvoiceData.filter((invoice: ProcessedInvoiceData) => {
-    // Search filter
     const matchesSearch = searchTerm === "" || 
       invoice.invoiceId.toLowerCase().includes(searchTerm.toLowerCase()) ||
       invoice.invoiceDate.toLowerCase().includes(searchTerm.toLowerCase());
-
-    // Period filter
     let matchesPeriod = true;
     if (filterPeriod !== "All") {
       const originalInvoice = invoiceHistory.find(orig => orig.id === invoice.id);

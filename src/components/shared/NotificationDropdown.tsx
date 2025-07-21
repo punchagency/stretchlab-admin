@@ -75,7 +75,7 @@ export const NotificationDropdown = ({ children }: NotificationDropdownProps) =>
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="end"
-        className="w-[90vw] sm:w-80 max-w-sm ml-2 sm:ml-0"
+        className="w-[90vw] sm:w-80 max-w-sm ml-2 sm:ml-0 border-1 border-border"
         sideOffset={8}
         alignOffset={-58}
       >

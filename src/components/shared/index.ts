@@ -22,3 +22,5 @@ export * from "./SideMenuList";
 export * from "./Spinner";
 export * from "./SuccessModal";
 export * from "./SvgIcon";
+export * from "./BusinessDetailModal";
+export * from "./BusinessDetailSkeleton";

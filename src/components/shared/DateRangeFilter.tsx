@@ -73,7 +73,7 @@ export const DateRangeFilter = ({
               className="fixed inset-0 z-10" 
               onClick={() => setIsOpen(false)}
             />
-            <div className="absolute z-20 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto">
+            <div className="absolute z-20 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-80 overflow-auto">
               <div className="p-2">
                 {!showDatePicker ? (
                   // Show filter options

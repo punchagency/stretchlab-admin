@@ -54,7 +54,7 @@ export const OpportunityBarChart: React.FC<OpportunityBarChartProps> = ({
   if (!data || data.length === 0) {
     return (
       <div className="flex items-center justify-center h-[350px] bg-gray-50 rounded-lg">
-        <p className="text-gray-500">No opportunity data available</p>
+        <p className="text-gray-500">No opportunity data available for this selection</p>
       </div>
     );
   }
@@ -75,7 +75,7 @@ export const OpportunityBarChart: React.FC<OpportunityBarChartProps> = ({
       <BarChart
         layout="vertical"
         data={processedData}
-        margin={{ top: 20, right: 50, left: 0, bottom: 20 }}
+        margin={{ top: 20, right: 40, left: 0, bottom: 20 }}
         barSize={barSize}
         onClick={(data) => {
           if (data.activeLabel) {

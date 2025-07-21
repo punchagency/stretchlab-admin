@@ -1,7 +1,8 @@
-import { MetricCard, RechartsBarChart, FilterDropdown, DateRangeFilter, MetricCardsSkeleton } from "@/components/shared";
-import { DataTable, userTableColumns } from "@/components/datatable";
+import { MetricCard, RechartsBarChart, FilterDropdown, DateRangeFilter, MetricCardsSkeleton, BusinessDetailModal } from "@/components/shared";
+import { DataTable, userTableColumns, businessTableColumns } from "@/components/datatable";
 import { ChartSkeleton } from "@/components/shared/ChartSkeleton";
 import { useDashboard } from "@/hooks/useDashboard";
+import { useBusinessDetail } from "@/hooks/useBusinessDetail";
 import { motion } from "motion/react";
 import { getUserInfo } from "@/utils";
 
@@ -10,22 +11,35 @@ export const Dashboard = () => {
     dashboardMetrics,
     chartData,
     userTableData,
+    businessTableData,
     selectedFilters,
     filterOptions,
     isMetricsLoading,
     isFiltersLoading,
     isChartLoading,
     isTableLoading,
+    isBusinessTableLoading,
     metricsError,
     filtersError,
     chartError,
     tableError,
+    businessTableError,
     maxValue,
     handleFilterChange,
     handleCustomRangeChange,
     shouldShowLocation,
     shouldShowFlexologist,
   } = useDashboard();
+
+  const {
+    businessInfo,
+    isModalOpen,
+    isBusinessInfoLoading,
+    businessInfoError,
+    openBusinessDetail,
+    closeBusinessDetail,
+  } = useBusinessDetail();
+
   const userInfo = getUserInfo();
   const handleMetricClick = (title: string) => {
     console.log(`Clicked on ${title}`);
@@ -187,9 +201,46 @@ export const Dashboard = () => {
             )}
 
           </div>
+
+         {userInfo?.role_id === 2 && <div className="mb-8 py-4 sm:px-4 bg-[#F5F5F5] rounded-lg shadow-md">
+            <h2 className="text-base font-semibold text-gray-900 mb-4 pl-2 sm:pl-0"> Business List</h2>
+
+            {isBusinessTableLoading ? (
+              <div className="flex justify-center items-center py-12">
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="text-primary-base font-medium"
+                >
+                  Loading businesses...
+                </motion.div>
+              </div>
+            ) : businessTableError ? (
+              <div className="flex justify-center items-center py-12">
+                <div className="text-red-500 font-medium">Failed to load businesses</div>
+              </div>
+            ) : (
+              <DataTable
+                columns={businessTableColumns(openBusinessDetail)}
+                data={businessTableData}
+                emptyText="No businesses found"
+                tableContainerClassName="bg-white"
+              />
+            )}
+
+          </div>}
+
         </div>
 
       </div>
+
+      <BusinessDetailModal
+        businessInfo={businessInfo}
+        isOpen={isModalOpen}
+        onClose={closeBusinessDetail}
+        isLoading={isBusinessInfoLoading}
+      />
     </div>
   );
 };

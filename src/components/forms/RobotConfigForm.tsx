@@ -36,7 +36,7 @@ export const RobotConfigForm = ({
   const [update, setUpdate] = useState(false);
   const [proceed, setProceed] = useState(false);
 
-  // Parse JSON strings to arrays
+  
   const parseLocations = (locationData: any): string[] => {
     if (Array.isArray(locationData)) return locationData;
     if (typeof locationData === 'string') {

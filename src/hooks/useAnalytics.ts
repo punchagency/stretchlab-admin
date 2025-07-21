@@ -6,6 +6,7 @@ import type {
   FilterState,
   FilterOptions,
   RPAAuditResponse,
+  RPAAuditParams,
   RPAAuditDetailsParams,
   RPAAuditDetailsResponse,
   LocationItem,
@@ -43,8 +44,25 @@ export const useAnalytics = () => {
     isLoading: isRPAAuditLoading,
     error: rpaAuditError,
   } = useQuery<RPAAuditResponse>({
-    queryKey: ['rpaAudit'],
-    queryFn: () => getRPAAudit(selectedFilters.duration),
+    queryKey: ['rpaAudit', selectedFilters.filterBy, selectedFilters.duration, selectedFilters.location, selectedFilters.flexologist, selectedFilters.customRange],
+    queryFn: async () => {
+      const params: RPAAuditParams = {
+        duration: selectedFilters.duration,
+      };
+
+      if (selectedFilters.filterBy === "Location" && selectedFilters.location !== "All") {
+        params.location = selectedFilters.location.toLowerCase();
+      } else if (selectedFilters.filterBy === "Flexologist" && selectedFilters.flexologist !== "All") {
+        params.flexologist_name = selectedFilters.flexologist.toLowerCase();
+      }
+
+      if (selectedFilters.duration === 'custom' && selectedFilters.customRange) {
+        params.start_date = selectedFilters.customRange.start;
+        params.end_date = selectedFilters.customRange.end;
+      }
+
+      return getRPAAudit(params);
+    },
     enabled: !!chartFiltersData, 
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
@@ -65,7 +83,6 @@ export const useAnalytics = () => {
 
       const opportunityToUse = selectedOpportunity || (rpaAuditData?.note_opportunities?.[0]?.opportunity);
       if (!opportunityToUse) return null;
-
 
       const params: RPAAuditDetailsParams = {
         opportunity: opportunityToUse.toLowerCase(),
@@ -173,13 +190,19 @@ export const useAnalytics = () => {
       ...prev,
       [filterKey]: value
     }));
+    
+    if (filterKey !== 'dataset') {
+      setSelectedOpportunity(null);
+    }
   };
 
   const handleCustomRangeChange = (start: string, end: string) => {
     setSelectedFilters(prev => ({
       ...prev,
       customRange: { start, end }
+      
     }));
+        setSelectedOpportunity(null);
   };
 
   const handleOpportunitySelect = (opportunity: string) => {

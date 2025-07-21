@@ -71,7 +71,6 @@ export const useSettings = () => {
         setHasLoadedTwoFactor(true);
       }
     } catch (error) {
-      console.error("Failed to load 2FA status:", error);
       setTwoFactorSettings({
         emailEnabled: false,
         status: "disabled",
@@ -171,7 +170,6 @@ export const useSettings = () => {
         });
       }
     } catch (error) {
-      console.error("Failed to refresh 2FA status:", error);
       setTwoFactorSettings(prev => ({
         ...prev,
         emailEnabled: twoFactorModal.mode === "enable",

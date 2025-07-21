@@ -10,7 +10,6 @@ import { NotificationDropdown } from "./NotificationDropdown";
 export const MainHeader = () => {
     const user = getUserInfo();
     const { profilePictureUrl } = useProfilePictureContext();
-    
     const { data: notificationsResponse } = useNotifications();
     const notifications = notificationsResponse?.notifications?.map(transformNotification) || [];
     const unreadCount = notifications.filter(n => !n.isRead).length;

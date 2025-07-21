@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getChartFilters, getChartData, getUserTableData, getDashboardMetrics } from "@/service/dashboard";
+import { getChartFilters, getChartData, getUserTableData, getDashboardMetrics, getBusinessTableData } from "@/service/dashboard";
 import type {
   ChartFiltersResponse,
   ChartDataPoint,
   ChartDataResponse,
   UserTableResponse,
   DashboardMetricsResponse,
+  BusinessTableResponse,
   FilterState,
   FilterOptions,
   MetricCardData
@@ -51,6 +52,17 @@ export const useDashboard = () => {
   } = useQuery<UserTableResponse>({
     queryKey: ['userTableData'],
     queryFn: getUserTableData,
+    staleTime: 3 * 60 * 1000,
+    refetchOnWindowFocus: false,
+  });
+
+  const {
+    data: businessTableData,
+    isLoading: isBusinessTableLoading,
+    error: businessTableError,
+  } = useQuery<BusinessTableResponse>({
+    queryKey: ['businessTableData'],
+    queryFn: getBusinessTableData,
     staleTime: 3 * 60 * 1000,
     refetchOnWindowFocus: false,
   });
@@ -231,7 +243,6 @@ export const useDashboard = () => {
     value: typeof item.value === 'number' && !isNaN(item.value) && item.value >= 0 ? item.value : 0,
     
   }));
-  // Use dummy data for now since backend hasn't been updated
   // const processedChartData = generateChartData();
   
   const maxValue = calculateMaxValue(processedChartData);
@@ -240,6 +251,10 @@ export const useDashboard = () => {
     dashboardMetrics: generateDashboardMetrics(userInfo?.role_id || 0),
     chartData: processedChartData,
     userTableData: userTableData?.data || [],
+    businessTableData: (businessTableData?.data || []).map(business => ({
+      ...business,
+      id: business.business_id
+    })),
     
     selectedFilters,
     filterOptions,
@@ -248,11 +263,13 @@ export const useDashboard = () => {
     isFiltersLoading,
     isChartLoading,
     isTableLoading,
+    isBusinessTableLoading,
     
     metricsError,
     filtersError,
     chartError,
     tableError,
+    businessTableError,
     
     maxValue,
     
