@@ -37,14 +37,14 @@ export const Analytics = () => {
         </h1>
       </div>
 
-      <div className="p-5 flex flex-col space-y-10">
-        <div className="bg-[#F5F5F5] rounded-lg shadow-sm border border-gray-200 p-5">
+      <div className="p-3 sm:p-5 flex flex-col space-y-10">
+        <div className="bg-[#F5F5F5] rounded-lg shadow-sm border border-gray-200 p-3 sm:p-5">
           <div className=''>
             <h2 className="text-base font-semibold text-gray-900 mb-2">
               Performance & Opportunity Dashboard
             </h2>
            
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6 flex flex-col gap-6">
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 sm:p-6 mb-6 flex flex-col gap-6">
               
               {isFiltersLoading ? (
                 <div className="text-center py-8">
@@ -131,13 +131,13 @@ export const Analytics = () => {
           </div>
         </div>
 
-        <div className="bg-[#F5F5F5] rounded-lg shadow-sm border border-gray-200 p-5">
+        <div className="bg-[#F5F5F5] rounded-lg shadow-sm border border-gray-200 p-3 sm:p-5">
           <h2 className="text-base font-semibold text-gray-900 mb-2">
             Performance Ranking
           </h2>
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 sm:p-6">
 
-            <div className="flex flex-wrap gap-4 mb-6">
+            <div className="flex flex-col sm:flex-row flex-wrap gap-4 mb-6">
               <FilterDropdown
                 label="Rank By"
                 value={selectedRankBy}

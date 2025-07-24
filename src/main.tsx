@@ -18,6 +18,7 @@ import {
   TwoFactorLogin,
   Notification,
   Billing,
+  NotFound,
 } from "./pages";
 import { Toaster } from "./components/ui/sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -86,6 +87,10 @@ const router = createBrowserRouter([
   {
     path: "/forgot-password",
     element: <ForgotPassword />,
+  },
+  {
+    path: "*",
+    element: <NotFound />,
   },
 ]);
 

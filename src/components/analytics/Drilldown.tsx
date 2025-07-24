@@ -95,8 +95,8 @@ export const Drilldown: React.FC<DrilldownProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-      <h3 className="text-base font-medium text-gray-900 mb-4">
+    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 sm:p-6">
+      <h3 className="text-base font-medium text-gray-900 mb-3">
         Drill-Down: <span className="text-primary-base">{selected || 'Overview'}</span>
       </h3>
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
