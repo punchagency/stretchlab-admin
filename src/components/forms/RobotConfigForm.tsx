@@ -36,7 +36,7 @@ export const RobotConfigForm = ({
   const [update, setUpdate] = useState(false);
   const [proceed, setProceed] = useState(false);
 
-  // Parse JSON strings to arrays
+
   const parseLocations = (locationData: any): string[] => {
     if (Array.isArray(locationData)) return locationData;
     if (typeof locationData === 'string') {
@@ -123,7 +123,6 @@ export const RobotConfigForm = ({
   const handleSaveSettings = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setFormError("");
-    console.log(formData);
     if (!formData.numberOfStudioLocations) {
       setFormError("Please select at least one location");
       return;
@@ -193,7 +192,7 @@ export const RobotConfigForm = ({
   if (isSignupFlow) {
     return (
       <>
-        <div className="bg-white rounded-lg shadow-lg p-6 md:p-8">
+        <div className="bg-white rounded-lg shadow-lg p-4 md:p-8">
           <h2 className="text-2xl font-semibold mb-6 text-center">
             Robot Process Automation Setup
           </h2>
@@ -257,7 +256,7 @@ export const RobotConfigForm = ({
                     type="button"
                     onClick={() => setVerified(false)}
                   >
-                    ✓ Credentials Verified - Re-verify if needed
+                    ✓ Credentials Verified - Re-verify
                   </Button>
                 </div>
               )}
@@ -278,7 +277,7 @@ export const RobotConfigForm = ({
                     All locations are selected by default. Unselect any locations you don't want to enable robot automation for ({locations.length} locations found)
                   </p>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-64 overflow-y-auto">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 overflow-y-auto">
                     {locations.map((location, _) => (
                       <div
                         key={location}

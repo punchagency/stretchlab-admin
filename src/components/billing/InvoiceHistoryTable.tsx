@@ -110,12 +110,9 @@ export const InvoiceHistoryTable = () => {
   ];
 
   const filteredData = processedInvoiceData.filter((invoice: ProcessedInvoiceData) => {
-    // Search filter
-    const matchesSearch = searchTerm === "" || 
+    const matchesSearch = searchTerm === "" ||
       invoice.invoiceId.toLowerCase().includes(searchTerm.toLowerCase()) ||
       invoice.invoiceDate.toLowerCase().includes(searchTerm.toLowerCase());
-
-    // Period filter
     let matchesPeriod = true;
     if (filterPeriod !== "All") {
       const originalInvoice = invoiceHistory.find(orig => orig.id === invoice.id);
@@ -142,7 +139,7 @@ export const InvoiceHistoryTable = () => {
     <div className="bg-white rounded-lg shadow-sm border border-gray-200">
       <div className="py-3 px-3 sm:px-6 border-b border-gray-200">
         <div className="flex flex-col gap-4 sm:gap-4 lg:flex-row lg:items-center lg:justify-between">
-                    <h2 className="text-xl font-semibold text-gray-900">Invoice History</h2>
+          <h2 className="text-xl font-semibold text-gray-900">Invoice History</h2>
 
           <div className="flex flex-col gap-3 sm:flex-row sm:gap-4 items-stretch sm:items-center">
             <div className="flex-1 sm:min-w-[280px]">

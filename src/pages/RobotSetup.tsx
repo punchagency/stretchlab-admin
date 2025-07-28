@@ -9,7 +9,7 @@ export const RobotSetup = () => {
           <div >
             <img src={logo} alt="StretchLab" className="w-40 h-auto mx-auto" />
           </div>
-          <p className="text-lg text-gray-600">
+          <p className="text-base md:text-lg text-gray-600 mt-1">
             Let's set up your robot automation to get started
           </p>
         </div>

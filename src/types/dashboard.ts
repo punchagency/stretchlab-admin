@@ -110,4 +110,55 @@ export interface MetricCardData {
   showCurrency: boolean;
 }
 
+export interface BusinessData {
+  id: number;
+  business_id: number;
+  buisness_flexologists_count: number;
+  business_created_at: string;
+  business_note_sub_status: string | null;
+  business_rpa_sub_status: string | null;
+  business_username: string;
+}
+
+export interface BusinessTableResponse {
+  data: BusinessData[];
+  status: string;
+}
+
+export interface BusinessFlexologistInfo {
+  full_name: string;
+  id: number;
+  last_login: string;
+  profile_picture_url: string | null;
+  status: number;
+}
+
+export interface BusinessRpaSubDetails {
+  currency: string;
+  end_date: number;
+  interval: string;
+  price: number;
+  quantity: number;
+  start_date: number;
+  status: string;
+}
+
+export interface BusinessInfo {
+  business_all_locations: string[] | null;
+  business_created_at: string;
+  business_flexologists_count: number;
+  business_flexologists_info: BusinessFlexologistInfo[];
+  business_note_sub_details: BusinessRpaSubDetails | null;
+  business_note_sub_status: string | null;
+  business_rpa_sub_details: BusinessRpaSubDetails | null;
+  business_rpa_sub_status: string | null;
+  business_selected_locations: string[] | null;
+  business_username: string;
+}
+
+export interface BusinessInfoResponse {
+  data: BusinessInfo;
+  status: string;
+}
+
  

@@ -60,7 +60,6 @@ export const ProfilePictureProvider: React.FC<{ children: React.ReactNode }> = (
         setProfilePictureUrl(null);
       }
     } catch (error) {
-      console.error("Failed to delete profile picture:", error);
       throw error;
     } finally {
       setIsLoading(false);

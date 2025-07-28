@@ -37,4 +37,16 @@ export const getUserTableData = async () => {
 export const getDashboardMetrics = async () => {
   const response = await api.get("/admin/dashboard/first_row");
   return response.data;
+};
+
+export const getBusinessTableData = async () => {
+  const response = await api.get("/admin/dashboard/fourth_row");
+  return response.data;
+};
+
+export const getBusinessInfo = async (businessId: number) => {
+  const response = await api.post("/admin/dashboard/get_business_info", {
+    business_id: businessId
+  });
+  return response.data;
 }; 

@@ -13,3 +13,5 @@ export * from "./Analytics";
 export * from "./TwoFactorLogin";
 export * from "./Notification";
 export * from "./Billing";
+export * from "./NotFound";
+export * from "./ErrorPage";

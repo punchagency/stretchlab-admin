@@ -23,7 +23,7 @@ export const Drilldown: React.FC<DrilldownProps> = ({
   }
 
   if (!data) {
-    return null; 
+    return null;
   }
 
   const totalLocationPages = Math.ceil(data.locations.length / itemsPerPage);
@@ -67,8 +67,8 @@ export const Drilldown: React.FC<DrilldownProps> = ({
           onClick={() => onPageChange('prev')}
           disabled={currentPage === 0}
           className={`p-1 rounded ${currentPage === 0
-              ? 'text-gray-300 cursor-not-allowed'
-              : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'
+            ? 'text-gray-300 cursor-not-allowed'
+            : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'
             }`}
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -82,8 +82,8 @@ export const Drilldown: React.FC<DrilldownProps> = ({
           onClick={() => onPageChange('next')}
           disabled={currentPage === totalPages - 1}
           className={`p-1 rounded ${currentPage === totalPages - 1
-              ? 'text-gray-300 cursor-not-allowed'
-              : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'
+            ? 'text-gray-300 cursor-not-allowed'
+            : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'
             }`}
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -95,14 +95,14 @@ export const Drilldown: React.FC<DrilldownProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-      <h3 className="text-base font-medium text-gray-900 mb-4">
+    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 sm:p-6">
+      <h3 className="text-base font-medium text-gray-900 mb-3">
         Drill-Down: <span className="text-primary-base">{selected || 'Overview'}</span>
       </h3>
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         <div>
           <h4 className="text-sm font-semibold text-gray-500 mb-2">By Location</h4>
-          {data.locations.length > 0 ?  <div className='flex flex-col gap-2'>
+          {data.locations.length > 0 ? <div className='flex flex-col gap-2'>
             {getPaginatedData(data.locations, locationPage).map((item: any, idx: number) => (
               <div key={idx} className="flex justify-between text-xs font-medium bg-[#F7F9FC] p-2 rounded-sm border border-gray-200">
                 <span className="text-gray-600">{item.name}</span>

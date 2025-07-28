@@ -29,7 +29,6 @@ export const HistoryInformation = ({
   const matchedStatus = Object.keys(statuses).find((key) =>
     data?.status.toLowerCase().includes(key)
   );
-  console.log(data);
   return (
     <div className="">
       <div className="flex flex-col md:flex-row items-center gap-6 md:gap-8">
