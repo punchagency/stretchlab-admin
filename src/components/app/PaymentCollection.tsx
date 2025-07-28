@@ -47,7 +47,6 @@ const CheckoutForm = ({
       });
 
       if (error) {
-        console.log(error, "error");
         setErrorMessage(error.message as string);
         return;
       }

@@ -10,7 +10,6 @@ export const ResetForm = () => {
     password: "",
     confirmPassword: "",
   });
-  console.log(token, "token");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();

@@ -36,7 +36,7 @@ export const RobotConfigForm = ({
   const [update, setUpdate] = useState(false);
   const [proceed, setProceed] = useState(false);
 
-  
+
   const parseLocations = (locationData: any): string[] => {
     if (Array.isArray(locationData)) return locationData;
     if (typeof locationData === 'string') {
@@ -123,7 +123,6 @@ export const RobotConfigForm = ({
   const handleSaveSettings = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setFormError("");
-    console.log(formData);
     if (!formData.numberOfStudioLocations) {
       setFormError("Please select at least one location");
       return;

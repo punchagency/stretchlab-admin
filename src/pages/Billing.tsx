@@ -39,7 +39,7 @@ export const Billing = () => {
   }
 
   return (
-    <div className="p-3 sm:p-6 min-h-screen bg-gray-50">
+    <div className="p-3 sm:p-6 min-h-screen bg-white">
       <div className="max-w-7xl mx-auto">
         <div className="mb-4 sm:mb-6">
           <h1 className="text-2xl font-bold text-gray-900">Billing</h1>

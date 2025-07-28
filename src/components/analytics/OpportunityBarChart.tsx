@@ -88,16 +88,16 @@ export const OpportunityBarChart: React.FC<OpportunityBarChartProps> = ({
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis type="number" fontSize={fontSize} fontWeight={500} />
-        <YAxis 
-          dataKey="displayName" 
-          type="category" 
-          width={yAxisWidth} 
-          fontSize={fontSize} 
+        <YAxis
+          dataKey="displayName"
+          type="category"
+          width={yAxisWidth}
+          fontSize={fontSize}
           style={{ textTransform: 'capitalize' }}
           tick={{ fontSize }}
         />
-        <Tooltip 
-          content={<CustomTooltip />} 
+        <Tooltip
+          content={<CustomTooltip />}
           cursor={false}
           labelFormatter={(label) => {
             const originalData = processedData.find(item => item.displayName === label);

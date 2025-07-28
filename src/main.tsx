@@ -19,6 +19,7 @@ import {
   Notification,
   Billing,
   NotFound,
+  ErrorPage,
 } from "./pages";
 import { Toaster } from "./components/ui/sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -29,6 +30,7 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <Home />,
+    errorElement: <ErrorPage />,
     children: [
       {
         path: "dashboard",
@@ -63,34 +65,42 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <Login />,
+    errorElement: <ErrorPage />,
   },
   {
     path: "/signup",
     element: <Signup />,
+    errorElement: <ErrorPage />,
   },
   {
     path: "/verification",
     element: <Verification />,
+    errorElement: <ErrorPage />,
   },
   {
     path: "/robot-setup",
     element: <RobotSetup />,
+    errorElement: <ErrorPage />,
   },
   {
     path: "/2fa-login",
     element: <TwoFactorLogin />,
+    errorElement: <ErrorPage />,
   },
   {
     path: "/reset-password/:token",
     element: <ResetPassword />,
+    errorElement: <ErrorPage />,
   },
   {
     path: "/forgot-password",
     element: <ForgotPassword />,
+    errorElement: <ErrorPage />,
   },
   {
     path: "*",
     element: <NotFound />,
+    errorElement: <ErrorPage />,
   },
 ]);
 
