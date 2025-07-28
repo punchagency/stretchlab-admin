@@ -1,5 +1,5 @@
 import { deleteUserCookie } from "@/utils";
-import { getUserCookie } from "@/utils";
+import { getUserCookie, getTempUserCookie } from "@/utils";
 import axios from "axios";
 
 export const api = axios.create({
@@ -7,8 +7,11 @@ export const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
+  const check_temp = getTempUserCookie();
   const token = getUserCookie();
-  if (token) {
+  if (check_temp) {
+    config.headers.Authorization = `Bearer ${check_temp}`;
+  } else if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;

@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import { Input, Button, Spinner } from "../shared";
 import { login } from "@/service/auth";
-import type { ApiError } from "@/types";
-import { setUserCookie } from "@/utils";
+import type { ApiError, LoginResponse } from "@/types";
+import { setTempUserCookie, setUserCookie } from "@/utils";
 import { Link, useNavigate } from "react-router";
 import {
   renderSuccessToast,
   renderErrorToast,
-  renderWarningToast,
 } from "../utils";
 
 export const LoginForm = () => {
@@ -38,17 +37,30 @@ export const LoginForm = () => {
       setIsLoading(true);
       const response = await login(formData.email, formData.password);
       if (response.status === 200) {
-        setUserCookie(response.data.token);
-        if (response.data.user.is_verified) {
-          renderSuccessToast(response.data.message);
-          navigate("/dashboard");
+        const loginData = response.data as LoginResponse;
+        if (loginData.requires_2fa) {
+          navigate(`/2fa-login?email=${encodeURIComponent(formData.email)}`);
+          return;
+        }
+        if (loginData.token) {
+          if (loginData.user.is_verified && loginData.user.is_clubready_verified) {
+            setUserCookie(loginData.token);
+            renderSuccessToast(loginData.message);
+            navigate("/dashboard");
+          } else if (loginData.user.is_verified && !loginData.user.is_clubready_verified) {
+            setTempUserCookie(loginData.token);
+            navigate("/robot-setup");
+          } else {
+            setTempUserCookie(loginData.token);
+            navigate("/verification");
+          }
         } else {
-          renderWarningToast(response.data.message);
-          navigate("/verification");
+          renderErrorToast("Login failed: No authentication token received");
         }
       }
     } catch (error) {
       const apiError = error as ApiError;
+      console.log(apiError);
       renderErrorToast(apiError.response.data.message);
     } finally {
       setIsLoading(false);

@@ -40,6 +40,9 @@ interface DataTableProps<TData extends { id: number | string }, TValue> {
   note?: boolean;
   emptyText?: string;
   handleClick?: (id: number) => void;
+  className?: string;
+  tableContainerClassName?: string;
+  tableClassName?: string;
 }
 
 export function DataTable<TData extends { id: number | string }, TValue>({
@@ -49,6 +52,9 @@ export function DataTable<TData extends { id: number | string }, TValue>({
   handleClick,
   note = false,
   emptyText = "No data found",
+  className,
+  tableContainerClassName,
+  tableClassName,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -71,7 +77,7 @@ export function DataTable<TData extends { id: number | string }, TValue>({
   });
 
   return (
-    <div>
+    <div className={`w-full max-w-full overflow-hidden px-2 sm:px-0 ${className || ""}`}>
       {note && (
         <div className="flex flex-col-reverse md:flex-row item-start xl:items-center gap-4 justify-start xl:justify-end py-4">
           <Input
@@ -170,12 +176,12 @@ export function DataTable<TData extends { id: number | string }, TValue>({
         </div>
       )}
       <div
-        className={`rounded-md border w-[87vw] mx-auto md:w-full overflow-x-auto`}
+        className={`rounded-md border w-[85vw] mx-auto md:w-full overflow-x-auto border-sidebar-border ${tableContainerClassName || ""}`}
       >
-        <Table>
-          <TableHeader className="bg-primary-light">
+        <Table className={`border-sidebar-border ${tableClassName}`}>
+          <TableHeader className="bg-primary-light ">
             {table.getHeaderGroups().map((headerGroup, index) => (
-              <TableRow key={index}>
+              <TableRow key={index} className="border-sidebar-border">
                 {headerGroup.headers.map((header, index) => {
                   return (
                     <TableHead key={index} className="pl-4 text-[#344054] py-2">
@@ -200,6 +206,7 @@ export function DataTable<TData extends { id: number | string }, TValue>({
                   }}
                   key={index}
                   data-state={row.getIsSelected() && "selected"}
+                  className="border-sidebar-border"
                 >
                   {row.getVisibleCells().map((cell, index) => (
                     <TableCell key={index} className="pl-4">
@@ -230,6 +237,7 @@ export function DataTable<TData extends { id: number | string }, TValue>({
           size="sm"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
+          className="border-sidebar-border"
         >
           Previous
         </Button>
@@ -238,6 +246,7 @@ export function DataTable<TData extends { id: number | string }, TValue>({
           size="sm"
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
+          className="border-sidebar-border"
         >
           Next
         </Button>

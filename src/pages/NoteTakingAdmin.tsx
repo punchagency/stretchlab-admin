@@ -13,7 +13,7 @@ import {
   SvgIcon,
 } from "@/components/shared";
 import { DataTable, type Payment } from "@/components/datatable";
-import type { ApiError } from "@/types";
+import type { ApiError, BillingInfo } from "@/types";
 import {
   renderErrorToast,
   renderSuccessToast,
@@ -24,7 +24,7 @@ import { ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { AnimatePresence, motion } from "framer-motion";
-import { ErrorHandle } from "@/components/app";
+import { ErrorHandle, PaymentCollection } from "@/components/app";
 export const NoteTakingAdmin = () => {
   const { data, isPending, error, isFetching, refetch } = useQuery({
     queryKey: ["users"],
@@ -36,6 +36,10 @@ export const NoteTakingAdmin = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isResending, setIsResending] = useState("");
   const [isAccessing, setIsAccessing] = useState("");
+  const [paymentInfo, setPaymentInfo] = useState(false);
+  const [billingInfo, setBillingInfo] = useState<BillingInfo | null>(null);
+  const [update, setUpdate] = useState(false);
+  const [proceed, setProceed] = useState(false);
 
   if (isPending) {
     return (
@@ -51,7 +55,7 @@ export const NoteTakingAdmin = () => {
   const resendInvite = async (email: string) => {
     setIsResending(email);
     try {
-      const response = await inviteFlexologist(email);
+      const response = await inviteFlexologist(email, true);
       if (response.status === 200) {
         renderSuccessToast(response.data.message);
         refetch();
@@ -217,13 +221,14 @@ export const NoteTakingAdmin = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setFormError("");
     if (!validateEmail(email)) {
       setFormError("Invalid email address");
       return;
     }
     try {
       setIsLoading(true);
-      const response = await inviteFlexologist(email);
+      const response = await inviteFlexologist(email, proceed);
       if (response.status === 200) {
         renderSuccessToast(response.data.message);
         refetch();
@@ -234,6 +239,13 @@ export const NoteTakingAdmin = () => {
       const apiError = error as ApiError;
       if (apiError.response.status === 409) {
         renderWarningToast(apiError.response.data.message);
+      } else if (apiError.response.status === 402) {
+        if (apiError.response.data.payment_id) {
+          setPaymentInfo(true);
+          setBillingInfo(apiError.response.data.payment_info as BillingInfo);
+        } else {
+          setPaymentInfo(true);
+        }
       } else {
         renderErrorToast(apiError.response.data.message);
       }
@@ -243,7 +255,7 @@ export const NoteTakingAdmin = () => {
   };
 
   return (
-    <div>
+    <div className="px-7">
       <h3 className="md:text-2xl text-lg font-semibold mb-8 md:mb-16">
         Note Taking Admin Dashboard
       </h3>
@@ -303,6 +315,17 @@ export const NoteTakingAdmin = () => {
           </Button2>
         </form>
       </Modal>
+      {paymentInfo && (
+        <PaymentCollection
+          show={paymentInfo}
+          onClose={() => setPaymentInfo(false)}
+          robot={false}
+          billingInfo={billingInfo}
+          update={update}
+          setUpdate={setUpdate}
+          setProceed={setProceed}
+        />
+      )}
     </div>
   );
 };

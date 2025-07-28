@@ -1,4 +1,5 @@
 export type SvgIconName =
+  | "menu"
   | "lock"
   | "mail"
   | "eye"
@@ -17,7 +18,15 @@ export type SvgIconName =
   | "search"
   | "filter"
   | "settings"
-  | "robot";
+  | "robot"
+  | "fax"
+  | "cancel"
+  | "logout"
+  | "edit"
+  | "bell"
+  | "billing"
+  | "trash"
+  | "users";
 
 export type RobotHistoryType = {
   id: number;
@@ -40,6 +49,7 @@ export type BookingType = {
   missed_sale_follow_up_rubric: string;
   note_analysis_improvements: string;
   note_analysis_progressive_moments: string;
+  note_oppurtunities: string;
   note_score: string;
   note_summary: string;
   pre_visit_preparation_rubric: string;

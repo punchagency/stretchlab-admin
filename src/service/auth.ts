@@ -48,3 +48,13 @@ export const resetPassword = async (password: string, token: string) => {
   });
   return response;
 };
+
+export const verify2FALogin = async (code: string, email: string) => {
+  const response = await api.post("/admin/auth/verify-2fa-login", { code, email });
+  return response;
+};
+
+export const resend2FAVerificationCode = async (email: string) => {
+  const response = await api.post("/admin/auth/resend-2fa-verification-code", { email });
+  return response;
+};

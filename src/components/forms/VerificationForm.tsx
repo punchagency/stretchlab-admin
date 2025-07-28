@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Input, Spinner } from "../shared";
+import { Button, Spinner, OTPInputComponent } from "../shared";
 import { verify, resendCode } from "@/service/auth";
 import type { ApiError } from "@/types";
 import { renderSuccessToast, renderErrorToast } from "../utils";
@@ -27,7 +27,7 @@ export const VerificationForm = () => {
       const response = await verify(code);
       if (response.status === 200) {
         renderSuccessToast(response.data.message);
-        navigate("/dashboard");
+        navigate("/robot-setup");
       } else {
         renderErrorToast(response.data.message);
       }
@@ -75,22 +75,20 @@ export const VerificationForm = () => {
             className="w-24 mb-4"
           /> */}
         </div>
-        <h2 className="text-3xl font-bold mb-2">Verify Code</h2>
-        <p className="text-gray-500 mb-6">
+        <h2 className="text-2xl font-bold mb-2">Verify Code</h2>
+        <p className="text-gray-500 mb-6 text-sm">
           An authentication code has been sent to your email
         </p>
         <form onSubmit={handleSubmit}>
-          <div className="mb-4 relative">
-            <Input
-              label="Enter code"
-              name="code"
-              type="password"
+          <div className="mb-4">
+            <OTPInputComponent
               value={code}
-              onChange={(e) => setCode(e.target.value)}
-              placeholder="Enter code"
+              onChange={setCode}
+              error={error}
+              label="Enter Code"
+              size="lg"
             />
           </div>
-          {error && <div className="text-red-500 text-sm mb-2">{error}</div>}
           <div className="mb-6 text-sm">
             Didn't receive code?{" "}
             <button

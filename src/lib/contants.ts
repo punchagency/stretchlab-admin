@@ -24,4 +24,14 @@ export const menuList = [
     icon: "settings",
     link: "/settings",
   },
+  {
+    title: "Notification",
+    icon: "bell",
+    link: "/notification",
+  },
+  {
+    title: "Billing",
+    icon: "billing",
+    link: "/billing",
+  },
 ];

@@ -137,6 +137,8 @@ export const RobotHistory = ({ configId }: { configId: number }) => {
   const { data, isPending } = useQuery({
     queryKey: ["robot-history", configId],
     queryFn: () => getRobotHistory(configId as number),
+    // refetchOnWindowFocus: false,
+    // enabled: !!configId,
   });
 
   const mutation = useMutation({
@@ -153,8 +155,6 @@ export const RobotHistory = ({ configId }: { configId: number }) => {
 
   const mutating = mutation.isPending;
 
-  console.log(mutating, "kill");
-
   if (isPending) {
     return (
       <div className="flex items-center justify-center gap-2 h-[50vh]">
@@ -170,7 +170,7 @@ export const RobotHistory = ({ configId }: { configId: number }) => {
     setBookingId(id);
     setShowModal(true);
   };
-  console.log("sttes", state);
+
   return (
     <>
       <div className="mt-10">
@@ -274,6 +274,7 @@ export const RobotHistory = ({ configId }: { configId: number }) => {
       </div>
       <Modal show={showModal} onClose={() => setShowModal(false)} size="2xl">
         <HistoryInformation
+          close={() => setShowModal(false)}
           data={data?.data.rpa_history.find(
             (item: BookingType) => item.id === bookingId
           )}

@@ -6,7 +6,9 @@ interface CustomJwtPayload extends JwtPayload {
   email: string;
   name: string;
   role_name: string;
+  username: string;
   avatar?: string;
+  role_id?: number;
 }
 
 export const setUserCookie = (token: string): void => {
@@ -14,6 +16,16 @@ export const setUserCookie = (token: string): void => {
   expireAt.setHours(23, 59, 59, 999);
 
   Cookies.set("token", token, { expires: expireAt });
+};
+
+export const setTempUserCookie = (token: string): void => {
+  const expireAt = new Date();
+  expireAt.setHours(23, 59, 59, 999);
+  Cookies.set("temp_token", token, { expires: expireAt });
+};
+
+export const getTempUserCookie = (): string | null => {
+  return Cookies.get("temp_token") || null;
 };
 
 export const getUserCookie = (): string | null => {
@@ -31,4 +43,5 @@ export const getUserInfo = (): CustomJwtPayload | null => {
 
 export const deleteUserCookie = (): void => {
   Cookies.remove("token");
+  Cookies.remove("temp_token");
 };

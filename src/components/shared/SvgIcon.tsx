@@ -320,6 +320,7 @@ export const SvgIcon = ({
           viewBox="0 0 18 21"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
+          className={className}
         >
           <path
             fillRule="evenodd"
@@ -400,6 +401,7 @@ export const SvgIcon = ({
           viewBox="0 0 22 22"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
+          className={className}
         >
           <path
             d="M6 12.0291C6 12.7194 6.55964 13.2791 7.25 13.2791C7.94036 13.2791 8.5 12.7194 8.5 12.0291C8.5 11.3388 7.94036 10.7792 7.25 10.7792C6.55964 10.7792 6 11.3388 6 12.0291Z"
@@ -421,7 +423,235 @@ export const SvgIcon = ({
           />
         </svg>
       );
+    case "menu":
+      return (
+        <svg
+          width={width}
+          height={height}
+          viewBox="0 0 27 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <g clipPath="url(#clip0_9256_6694)">
+            <path d="M1.75859 3.22129H25.7586C26.4186 3.22129 26.9586 2.68129 26.9586 2.02129C26.9586 1.36129 26.4186 0.821289 25.7586 0.821289H1.75859C1.09859 0.821289 0.558594 1.36129 0.558594 2.02129C0.558594 2.68129 1.09859 3.22129 1.75859 3.22129Z" fill={fill} />
+            <path d="M13.7586 20.8213H1.75859C1.09859 20.8213 0.558594 21.3613 0.558594 22.0213C0.558594 22.6813 1.09859 23.2213 1.75859 23.2213H13.7586C14.4186 23.2213 14.9586 22.6813 14.9586 22.0213C14.9586 21.3613 14.4186 20.8213 13.7586 20.8213Z" fill={fill} />
+            <path d="M25.7586 10.8213H1.75859C1.09859 10.8213 0.558594 11.3613 0.558594 12.0213C0.558594 12.6813 1.09859 13.2213 1.75859 13.2213H25.7586C26.4186 13.2213 26.9586 12.6813 26.9586 12.0213C26.9586 11.3613 26.4186 10.8213 25.7586 10.8213Z" fill={fill} />
+          </g>
+          <defs>
+            <clipPath id="clip0_9256_6694">
+              <rect width="26.4" height="22.4" fill={fill} transform="translate(0.558594 0.821289)" />
+            </clipPath>
+          </defs>
 
+        </svg>
+      );
+    case "fax":
+      return (
+        <svg
+          width={width}
+          height={height}
+          viewBox="0 0 19 20"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path d="M18.5926 4.17L15.0556 0.24C14.9116 0.0799998 14.7226 0 14.5246 0H2.73459C1.67259 0 0.808594 0.959999 0.808594 2.14V17.86C0.808594 19.04 1.67259 20 2.73459 20H16.8826C17.9446 20 18.8086 19.04 18.8086 17.86V4.76C18.8086 4.54 18.7276 4.33 18.5926 4.17ZM5.24559 13.93C5.24559 13.66 5.44359 13.45 5.67759 13.45H13.9306C14.1736 13.45 14.3626 13.67 14.3626 13.93V18.34H5.24559V13.93ZM13.9306 11.79H5.67759C4.61559 11.79 3.75159 12.75 3.75159 13.93V18.34H2.72559C2.48259 18.34 2.29359 18.12 2.29359 17.86V2.14C2.29359 1.87 2.49159 1.66 2.72559 1.66H6.10959V5.42C6.10959 6.24 6.71259 6.9 7.44159 6.9H12.1576C12.8956 6.9 13.4896 6.23 13.4896 5.42V1.66H14.2096L17.3056 5.1V17.86C17.3056 18.13 17.1076 18.34 16.8736 18.34H15.8476V13.93C15.8476 12.75 14.9836 11.79 13.9216 11.79H13.9306ZM7.60359 5.24V1.66H12.0046V5.24H7.60359Z" fill="white" />
+
+
+        </svg>
+      );
+    case "cancel":
+      return (
+        <svg width={width} height={height} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M16.9284 3.04992C13.0884 -0.790078 6.86844 -0.790078 3.02844 3.04992C-0.811563 6.88992 -0.811563 13.1099 3.02844 16.9499C6.86844 20.7899 13.0884 20.7899 16.9284 16.9499C20.7684 13.1099 20.7684 6.88992 16.9284 3.04992ZM15.7684 15.7899C12.5684 18.9899 7.38844 18.9899 4.18844 15.7899C0.988437 12.5899 0.988437 7.40992 4.18844 4.20992C7.38844 1.00992 12.5684 1.00992 15.7684 4.20992C18.9684 7.40992 18.9684 12.5899 15.7684 15.7899Z" fill="white" />
+          <path d="M14.0285 5.93971C13.7085 5.61971 13.1885 5.61971 12.8685 5.93971L9.96846 8.83971L7.06846 5.93971C6.74846 5.61971 6.22846 5.61971 5.90846 5.93971C5.58846 6.25971 5.58846 6.77971 5.90846 7.09971L8.80846 9.99971L5.91846 12.8897C5.59846 13.2097 5.59846 13.7297 5.91846 14.0497C6.23846 14.3697 6.75846 14.3697 7.07846 14.0497L9.96846 11.1597L12.8685 14.0597C13.1885 14.3797 13.7085 14.3797 14.0285 14.0597C14.3485 13.7397 14.3485 13.2197 14.0285 12.8997L11.1285 9.99971L14.0285 7.09971C14.3485 6.77971 14.3485 6.25971 14.0285 5.93971Z" fill={fill} />
+        </svg>
+      );
+    case "logout":
+      return (
+        <svg
+          width={width}
+          height={height}
+          viewBox="0 0 18 21"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className={className}
+        >
+          <path fillRule="evenodd" clipRule="evenodd" d="M10 1.77961C10 1.22736 9.55229 0.779663 9 0.779663C8.44771 0.779663 8 1.22736 8 1.77961V2.83449C3.50005 3.33191 0 7.1468 0 11.7791C0 16.7494 4.02944 20.7787 9 20.7787C13.9706 20.7787 18 16.7494 18 11.7791C18 7.1468 14.5 3.33191 10 2.83449V1.77961ZM8 4.85035V9.77923C8 10.3315 8.44771 10.7792 9 10.7792C9.55229 10.7792 10 10.3315 10 9.77923V4.85035C13.3923 5.33556 16 8.25283 16 11.7791C16 15.6449 12.866 18.7788 9 18.7788C5.13401 18.7788 2 15.6449 2 11.7791C2 8.25283 4.60771 5.33556 8 4.85035Z" fill={fill}/>
+
+        </svg>
+      );
+    case "edit":
+      return (
+        <svg
+          width={width}
+          height={height}
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className={className}
+        >
+          <path
+            d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13M18.5 2.5C18.8978 2.1022 19.4289 1.87868 20 1.87868C20.5711 1.87868 21.1022 2.1022 21.5 2.5C21.8978 2.8978 22.1213 3.42893 22.1213 4C22.1213 4.57107 21.8978 5.1022 21.5 5.5L12 15L8 16L9 12L18.5 2.5Z"
+            stroke={fill}
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      );
+    case "bell":
+      return (
+        <svg
+          width={width}
+          height={height}
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className={className}
+        >
+          <path
+            d="M18 8C18 6.4087 17.3679 4.88258 16.2426 3.75736C15.1174 2.63214 13.5913 2 12 2C10.4087 2 8.88258 2.63214 7.75736 3.75736C6.63214 4.88258 6 6.4087 6 8C6 15 3 17 3 17H21C21 17 18 15 18 8Z"
+            stroke={fill}
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M13.73 21C13.5542 21.3031 13.3019 21.5547 12.9982 21.7295C12.6946 21.9044 12.3504 21.9965 12 21.9965C11.6496 21.9965 11.3054 21.9044 11.0018 21.7295C10.6982 21.5547 10.4458 21.3031 10.27 21"
+            stroke={fill}
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      );
+    case "billing":
+      return (
+        <svg
+          width={width}
+          height={height}
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className={className}
+        >
+          <path
+            d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z"
+            stroke={fill}
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M14 2V8H20"
+            stroke={fill}
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M16 13H8"
+            stroke={fill}
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M16 17H8"
+            stroke={fill}
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M10 9H9H8"
+            stroke={fill}
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      );
+    case "trash":
+      return (
+        <svg
+          width={width}
+          height={height}
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className={className}
+        >
+          <path
+            d="M3 6H5H21"
+            stroke={fill}
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M8 6V4C8 3.46957 8.21071 2.96086 8.58579 2.58579C8.96086 2.21071 9.46957 2 10 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.96086 16 3.46957 16 4V6M19 6V20C19 20.5304 18.7893 21.0391 18.4142 21.4142C18.0391 21.7893 17.5304 22 17 22H7C6.46957 22 5.96086 21.7893 5.58579 21.4142C5.21071 21.0391 5 20.5304 5 20V6H19Z"
+            stroke={fill}
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M10 11V17"
+            stroke={fill}
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M14 11V17"
+            stroke={fill}
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      );
+    case "users":
+      return (
+        <svg
+          width={width}
+          height={height}
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className={className}
+        >
+          <path
+            d="M17 21V19C17 17.9391 16.5786 16.9217 15.8284 16.1716C15.0783 15.4214 14.0609 15 13 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21"
+            stroke={fill}
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M9 11C11.2091 11 13 9.20914 13 7C13 4.79086 11.2091 3 9 3C6.79086 3 5 4.79086 5 7C5 9.20914 6.79086 11 9 11Z"
+            stroke={fill}
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M23 21V19C22.9993 18.1137 22.7044 17.2528 22.1614 16.5523C21.6184 15.8519 20.8581 15.3516 20 15.13"
+            stroke={fill}
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M16 3.13C16.8604 3.35031 17.623 3.85071 18.1676 4.55232C18.7122 5.25392 19.0078 6.11683 19.0078 7.005C19.0078 7.89317 18.7122 8.75608 18.1676 9.45768C17.623 10.1593 16.8604 10.6597 16 10.88"
+            stroke={fill}
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      );
     default:
       return null;
   }

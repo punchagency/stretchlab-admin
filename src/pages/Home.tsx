@@ -2,9 +2,7 @@ import {
   SidebarContent,
   SidebarHeader,
   SidebarSeparator,
-  SidebarTrigger,
   SidebarMenu,
-  SidebarFooter,
   useSidebar,
   SidebarRail,
 } from "@/components/ui/sidebar";
@@ -14,9 +12,11 @@ import logo from "@/assets/images/stretchlab.png";
 import logoIcon from "@/assets/images/stretchlab-favicon.png";
 import { Outlet, useNavigate } from "react-router";
 import { menuList } from "@/lib/contants";
-import { NavUser, SideMenuList } from "@/components/shared";
+import { SideMenuList, LogoutMenu } from "@/components/shared";
 import { useEffect } from "react";
 import { getUserCookie } from "@/utils";
+import { MainHeader } from "@/components/shared";
+import { ProfilePictureProvider } from "@/contexts/ProfilePictureContext";
 
 const SidebarLogo = () => {
   const { state } = useSidebar();
@@ -30,6 +30,8 @@ const SidebarLogo = () => {
   );
 };
 
+
+
 export const Home = () => {
   const navigate = useNavigate();
   useEffect(() => {
@@ -38,34 +40,40 @@ export const Home = () => {
       navigate("/login");
     }
   }, []);
+  
   return (
-    <SidebarProvider>
-      <Sidebar className="p-2" collapsible="icon">
-        <SidebarHeader className="pt-5">
-          <SidebarLogo />
-        </SidebarHeader>
-        <SidebarSeparator />
-        <SidebarContent className="py-5">
-          <SidebarMenu className="flex flex-col">
-            {menuList.map((menu) => (
-              <SideMenuList
-                key={menu.title}
-                title={menu.title}
-                icon={menu.icon}
-                link={menu.link}
-              />
-            ))}
-          </SidebarMenu>
-        </SidebarContent>
-        <SidebarFooter>
-          <NavUser />
-        </SidebarFooter>
-        <SidebarRail />
-      </Sidebar>
-      <div className="flex-1 py-5 px-7">
-        <SidebarTrigger />
-        <Outlet />
-      </div>
-    </SidebarProvider>
+    <ProfilePictureProvider>
+      <SidebarProvider>
+        <Sidebar className="p-2 border-sidebar-border" collapsible="icon">
+          <SidebarHeader className="pt-5">
+            <SidebarLogo />
+          </SidebarHeader>
+          <SidebarSeparator />
+          <SidebarContent className="py-5">
+            <SidebarMenu className="flex flex-col">
+              {menuList.map((menu) => (
+                <SideMenuList
+                  key={menu.title}
+                  title={menu.title}
+                  icon={menu.icon}
+                  link={menu.link}
+                />
+              ))}
+              <LogoutMenu />
+            </SidebarMenu>
+          </SidebarContent>
+          {/* <SidebarFooter>
+            <NavUser />
+          </SidebarFooter> */}
+          <SidebarRail />
+        </Sidebar>
+        <div className="flex-1 bg-white">
+          <MainHeader />
+          <div>
+            <Outlet />
+          </div>
+        </div>
+      </SidebarProvider>
+    </ProfilePictureProvider>
   );
 };
