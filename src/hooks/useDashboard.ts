@@ -91,14 +91,14 @@ export const useDashboard = () => {
 
     if (chartFiltersData?.status === "success") {
       const { filters, flexologists, locations } = chartFiltersData.data;
-      
+
       filtersMap.datasetMap = new Map(filters.map(f => [f.label, f.value]));
       filtersMap.flexologistMap = new Map(flexologists.map(f => [f.full_name, f.id]));
-      
+
       const datasetOptions = filters.map(filter => filter.label);
       const flexologistOptions = ["All", ...flexologists.map(flex => flex.full_name)];
       const locationOptions = ["All", ...locations];
-      
+
       filterOptions.dataset = datasetOptions;
       filterOptions.flexologist = flexologistOptions;
       filterOptions.location = locationOptions;
@@ -117,9 +117,9 @@ export const useDashboard = () => {
 
   const getChartDataParams = () => {
     const { filtersMap } = processFilterOptions();
-    
+
     if (!selectedFilters.dataset) return null;
-    
+
     const params: any = {
       duration: selectedFilters.duration,
       dataset: filtersMap.datasetMap.get(selectedFilters.dataset) || selectedFilters.dataset,
@@ -154,56 +154,56 @@ export const useDashboard = () => {
   const generateDashboardMetrics = (role_id: number): MetricCardData[] => {
     const metrics: MetricCardData[] = [];
 
-  if (role_id === 1) {
-    metrics.push({
-      title: "Revenue",
-      value: dashboardMetricsData?.data?.balance_info?.month_transactions
-        ? `$${dashboardMetricsData.data.balance_info.month_transactions.toFixed(2)}`
-        : "$0.00",
-      subtitle: "This Month",
-      // buttonText: "View Details",
-      buttonVariant: "primary",
-      showCurrency: true,
-    });
-  }
-
-  metrics.push(
-    {
-      title: "Bookings",
-      value: dashboardMetricsData?.data?.bookings_info?.bookings_in_month
-        ? `${dashboardMetricsData.data.bookings_info.bookings_in_month}`
-        : "0",
-      subtitle: dashboardMetricsData?.data?.bookings_info
-        ? `${dashboardMetricsData.data.bookings_info.upwards_trend ? '+' : dashboardMetricsData.data.bookings_info.neutral_trend ? '' : '-'}${dashboardMetricsData.data.bookings_info.aggregation} Total`
-        : "No data",
-      // buttonText: "See Sessions",
-      buttonVariant: "primary",
-      showCurrency: false,
-    },
-    {
-      title: "Security Incidents",
-      value: "87%",
-      subtitle: "+1% Vs Last Month",
-      // buttonText: "Utilization",
-      buttonVariant: "primary",
-      showCurrency: false,
+    if (role_id === 1) {
+      metrics.push({
+        title: "Revenue",
+        value: dashboardMetricsData?.data?.balance_info?.month_transactions
+          ? `$${dashboardMetricsData.data.balance_info.month_transactions.toFixed(2)}`
+          : "$0.00",
+        subtitle: "This Month",
+        // buttonText: "View Details",
+        buttonVariant: "primary",
+        showCurrency: true,
+      });
     }
-  );
-  return metrics;
-};
+
+    metrics.push(
+      {
+        title: "Bookings",
+        value: dashboardMetricsData?.data?.bookings_info?.bookings_in_month
+          ? `${dashboardMetricsData.data.bookings_info.bookings_in_month}`
+          : "0",
+        subtitle: dashboardMetricsData?.data?.bookings_info
+          ? `${dashboardMetricsData.data.bookings_info.upwards_trend ? '+' : dashboardMetricsData.data.bookings_info.neutral_trend ? '' : '-'}${dashboardMetricsData.data.bookings_info.aggregation} Total`
+          : "No data",
+        // buttonText: "See Sessions",
+        buttonVariant: "primary",
+        showCurrency: false,
+      },
+      {
+        title: "Security Incidents",
+        value: "87%",
+        subtitle: "+1% Vs Last Month",
+        // buttonText: "Utilization",
+        buttonVariant: "primary",
+        showCurrency: false,
+      }
+    );
+    return metrics;
+  };
 
   const calculateMaxValue = (data: ChartDataPoint[]) => {
     if (!data || data.length === 0) return 100;
-    
+
     const validValues = data
       .map(d => d.value)
       .filter(value => typeof value === 'number' && !isNaN(value) && value >= 0);
-    
+
     if (validValues.length === 0) return 100;
-    
+
     const maxValue = Math.max(...validValues);
     if (maxValue === 0) return 100;
-    
+
     if (maxValue < 10) {
       return Math.ceil(maxValue * 1.2);
     } else if (maxValue < 100) {
@@ -230,7 +230,7 @@ export const useDashboard = () => {
   // const generateChartData = (): ChartDataPoint[] => {
   //   const labels = getLabels(selectedFilters.duration as any, selectedFilters.customRange);
   //   const values = generateDummyData(labels);
-    
+
   //   return labels.map((label, index) => ({
   //     label,
   //     value: values[index]
@@ -241,10 +241,10 @@ export const useDashboard = () => {
   const processedChartData = (chartData?.data || []).map(item => ({
     ...item,
     value: typeof item.value === 'number' && !isNaN(item.value) && item.value >= 0 ? item.value : 0,
-    
+
   }));
   // const processedChartData = generateChartData();
-  
+
   const maxValue = calculateMaxValue(processedChartData);
 
   return {
@@ -255,24 +255,24 @@ export const useDashboard = () => {
       ...business,
       id: business.business_id
     })),
-    
+
     selectedFilters,
     filterOptions,
-    
+
     isMetricsLoading,
     isFiltersLoading,
     isChartLoading,
     isTableLoading,
     isBusinessTableLoading,
-    
+
     metricsError,
     filtersError,
     chartError,
     tableError,
     businessTableError,
-    
+
     maxValue,
-    
+
     handleFilterChange,
     handleCustomRangeChange,
     shouldShowLocation: selectedFilters.filterBy === "Location",
