@@ -197,7 +197,7 @@ export const Dashboard = () => {
 
           </div>
 
-          {userInfo?.role_id === 2 && <div className="mb-8 py-4 sm:px-4 bg-[#F5F5F5] rounded-lg shadow-md">
+          {userInfo?.role_id === 1 && <div className="mb-8 py-4 sm:px-4 bg-[#F5F5F5] rounded-lg shadow-md">
             <h2 className="text-base font-semibold text-gray-900 mb-4 pl-2 sm:pl-0"> Business List</h2>
 
             {isBusinessTableLoading ? (
