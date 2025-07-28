@@ -8,22 +8,22 @@ import { useProfilePictureContext } from "@/contexts/ProfilePictureContext";
 
 export const useSettings = () => {
   const user = useMemo(() => getUserInfo(), []);
-    const { profilePictureUrl, refreshProfilePicture, deleteProfilePicture } = useProfilePictureContext();
-  
+  const { profilePictureUrl, refreshProfilePicture, deleteProfilePicture } = useProfilePictureContext();
+
   const [activeSection, setActiveSection] = useState("profile");
   const [passwordTab, setPasswordTab] = useState<"password" | "2fa">("password");
-  
+
   const [profileData, setProfileData] = useState<ProfileFormData>({
     username: user?.username || user?.name || "",
     email: user?.email || "",
   });
-  
+
   const [passwordData, setPasswordData] = useState<PasswordFormData>({
     currentPassword: "",
     newPassword: "",
     confirmPassword: "",
   });
-  
+
   const [twoFactorSettings, setTwoFactorSettings] = useState<TwoFactorSettings>({
     emailEnabled: false,
     status: "disabled",
@@ -40,7 +40,7 @@ export const useSettings = () => {
   const [isLoadingProfilePicture, setIsLoadingProfilePicture] = useState(false);
   const [isLoadingProfilePictureDelete, setIsLoadingProfilePictureDelete] = useState(false);
   const [hasLoadedTwoFactor, setHasLoadedTwoFactor] = useState(false);
-  
+
   // Email change modal state
   const [emailChangeModal, setEmailChangeModal] = useState({
     isOpen: false,
@@ -52,7 +52,7 @@ export const useSettings = () => {
       if (response.status === 200) {
         let emailEnabled = false;
         let status: "enabled" | "disabled" | "pending" = "disabled";
-        
+
         if (response.data.two_factor_auth === true) {
           emailEnabled = true;
           status = "enabled";
@@ -63,7 +63,7 @@ export const useSettings = () => {
           emailEnabled = false;
           status = "disabled";
         }
-        
+
         setTwoFactorSettings({
           emailEnabled,
           status,
@@ -108,7 +108,7 @@ export const useSettings = () => {
       const currentlyEnabled = twoFactorSettings.emailEnabled;
       try {
         setIsLoadingTwoFactor(true);
-        
+
         if (currentlyEnabled) {
           const response = await disableTwoFactor();
           if (response.status === 200) {
@@ -152,7 +152,7 @@ export const useSettings = () => {
       if (response.status === 200) {
         let emailEnabled = false;
         let status: "enabled" | "disabled" | "pending" = "disabled";
-        
+
         if (response.data.two_factor_auth === true) {
           emailEnabled = true;
           status = "enabled";
@@ -163,7 +163,7 @@ export const useSettings = () => {
           emailEnabled = false;
           status = "disabled";
         }
-        
+
         setTwoFactorSettings({
           emailEnabled,
           status,
@@ -188,16 +188,16 @@ export const useSettings = () => {
           renderErrorToast('File size must be less than 5MB');
           return;
         }
-        
+
         if (!file.type.startsWith('image/')) {
           renderErrorToast('Please select a valid image file');
           return;
         }
-        
+
         try {
           setIsLoadingProfilePicture(true);
           const response = await uploadProfilePicture(file);
-          
+
           if (response.status === 200) {
             renderSuccessToast(response.data.message || 'Profile picture uploaded successfully');
             await refreshProfilePicture();
@@ -240,10 +240,10 @@ export const useSettings = () => {
         renderErrorToast("Please enter a valid email address");
         return;
       }
-            try {
+      try {
         setIsLoadingEmailChange(true);
         const response = await changeEmailInitiate(profileData.email);
-        
+
         if (response.status === 200) {
           renderSuccessToast("Verification code sent to your new email address");
           setEmailChangeModal({
@@ -288,7 +288,7 @@ export const useSettings = () => {
     try {
       setIsLoadingPassword(true);
       const response = await changePassword(passwordData.currentPassword, passwordData.newPassword);
-      
+
       if (response.status === 200) {
         renderSuccessToast(response.data.message || "Password updated successfully!");
         setPasswordData({

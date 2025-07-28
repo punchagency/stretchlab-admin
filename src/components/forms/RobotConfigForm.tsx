@@ -114,7 +114,7 @@ export const RobotConfigForm = ({
       }
     } catch (error) {
       const apiError = error as ApiError;
-      renderErrorToast(apiError.response.data.message);
+      renderErrorToast(apiError.response.data.message || "Something went wrong, please try again.");
     } finally {
       setVerifying(false);
     }
