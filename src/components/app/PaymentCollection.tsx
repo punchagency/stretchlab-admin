@@ -34,6 +34,7 @@ const CheckoutForm = ({
   const elements = useElements();
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [paymentElementReady, setPaymentElementReady] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -119,7 +120,7 @@ const CheckoutForm = ({
           robot ? "location" : "flexologist"
         } per month.`}
       </p>
-      <PaymentElement />
+      <PaymentElement onReady={() => setPaymentElementReady(true)} />
       {errorMessage && <p className="text-red-500 mt-3">{errorMessage}</p>}
       <div className="flex items-center mt-4 gap-2">
         {update && (
@@ -133,8 +134,8 @@ const CheckoutForm = ({
         )}
         <button
           type="submit"
-          className="w-full bg-primary-base font-semibold flex items-center justify-center  cursor-pointer text-white px-4 py-3 rounded-md"
-          disabled={!stripe || !elements || loading}
+          className="w-full bg-primary-base font-semibold flex items-center justify-center  cursor-pointer text-white px-4 py-3 rounded-md disabled:opacity-30"
+          disabled={!stripe || !elements || loading || !paymentElementReady}
         >
           {loading ? (
             <>

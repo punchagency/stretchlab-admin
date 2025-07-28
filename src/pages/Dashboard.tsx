@@ -43,6 +43,7 @@ export const Dashboard = () => {
   const handleMetricClick = (title: string) => {
     console.log(`Clicked on ${title}`);
   };
+  
 
   return (
     <div className="min-h-screen bg-white">
