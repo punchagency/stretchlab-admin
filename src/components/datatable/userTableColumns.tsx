@@ -17,15 +17,15 @@ export const userTableColumns: ColumnDef<UserData>[] = [
     header: "Name",
     cell: ({ row }) => {
       const user = row.original;
-      const initials = user.full_name.split(" ").map(n => n[0]).join("").toUpperCase();
+      const initials = user?.full_name?.split(" ").map(n => n[0]).join("").toUpperCase();
       
       return (
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-300 flex items-center justify-center">
-            {user.profile_picture_url ? (
+            {user?.profile_picture_url ? (
               <img 
-                src={user.profile_picture_url} 
-                alt={user.full_name}
+                src={user?.profile_picture_url} 
+                alt={user?.full_name}
                 className="w-full h-full object-cover"
               />
             ) : (
@@ -34,7 +34,7 @@ export const userTableColumns: ColumnDef<UserData>[] = [
               </span>
             )}
           </div>
-          <span className="font-medium text-gray-900">{user.full_name}</span>
+          <span className="font-medium text-gray-900">{user?.full_name}</span>
         </div>
       );
     },

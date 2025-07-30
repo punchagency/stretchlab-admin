@@ -2,7 +2,7 @@ import { useNavigate } from "react-router";
 import { type ColumnDef } from "@tanstack/react-table";
 import { ActionDropdown, type ActionItem } from "@/components/shared";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
-import { useNotifications, useUpdateNotification, useDeleteNotification } from "@/service/notification";
+import { useNotifications, useUpdateNotification, useDeleteNotification, useMarkAllAsRead } from "@/service/notification";
 import { 
   transformNotification, 
   getBadgeStyles, 
@@ -22,6 +22,7 @@ export const useNotificationPage = () => {
 
   const updateNotificationMutation = useUpdateNotification();
   const deleteNotificationMutation = useDeleteNotification();
+  const markAllAsReadMutation = useMarkAllAsRead();
 
   const originalNotifications = notificationsResponse?.notifications || [];
   const transformedNotifications = originalNotifications.map(transformNotification);
@@ -83,12 +84,13 @@ export const useNotificationPage = () => {
       accessorKey: "type",
       header: "Type",
       size: 140,
-      cell: ({ getValue }) => {
+      cell: ({ getValue, row }) => {
         const type = getValue() as NotificationType;
+        const notification = row.original;
         return (
           <div className="flex items-center">
             <span 
-              className={`px-3 py-1 rounded-full text-xs font-medium border ${getBadgeStyles(type)}`}
+              className={`px-3 py-1 rounded-full text-xs ${!notification.isRead ? 'font-bold' : 'font-medium'} border ${getBadgeStyles(type)}`}
             >
               {getTypeDisplayName(type)}
             </span>
@@ -100,12 +102,13 @@ export const useNotificationPage = () => {
       accessorKey: "description",
       header: "Description",
       size: 400,
-      cell: ({ getValue }) => {
+      cell: ({ getValue, row }) => {
         const description = getValue() as string;
+        const notification = row.original;
         const isLongText = description.length > 60;
         
         return (
-          <div className="text-gray-900 font-medium">
+          <div className={`text-gray-900 ${!notification.isRead ? 'font-bold' : 'font-medium'}`}>
             {isLongText ? (
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -130,11 +133,14 @@ export const useNotificationPage = () => {
       accessorKey: "date",
       header: "Date",
       size: 120,
-      cell: ({ getValue }) => (
-        <div className="text-gray-600 whitespace-nowrap">
-          {getValue() as string}
-        </div>
-      ),
+      cell: ({ getValue, row }) => {
+        const notification = row.original;
+        return (
+          <div className={`text-gray-600 whitespace-nowrap ${!notification.isRead ? 'font-bold' : 'font-normal'}`}>
+            {getValue() as string}
+          </div>
+        );
+      },
     },
     {
       id: "actions",
@@ -188,5 +194,6 @@ export const useNotificationPage = () => {
     refetch,
     updateNotificationMutation,
     deleteNotificationMutation,
+    markAllAsReadMutation,
   };
 }; 

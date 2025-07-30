@@ -76,9 +76,8 @@ export const HistoryInformation = ({
             <div>
               <h3 className="text-[#344054] font-semibold text-lg">Status</h3>
               <div
-                className={`${
-                  badgeColor[matchedStatus as keyof typeof badgeColor]
-                } px-2 py-1.5 rounded-2xl w-28 text-center font-medium`}
+                className={`${badgeColor[matchedStatus as keyof typeof badgeColor]
+                  } px-2 py-1.5 rounded-2xl w-28 text-center font-medium`}
               >
                 {statuses[matchedStatus as keyof typeof statuses]}
               </div>
@@ -151,20 +150,19 @@ export const HistoryInformation = ({
                 Note Oppurtunities
               </h3>
               {data?.note_oppurtunities !== "N/A" &&
-              JSON.parse(data?.note_oppurtunities as string).length > 0 ? (
+                JSON.parse(data?.note_oppurtunities as string).length > 0 ? (
                 <div className="flex items center gap-2 mt-2">
                   {JSON.parse(data?.note_oppurtunities as string).map(
                     (item: string, index: number) => (
                       <div
-                        className={`rounded-md font-semibold text-sm px-3 py-2 ${
-                          item.toLowerCase().includes("need")
+                        className={`rounded-md font-semibold text-sm px-3 py-2 ${item.toLowerCase().includes("need")
                             ? "bg-blue-500 text-white"
                             : item.toLowerCase().includes("session")
-                            ? "bg-green-500 text-white"
-                            : item.toLowerCase().includes("post")
-                            ? "bg-orange-500 text-white"
-                            : "bg-purple-500 text-white"
-                        }`}
+                              ? "bg-green-500 text-white"
+                              : item.toLowerCase().includes("post")
+                                ? "bg-orange-500 text-white"
+                                : "bg-purple-500 text-white"
+                          }`}
                         key={index}
                       >
                         {item}
@@ -196,14 +194,14 @@ export const HistoryInformation = ({
             <p className="text-dark-1 text-base mt-2">
               {data?.note_analysis_improvements
                 ? data?.note_analysis_improvements
-                    .split("\n\n")
-                    .map((line, index) => (
-                      <Fragment key={index}>
-                        - {line}
-                        <br />
-                        <br />
-                      </Fragment>
-                    ))
+                  .split("\n\n")
+                  .map((line, index) => (
+                    <Fragment key={index}>
+                      - {line}
+                      <br />
+                      <br />
+                    </Fragment>
+                  ))
                 : "N/A"}
             </p>
           </div>
@@ -214,14 +212,14 @@ export const HistoryInformation = ({
             <p className="text-dark-1 text-base mt-2">
               {data?.note_analysis_progressive_moments
                 ? data?.note_analysis_progressive_moments
-                    .split("\n\n")
-                    .map((line, index) => (
-                      <Fragment key={index}>
-                        - {line}
-                        <br />
-                        <br />
-                      </Fragment>
-                    ))
+                  .split("\n\n")
+                  .map((line, index) => (
+                    <Fragment key={index}>
+                      - {line}
+                      <br />
+                      <br />
+                    </Fragment>
+                  ))
                 : "N/A"}
             </p>
           </div>

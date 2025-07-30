@@ -116,9 +116,8 @@ const CheckoutForm = ({
   return (
     <form onSubmit={handleSubmit}>
       <p className="text-sm text-gray-500 mb-4">
-        {`This will charge you $${price} per ${
-          robot ? "location" : "flexologist"
-        } per month.`}
+        {`This will charge you $${price} per ${robot ? "location" : "flexologist"
+          } per month.`}
       </p>
       <PaymentElement onReady={() => setPaymentElementReady(true)} />
       {errorMessage && <p className="text-red-500 mt-3">{errorMessage}</p>}
