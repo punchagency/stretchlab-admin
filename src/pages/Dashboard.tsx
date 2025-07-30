@@ -190,7 +190,7 @@ export const Dashboard = () => {
             ) : (
               <DataTable
                 columns={userTableColumns}
-                data={userTableData}
+                data={userTableData.filter(flexologist => flexologist?.status === 1)}
                 emptyText="No users found"
                 tableContainerClassName="bg-white"
               />

@@ -182,7 +182,7 @@ export const RobotConfigForm = ({
           setPaymentInfo(true);
         }
       } else {
-        renderErrorToast(apiError.response.data.message);
+        renderErrorToast(apiError.response.data.message  || "Something went wrong, please try again.");
       }
     } finally {
       setSaving(false);
