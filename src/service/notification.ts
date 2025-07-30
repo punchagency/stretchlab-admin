@@ -36,6 +36,11 @@ export interface DeleteNotificationResponse {
   status: string;
 }
 
+export interface MarkAllAsReadResponse {
+  message: string;
+  status: string;
+}
+
 export const getNotifications = async (): Promise<NotificationsApiResponse> => {
   const response = await api.get<[NotificationsApiResponse, number]>(
     "/notification/"
@@ -59,6 +64,11 @@ export const deleteNotification = async (
   const response = await api.delete<[DeleteNotificationResponse, number]>(
     `/notification/delete/${data.notification_id}`
   );
+  return response.data[0];
+};
+
+export const markAllAsRead = async (): Promise<MarkAllAsReadResponse> => {
+  const response = await api.get<[MarkAllAsReadResponse, number]>('/notification/mark-all-as-read');
   return response.data[0];
 };
 
@@ -155,3 +165,38 @@ export const useDeleteNotification = () => {
     },
   });
 };
+
+export const useMarkAllAsRead = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: markAllAsRead,
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: ["notifications"] });
+      const previousNotifications = queryClient.getQueryData(["notifications"]);
+      queryClient.setQueryData(["notifications"], (old: NotificationsApiResponse | undefined) => {
+        if (!old) return old;
+        
+        return {
+          ...old, 
+          notifications: old.notifications.map(notification => ({
+            ...notification,
+            is_read: true
+          }))
+        };
+      });
+      return { previousNotifications };
+    },
+    onSuccess: () => {
+      renderSuccessToast("All notifications marked as read");
+      queryClient.invalidateQueries({ queryKey: ["notifications"] });
+    },
+    onError: (error: any, _, context) => {
+      if (context?.previousNotifications) {
+        queryClient.setQueryData(["notifications"], context.previousNotifications);
+      }
+      renderErrorToast(error?.response?.data?.message || "Failed to mark all notifications as read");
+    },
+  });
+}; 
+

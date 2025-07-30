@@ -14,7 +14,7 @@ import { Outlet, useNavigate } from "react-router";
 import { menuList } from "@/lib/contants";
 import { SideMenuList, LogoutMenu } from "@/components/shared";
 import { useEffect } from "react";
-import { getUserCookie } from "@/utils";
+import { getUserCookie, getUserInfo } from "@/utils";
 import { MainHeader } from "@/components/shared";
 import { ProfilePictureProvider } from "@/contexts/ProfilePictureContext";
 
@@ -40,6 +40,10 @@ export const Home = () => {
       navigate("/login");
     }
   }, []);
+  const userInfo = getUserInfo();
+  const filteredMenuList = menuList.filter(
+    (menu) => !(userInfo?.role_id === 1 && menu.title === "Billing")
+  );
   
   return (
     <ProfilePictureProvider>
@@ -51,7 +55,7 @@ export const Home = () => {
           <SidebarSeparator />
           <SidebarContent className="py-5">
             <SidebarMenu className="flex flex-col">
-              {menuList.map((menu) => (
+              {filteredMenuList.map((menu) => (
                 <SideMenuList
                   key={menu.title}
                   title={menu.title}
