@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { api } from './api';
+import { api } from "./api";
 import { renderErrorToast, renderSuccessToast } from "@/components/utils";
 
 export interface NotificationResponse {
@@ -42,17 +42,28 @@ export interface MarkAllAsReadResponse {
 }
 
 export const getNotifications = async (): Promise<NotificationsApiResponse> => {
-  const response = await api.get<[NotificationsApiResponse, number]>('/notification');
+  const response = await api.get<[NotificationsApiResponse, number]>(
+    "/notification/"
+  );
   return response.data[0];
 };
 
-export const updateNotification = async (data: UpdateNotificationRequest): Promise<UpdateNotificationResponse> => {
-  const response = await api.post<[UpdateNotificationResponse, number]>('/notification/update', data);
+export const updateNotification = async (
+  data: UpdateNotificationRequest
+): Promise<UpdateNotificationResponse> => {
+  const response = await api.post<[UpdateNotificationResponse, number]>(
+    "/notification/update",
+    data
+  );
   return response.data[0];
 };
 
-export const deleteNotification = async (data: DeleteNotificationRequest): Promise<DeleteNotificationResponse> => {
-  const response = await api.delete<[DeleteNotificationResponse, number]>(`/notification/delete/${data.notification_id}`);
+export const deleteNotification = async (
+  data: DeleteNotificationRequest
+): Promise<DeleteNotificationResponse> => {
+  const response = await api.delete<[DeleteNotificationResponse, number]>(
+    `/notification/delete/${data.notification_id}`
+  );
   return response.data[0];
 };
 
@@ -73,24 +84,27 @@ export const useNotifications = () => {
 
 export const useUpdateNotification = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: updateNotification,
     onMutate: async (variables: UpdateNotificationRequest) => {
       await queryClient.cancelQueries({ queryKey: ["notifications"] });
       const previousNotifications = queryClient.getQueryData(["notifications"]);
-      queryClient.setQueryData(["notifications"], (old: NotificationsApiResponse | undefined) => {
-        if (!old) return old;
-        
-        return {
-          ...old, 
-          notifications: old.notifications.map(notification => 
-            notification.id === variables.notification_id
-              ? { ...notification, is_read: variables.is_read }
-              : notification
-          )
-        };
-      });
+      queryClient.setQueryData(
+        ["notifications"],
+        (old: NotificationsApiResponse | undefined) => {
+          if (!old) return old;
+
+          return {
+            ...old,
+            notifications: old.notifications.map((notification) =>
+              notification.id === variables.notification_id
+                ? { ...notification, is_read: variables.is_read }
+                : notification
+            ),
+          };
+        }
+      );
       return { previousNotifications };
     },
     onSuccess: () => {
@@ -99,31 +113,39 @@ export const useUpdateNotification = () => {
     },
     onError: (error: any, _, context) => {
       if (context?.previousNotifications) {
-        queryClient.setQueryData(["notifications"], context.previousNotifications);
+        queryClient.setQueryData(
+          ["notifications"],
+          context.previousNotifications
+        );
       }
-      renderErrorToast(error?.response?.data?.message || "Failed to update notification");
+      renderErrorToast(
+        error?.response?.data?.message || "Failed to update notification"
+      );
     },
   });
 };
 
 export const useDeleteNotification = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: deleteNotification,
     onMutate: async (variables: DeleteNotificationRequest) => {
       await queryClient.cancelQueries({ queryKey: ["notifications"] });
       const previousNotifications = queryClient.getQueryData(["notifications"]);
-      queryClient.setQueryData(["notifications"], (old: NotificationsApiResponse | undefined) => {
-        if (!old) return old;
-        
-        return {
-          ...old, 
-          notifications: old.notifications.filter(notification => 
-            notification.id !== variables.notification_id
-          )
-        };
-      });
+      queryClient.setQueryData(
+        ["notifications"],
+        (old: NotificationsApiResponse | undefined) => {
+          if (!old) return old;
+
+          return {
+            ...old,
+            notifications: old.notifications.filter(
+              (notification) => notification.id !== variables.notification_id
+            ),
+          };
+        }
+      );
       return { previousNotifications };
     },
     onSuccess: () => {
@@ -132,9 +154,14 @@ export const useDeleteNotification = () => {
     },
     onError: (error: any, _, context) => {
       if (context?.previousNotifications) {
-        queryClient.setQueryData(["notifications"], context.previousNotifications);
+        queryClient.setQueryData(
+          ["notifications"],
+          context.previousNotifications
+        );
       }
-      renderErrorToast(error?.response?.data?.message || "Failed to delete notification");
+      renderErrorToast(
+        error?.response?.data?.message || "Failed to delete notification"
+      );
     },
   });
 };
@@ -172,3 +199,4 @@ export const useMarkAllAsRead = () => {
     },
   });
 }; 
+
