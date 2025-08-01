@@ -20,3 +20,10 @@ export const cancelSubscription = async (type: "note_taking" | "robot_process_au
   });
   return response;
 };
+
+export const restartSubscription = async (type: "note_taking" | "robot_process_automation") => {
+  const response = await api.post("/admin/payment/restart-subscription", {
+    type,
+  });
+  return response;
+};

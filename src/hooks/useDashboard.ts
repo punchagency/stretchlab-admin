@@ -27,6 +27,7 @@ export const useDashboard = () => {
     data: dashboardMetricsData,
     isLoading: isMetricsLoading,
     error: metricsError,
+    refetch: refetchMetrics,
   } = useQuery<DashboardMetricsResponse>({
     queryKey: ['dashboardMetrics'],
     queryFn: getDashboardMetrics,
@@ -38,6 +39,7 @@ export const useDashboard = () => {
     data: chartFiltersData,
     isLoading: isFiltersLoading,
     error: filtersError,
+    refetch: refetchFilters,
   } = useQuery<ChartFiltersResponse>({
     queryKey: ['chartFilters'],
     queryFn: getChartFilters,
@@ -49,6 +51,7 @@ export const useDashboard = () => {
     data: userTableData,
     isLoading: isTableLoading,
     error: tableError,
+    refetch: refetchUserTable,
   } = useQuery<UserTableResponse>({
     queryKey: ['userTableData'],
     queryFn: getUserTableData,
@@ -60,6 +63,7 @@ export const useDashboard = () => {
     data: businessTableData,
     isLoading: isBusinessTableLoading,
     error: businessTableError,
+    refetch: refetchBusinessTable,
   } = useQuery<BusinessTableResponse>({
     queryKey: ['businessTableData'],
     queryFn: getBusinessTableData,
@@ -143,6 +147,7 @@ export const useDashboard = () => {
     data: chartData,
     isLoading: isChartLoading,
     error: chartError,
+    refetch: refetchChart,
   } = useQuery<ChartDataResponse>({
     queryKey: ['chartData', chartDataParams],
     queryFn: () => getChartData(chartDataParams!),
@@ -174,7 +179,7 @@ export const useDashboard = () => {
           ? `${dashboardMetricsData.data.bookings_info.bookings_in_month}`
           : "0",
         subtitle: dashboardMetricsData?.data?.bookings_info
-          ? `${dashboardMetricsData.data.bookings_info.upwards_trend ? '+' : dashboardMetricsData.data.bookings_info.neutral_trend ? '' : '-'}${dashboardMetricsData.data.bookings_info.aggregation} Total`
+          ? `${dashboardMetricsData.data.bookings_info.upwards_trend ? '+' : dashboardMetricsData.data.bookings_info.neutral_trend ? '' : '-'}${dashboardMetricsData.data.bookings_info.aggregation.toFixed(2)} Total`
           : "No data",
         // buttonText: "See Sessions",
         buttonVariant: "primary",
@@ -277,5 +282,11 @@ export const useDashboard = () => {
     handleCustomRangeChange,
     shouldShowLocation: selectedFilters.filterBy === "Location",
     shouldShowFlexologist: selectedFilters.filterBy === "Flexologist",
+
+    retryMetrics: refetchMetrics,
+    retryFilters: refetchFilters,
+    retryChart: refetchChart,
+    retryUserTable: refetchUserTable,
+    retryBusinessTable: refetchBusinessTable,
   };
 }; 

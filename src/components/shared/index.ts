@@ -24,3 +24,4 @@ export * from "./SuccessModal";
 export * from "./SvgIcon";
 export * from "./BusinessDetailModal";
 export * from "./BusinessDetailSkeleton";
+export * from "./TableSkeleton";

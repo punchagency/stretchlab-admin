@@ -8,6 +8,7 @@ interface CustomJwtPayload extends JwtPayload {
   role_name: string;
   username: string;
   avatar?: string;
+  rpa_verified?: boolean | null;
   role_id?: number;
 }
 
