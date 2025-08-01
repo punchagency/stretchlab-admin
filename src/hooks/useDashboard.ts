@@ -179,7 +179,7 @@ export const useDashboard = () => {
           ? `${dashboardMetricsData.data.bookings_info.bookings_in_month}`
           : "0",
         subtitle: dashboardMetricsData?.data?.bookings_info
-          ? `${dashboardMetricsData.data.bookings_info.upwards_trend ? '+' : dashboardMetricsData.data.bookings_info.neutral_trend ? '' : '-'}${dashboardMetricsData.data.bookings_info.aggregation.toFixed(2)} Total`
+          ? `${dashboardMetricsData.data.bookings_info.upwards_trend ? '+' : ''}${dashboardMetricsData.data.bookings_info.aggregation.toFixed(2)} %`
           : "No data",
         // buttonText: "See Sessions",
         buttonVariant: "primary",
