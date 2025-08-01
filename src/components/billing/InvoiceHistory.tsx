@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Button, ConfirmModal, SvgIcon } from "@/components/shared";
-import { cancelSubscription } from "@/service/payment";
+import { cancelSubscription, restartSubscription } from "@/service/payment";
 import { renderErrorToast, renderSuccessToast } from "../utils";
 import type { ApiError } from "@/types/response";
+import { CheckCircle } from "lucide-react";
 
 interface InvoiceHistoryProps {
   flexologistQuantity: number;
@@ -29,26 +30,40 @@ export const InvoiceHistory = ({
 }: InvoiceHistoryProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [subscriptionToCancel, setSubscriptionToCancel] = useState<"note_taking" | "robot_process_automation" | null>(null);
+  const [subscriptionToModify, setSubscriptionToModify] = useState<"note_taking" | "robot_process_automation" | null>(null);
+  const [actionType, setActionType] = useState<"cancel" | "restart" | null>(null);
 
   const handleCancelSubscription = async (type: "note_taking" | "robot_process_automation") => {
-    setSubscriptionToCancel(type);
+    setSubscriptionToModify(type);
+    setActionType("cancel");
     setShowConfirmModal(true);
   };
 
-  const confirmCancelSubscription = async () => {
-    if (!subscriptionToCancel) return;
+  const handleRestartSubscription = async (type: "note_taking" | "robot_process_automation") => {
+    setSubscriptionToModify(type);
+    setActionType("restart");
+    setShowConfirmModal(true);
+  };
+
+  const confirmSubscriptionAction = async () => {
+    if (!subscriptionToModify || !actionType) return;
     
     setIsLoading(true);
     try {
-      await cancelSubscription(subscriptionToCancel);
-      renderSuccessToast(`${subscriptionToCancel === "note_taking" ? "Note Taking" : "RPA Automation"} subscription cancelled successfully`);
+      if (actionType === "cancel") {
+        await cancelSubscription(subscriptionToModify);
+        renderSuccessToast(`${subscriptionToModify === "note_taking" ? "Note Taking" : "RPA Automation"} subscription cancelled successfully`);
+      } else {
+        await restartSubscription(subscriptionToModify);
+        renderSuccessToast(`${subscriptionToModify === "note_taking" ? "Note Taking" : "RPA Automation"} subscription restarted successfully`);
+      }
       setShowConfirmModal(false);
-      setSubscriptionToCancel(null);
+      setSubscriptionToModify(null);
+      setActionType(null);
       onRefresh?.();
     } catch (error) {
       const apiError = error as ApiError;
-      renderErrorToast( apiError.response.data.message || "Failed to cancel subscription. Please try again.");
+      renderErrorToast( apiError.response.data.message || `Failed to ${actionType} subscription. Please try again.`);
     } finally {
       setIsLoading(false);
     }
@@ -56,7 +71,8 @@ export const InvoiceHistory = ({
 
   const handleModalClose = () => {
     setShowConfirmModal(false);
-    setSubscriptionToCancel(null);
+    setSubscriptionToModify(null);
+    setActionType(null);
   };
   return (
     <div className="bg-[#E1EEF0] rounded-lg shadow-sm border border-gray-200 p-3 sm:p-4">
@@ -87,14 +103,23 @@ export const InvoiceHistory = ({
             </div>
           )}
           
-          {flexologistStatus !== "canceled" && (
+          {flexologistStatus === "canceled" ? (
+            <Button
+              onClick={() => handleRestartSubscription("note_taking")}
+              disabled={isLoading}
+              className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 text-sm rounded-md w-fit flex items-center gap-2"
+            >
+              <CheckCircle width={16} height={16} />
+              {isLoading && subscriptionToModify === "note_taking" && actionType === "restart" ? "Restarting..." : "Restart"}
+            </Button>
+          ) : (
             <Button
               onClick={() => handleCancelSubscription("note_taking")}
               disabled={isLoading}
               className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 text-sm rounded-md w-fit flex items-center gap-2"
             >
               <SvgIcon name="cancel" width={16} height={16} fill="white" />
-              {isLoading && subscriptionToCancel === "note_taking" ? "Cancelling..." : "Cancel"}
+              {isLoading && subscriptionToModify === "note_taking" && actionType === "cancel" ? "Cancelling..." : "Cancel"}
             </Button>
           )}
         </div>}
@@ -120,14 +145,23 @@ export const InvoiceHistory = ({
               </div>
             )}
             
-            {rpaStatus !== "canceled" && (
+            {rpaStatus === "canceled" ? (
+              <Button
+                onClick={() => handleRestartSubscription("robot_process_automation")}
+                disabled={isLoading}
+                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 text-sm rounded-md w-fit flex items-center gap-2"
+              >
+                <CheckCircle width={16} height={16}/>
+                {isLoading && subscriptionToModify === "robot_process_automation" && actionType === "restart" ? "Restarting..." : "Restart"}
+              </Button>
+            ) : (
               <Button
                 onClick={() => handleCancelSubscription("robot_process_automation")}
                 disabled={isLoading}
                 className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 text-sm rounded-md w-fit flex items-center gap-2"
               >
                 <SvgIcon name="cancel" width={16} height={16} fill="white" />
-                {isLoading && subscriptionToCancel === "robot_process_automation" ? "Cancelling..." : "Cancel"}
+                {isLoading && subscriptionToModify === "robot_process_automation" && actionType === "cancel" ? "Cancelling..." : "Cancel"}
               </Button>
             )}
           </div>
@@ -138,9 +172,9 @@ export const InvoiceHistory = ({
       <ConfirmModal
         isOpen={showConfirmModal}
         onClose={handleModalClose}
-        onConfirm={confirmCancelSubscription}
-        title="Cancel Subscription"
-        message={`Are you sure you want to cancel your ${subscriptionToCancel === "note_taking" ? "Note Taking" : "RPA Automation"} subscription? This action cannot be undone.`}
+        onConfirm={confirmSubscriptionAction}
+        title={actionType === "cancel" ? "Cancel Subscription" : "Restart Subscription"}
+        message={`Are you sure you want to ${actionType} your ${subscriptionToModify === "note_taking" ? "Note Taking" : "RPA Automation"} subscription?${actionType === "cancel" ? " This action cannot be undone." : ""}`}
         loading={isLoading}
         error={false}
       />

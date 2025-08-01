@@ -16,13 +16,24 @@ import type {
 } from "@/types";
 
 export const useAnalytics = () => {
+  const getTodayDateRange = () => {
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    
+    return {
+      start: yesterday.toISOString().split('T')[0],
+      end: today.toISOString().split('T')[0]
+    };
+  };
+
   const [selectedFilters, setSelectedFilters] = useState<FilterState>({
     filterBy: "Location",
-    duration: "last_7_days",
+    duration: "today",
     location: "All",
     flexologist: "All",
     dataset: "",
-    customRange: undefined,
+    customRange: getTodayDateRange(),
   });
 
   const [selectedOpportunity, setSelectedOpportunity] = useState<string | null>(null);
@@ -32,6 +43,7 @@ export const useAnalytics = () => {
     data: chartFiltersData,
     isLoading: isFiltersLoading,
     error: filtersError,
+    refetch: refetchFilters,
   } = useQuery<ChartFiltersResponse>({
     queryKey: ['chartFilters'],
     queryFn: getChartFilters,
@@ -43,11 +55,12 @@ export const useAnalytics = () => {
     data: rpaAuditData,
     isLoading: isRPAAuditLoading,
     error: rpaAuditError,
+    refetch: refetchRPAAudit,
   } = useQuery<RPAAuditResponse>({
     queryKey: ['rpaAudit', selectedFilters.filterBy, selectedFilters.duration, selectedFilters.location, selectedFilters.flexologist, selectedFilters.customRange],
     queryFn: async () => {
       const params: RPAAuditParams = {
-        duration: selectedFilters.duration,
+        duration: selectedFilters.duration === 'today' ? 'custom' : selectedFilters.duration,
       };
 
       if (selectedFilters.filterBy === "Location" && selectedFilters.location !== "All") {
@@ -56,7 +69,7 @@ export const useAnalytics = () => {
         params.flexologist_name = selectedFilters.flexologist.toLowerCase();
       }
 
-      if (selectedFilters.duration === 'custom' && selectedFilters.customRange) {
+      if ((selectedFilters.duration === 'custom' || selectedFilters.duration === 'today') && selectedFilters.customRange) {
         params.start_date = selectedFilters.customRange.start;
         params.end_date = selectedFilters.customRange.end;
       }
@@ -72,6 +85,7 @@ export const useAnalytics = () => {
     data: rpaAuditDetailsData,
     isLoading: isRPAAuditDetailsLoading,
     error: rpaAuditDetailsError,
+    refetch: refetchRPAAuditDetails,
   } = useQuery<RPAAuditDetailsResponse | null>({
     queryKey: ['rpaAuditDetails', selectedOpportunity, selectedFilters.filterBy, selectedFilters.duration, selectedFilters.location, selectedFilters.flexologist, selectedFilters.customRange],
     queryFn: async () => {
@@ -86,7 +100,7 @@ export const useAnalytics = () => {
 
       const params: RPAAuditDetailsParams = {
         opportunity: opportunityToUse.toLowerCase(),
-        duration: selectedFilters.duration,
+        duration: selectedFilters.duration === 'today' ? 'custom' : selectedFilters.duration,
         start_date: "",
         end_date: "",
       };
@@ -97,7 +111,7 @@ export const useAnalytics = () => {
         params.flexologist_name = selectedFilters.flexologist.toLowerCase();
       }
 
-      if (selectedFilters.duration === 'custom' && selectedFilters.customRange) {
+      if ((selectedFilters.duration === 'custom' || selectedFilters.duration === 'today') && selectedFilters.customRange) {
         params.start_date = selectedFilters.customRange.start;
         params.end_date = selectedFilters.customRange.end;
       }
@@ -113,6 +127,7 @@ export const useAnalytics = () => {
     data: rankingData,
     isLoading: isRankingLoading,
     error: rankingError,
+    refetch: refetchRanking,
   } = useQuery<RankingAnalyticsResponse | null>({
     queryKey: ['rankingAnalytics', selectedRankBy, selectedFilters.dataset, selectedFilters.duration, selectedFilters.customRange],
     queryFn: async () => {
@@ -121,13 +136,13 @@ export const useAnalytics = () => {
       const params: RankingAnalyticsParams = {
         rank_by: selectedRankBy.toLowerCase(),
         metric: getMetricValueFromLabel(selectedFilters.dataset),
-        duration: selectedFilters.duration,
+        duration: selectedFilters.duration === 'today' ? 'custom' : selectedFilters.duration,
         start_date: "",
         end_date: "",
       };
 
       
-      if (selectedFilters.duration === 'custom' && selectedFilters.customRange) {
+      if ((selectedFilters.duration === 'custom' || selectedFilters.duration === 'today') && selectedFilters.customRange) {
         params.start_date = selectedFilters.customRange.start;
         params.end_date = selectedFilters.customRange.end;
       }
@@ -143,6 +158,7 @@ export const useAnalytics = () => {
     const filterOptions: FilterOptions = {
       filterBy: ["Location", "Flexologist"],
       duration: [
+        { value: "today", label: "Today" },
         { value: "last_7_days", label: "Last 7 Days" },
         { value: "last_30_days", label: "Last 30 Days" },
         { value: "last_90_days", label: "Last 90 Days" },
@@ -186,10 +202,19 @@ export const useAnalytics = () => {
   };
 
   const handleFilterChange = (filterKey: string, value: string) => {
-    setSelectedFilters(prev => ({
-      ...prev,
-      [filterKey]: value
-    }));
+    setSelectedFilters(prev => {
+      const newFilters = {
+        ...prev,
+        [filterKey]: value
+      };
+
+      // Automatically set date range for "today" option
+      if (filterKey === 'duration' && value === 'today') {
+        newFilters.customRange = getTodayDateRange();
+      }
+
+      return newFilters;
+    });
     
     if (filterKey !== 'dataset') {
       setSelectedOpportunity(null);
@@ -309,5 +334,10 @@ export const useAnalytics = () => {
 
     shouldShowLocation: selectedFilters.filterBy === "Location",
     shouldShowFlexologist: selectedFilters.filterBy === "Flexologist",
+
+    retryFilters: refetchFilters,
+    retryRPAAudit: refetchRPAAudit,
+    retryRPAAuditDetails: refetchRPAAuditDetails,
+    retryRanking: refetchRanking,
   };
 }; 
