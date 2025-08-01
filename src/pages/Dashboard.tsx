@@ -1,10 +1,11 @@
-import { MetricCard, RechartsBarChart, FilterDropdown, DateRangeFilter, MetricCardsSkeleton, BusinessDetailModal } from "@/components/shared";
+import { MetricCard, RechartsBarChart, FilterDropdown, DateRangeFilter, MetricCardsSkeleton, BusinessDetailModal, Button, TableSkeleton } from "@/components/shared";
 import { DataTable, userTableColumns, businessTableColumns } from "@/components/datatable";
 import { ChartSkeleton } from "@/components/shared/ChartSkeleton";
 import { useDashboard } from "@/hooks/useDashboard";
 import { useBusinessDetail } from "@/hooks/useBusinessDetail";
-import { motion } from "motion/react";
+
 import { getUserInfo } from "@/utils";
+import { RefreshCcw } from "lucide-react";
 
 export const Dashboard = () => {
   const {
@@ -29,6 +30,11 @@ export const Dashboard = () => {
     handleCustomRangeChange,
     shouldShowLocation,
     shouldShowFlexologist,
+    retryMetrics,
+    retryFilters,
+    retryChart,
+    retryUserTable,
+    retryBusinessTable,
   } = useDashboard();
 
   const {
@@ -43,7 +49,7 @@ export const Dashboard = () => {
   const handleMetricClick = (title: string) => {
     console.log(`Clicked on ${title}`);
   };
-  
+
 
   return (
     <div className="min-h-screen bg-white">
@@ -61,9 +67,16 @@ export const Dashboard = () => {
             {isMetricsLoading ? (
               <MetricCardsSkeleton />
             ) : metricsError ? (
-              <div className="text-center py-8">
+              <div className="text-center py-8 flex items-center justify-center flex-col">
                 <div className="text-red-500 mb-2">Error loading metrics</div>
-                <p className="text-gray-600">Please try refreshing the page</p>
+
+                <Button
+                  onClick={() => retryMetrics()}
+                  className="bg-primary-base text-white hover:bg-primary-base/80 px-4 py-2 flex items-center justify-center"
+                >
+                  <RefreshCcw className="w-4 h-4 mr-2" />
+                  Retry
+                </Button>
               </div>
             ) : (
               <div className={`grid grid-cols-1 md:grid-cols-2 ${userInfo?.role_id === 1 ? 'lg:grid-cols-3' : 'lg:grid-cols-2'
@@ -95,9 +108,15 @@ export const Dashboard = () => {
                   <div className="text-gray-500 mb-2">Loading filters...</div>
                 </div>
               ) : filtersError ? (
-                <div className="text-center py-8">
+                <div className="text-center py-8 flex items-center justify-center flex-col">
                   <div className="text-red-500 mb-2">Error loading filters</div>
-                  <p className="text-gray-600">Please try refreshing the page</p>
+                  <Button
+                    onClick={() => retryFilters()}
+                    className="bg-primary-base text-white hover:bg-primary-base/80 px-4 py-2 flex items-center justify-center"
+                  >
+                    <RefreshCcw className="w-4 h-4 mr-2" />
+                    Retry
+                  </Button>
                 </div>
               ) : (
                 <>
@@ -151,9 +170,15 @@ export const Dashboard = () => {
                       <ChartSkeleton />
                     )}
                     {chartError && (
-                      <div className="text-center py-8">
+                      <div className="text-center py-8 flex items-center justify-center flex-col">
                         <div className="text-red-500 mb-2">Error loading chart data</div>
-                        <p className="text-gray-600">Please try again</p>
+                        <Button
+                          onClick={() => retryChart()}
+                          className="bg-primary-base text-white hover:bg-primary-base/80 px-4 py-2 flex items-center justify-center"
+                        >
+                          <RefreshCcw className="w-4 h-4 mr-2" />
+                          Retry
+                        </Button>
                       </div>
                     )}
                     {!chartError && !isChartLoading && (
@@ -173,19 +198,19 @@ export const Dashboard = () => {
             <h2 className="text-base font-semibold text-gray-900 mb-4 pl-2 sm:pl-0">My Team</h2>
 
             {isTableLoading ? (
-              <div className="flex justify-center items-center py-12">
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="text-primary-base font-medium"
-                >
-                  Loading users...
-                </motion.div>
-              </div>
+
+              <TableSkeleton rows={5} columns={4} />
+
             ) : tableError ? (
-              <div className="flex justify-center items-center py-12">
-                <div className="text-red-500 font-medium">Failed to load users</div>
+              <div className="flex flex-col justify-center items-center py-12">
+                <div className="text-red-500 font-medium mb-4">Failed to load users</div>
+                <Button
+                  onClick={() => retryUserTable()}
+                  className="bg-primary-base text-white hover:bg-primary-base/80 px-4 py-2 flex items-center justify-center"
+                >
+                  <RefreshCcw className="w-4 h-4 mr-2" />
+                  Retry
+                </Button>
               </div>
             ) : (
               <DataTable
@@ -202,19 +227,18 @@ export const Dashboard = () => {
             <h2 className="text-base font-semibold text-gray-900 mb-4 pl-2 sm:pl-0"> Business List</h2>
 
             {isBusinessTableLoading ? (
-              <div className="flex justify-center items-center py-12">
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="text-primary-base font-medium"
-                >
-                  Loading businesses...
-                </motion.div>
-              </div>
+
+              <TableSkeleton rows={5} columns={4} />
             ) : businessTableError ? (
-              <div className="flex justify-center items-center py-12">
-                <div className="text-red-500 font-medium">Failed to load businesses</div>
+              <div className="flex flex-col justify-center items-center py-12">
+                <div className="text-red-500 font-medium mb-4">Failed to load businesses</div>
+                <Button
+                  onClick={() => retryBusinessTable()}
+                  className="bg-primary-base text-white hover:bg-primary-base/80 px-4 py-2 flex items-center justify-center"
+                >
+                  <RefreshCcw className="w-4 h-4 mr-2" />
+                  Retry
+                </Button>
               </div>
             ) : (
               <DataTable

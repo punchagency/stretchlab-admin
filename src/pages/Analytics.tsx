@@ -1,6 +1,7 @@
-import { FilterDropdown, DateRangeFilter } from '../components/shared';
+import { FilterDropdown, DateRangeFilter, Button } from '../components/shared';
 import { OpportunityBarChart, RankingBarChart, Drilldown, MetricsDisplay } from '../components/analytics';
 import { useAnalytics } from '@/hooks/useAnalytics';
+import { RefreshCcw } from 'lucide-react';
 
 export const Analytics = () => {
   const {
@@ -25,6 +26,9 @@ export const Analytics = () => {
     handleRankByChange,
     shouldShowLocation,
     shouldShowFlexologist,
+    retryFilters,
+    retryRPAAudit,
+    retryRanking,
   } = useAnalytics();
 
   const rankByOptions = ['Location', 'Flexologist'];
@@ -51,9 +55,15 @@ export const Analytics = () => {
                   <div className="text-gray-500 mb-2">Loading filters...</div>
                 </div>
               ) : filtersError ? (
-                <div className="text-center py-8">
+                <div className="text-center py-8 flex items-center justify-center flex-col">
                   <div className="text-red-500 mb-2">Error loading filters</div>
-                  <p className="text-gray-600">Please try refreshing the page</p>
+                  <Button
+                    onClick={() => retryFilters()}
+                    className="bg-primary-base text-white hover:bg-primary-base/80 px-4 py-2 flex items-center justify-center"
+                  >
+                    <RefreshCcw className="w-4 h-4 mr-2" />
+                    Retry
+                  </Button>
                 </div>
               ) : (
                 <div className="flex flex-wrap gap-3 justify-between flex-col sm:flex-row">
@@ -96,9 +106,15 @@ export const Analytics = () => {
               {!isFiltersLoading && (
                 <>
                   {rpaAuditError && (
-                    <div className="text-center py-8">
+                    <div className="text-center py-8 flex items-center justify-center flex-col">
                       <div className="text-red-500 mb-2">Error loading opportunity data</div>
-                      <p className="text-gray-600">Please try refreshing the page</p>
+                      <Button
+                        onClick={() => retryRPAAudit()}
+                        className="bg-primary-base text-white hover:bg-primary-base/80 px-4 py-2 flex items-center justify-center"
+                      >
+                        <RefreshCcw className="w-4 h-4 mr-2" />
+                        Retry
+                      </Button>
                     </div>
                   )}
 
@@ -156,9 +172,15 @@ export const Analytics = () => {
             </div>
 
             {rankingError && (
-              <div className="text-center py-8">
+              <div className="text-center py-8 flex items-center justify-center flex-col">
                 <div className="text-red-500 mb-2">Error loading ranking data</div>
-                <p className="text-gray-600">Please try refreshing the page</p>
+                <Button
+                  onClick={() => retryRanking()}
+                  className="bg-primary-base text-white hover:bg-primary-base/80 px-4 py-2 flex items-center justify-center"
+                >
+                  <RefreshCcw className="w-4 h-4 mr-2" />
+                  Retry
+                </Button>
               </div>
             )}
 
