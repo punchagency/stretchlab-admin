@@ -30,6 +30,7 @@ export interface RPAAuditParams {
   flexologist_name?: string;
   start_date?: string;
   end_date?: string;
+  filter_metric?: string;
 }
 
 export interface RPAAuditDetailsParams {
@@ -65,6 +66,7 @@ export interface RankingAnalyticsParams {
   duration: string;
   start_date?: string;
   end_date?: string;
+  filter_metric?: string;
 }
 
 // Chart Data Types

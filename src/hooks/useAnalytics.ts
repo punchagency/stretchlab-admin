@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useQuery} from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { getChartFilters, getRPAAudit, getRPAAuditDetails, getRankingAnalytics } from "@/service/analytics";
 import type {
   ChartFiltersResponse,
@@ -20,9 +20,9 @@ export const useAnalytics = () => {
     const today = new Date();
     const yesterday = new Date(today);
     yesterday.setDate(yesterday.getDate() - 1);
-    
+
     return {
-      start: yesterday.toISOString().split('T')[0],
+      start: today.toISOString().split('T')[0],
       end: today.toISOString().split('T')[0]
     };
   };
@@ -34,6 +34,7 @@ export const useAnalytics = () => {
     flexologist: "All",
     dataset: "",
     customRange: getTodayDateRange(),
+    filterMetric: "all",
   });
 
   const [selectedOpportunity, setSelectedOpportunity] = useState<string | null>(null);
@@ -45,8 +46,8 @@ export const useAnalytics = () => {
     error: filtersError,
     refetch: refetchFilters,
   } = useQuery<ChartFiltersResponse>({
-    queryKey: ['chartFilters'],
-    queryFn: getChartFilters,
+    queryKey: ['chartFilters', 'analytics'],
+    queryFn: () => getChartFilters('analytics'),
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
   });
@@ -57,11 +58,12 @@ export const useAnalytics = () => {
     error: rpaAuditError,
     refetch: refetchRPAAudit,
   } = useQuery<RPAAuditResponse>({
-    queryKey: ['rpaAudit', selectedFilters.filterBy, selectedFilters.duration, selectedFilters.location, selectedFilters.flexologist, selectedFilters.customRange],
+    queryKey: ['rpaAudit', selectedFilters.filterBy, selectedFilters.duration, selectedFilters.location, selectedFilters.flexologist, selectedFilters.customRange, selectedFilters.filterMetric],
     queryFn: async () => {
       const params: RPAAuditParams = {
         duration: selectedFilters.duration === 'today' ? 'custom' : selectedFilters.duration,
       };
+      params.filter_metric = selectedFilters.filterMetric;
 
       if (selectedFilters.filterBy === "Location" && selectedFilters.location !== "All") {
         params.location = selectedFilters.location.toLowerCase();
@@ -74,9 +76,10 @@ export const useAnalytics = () => {
         params.end_date = selectedFilters.customRange.end;
       }
 
+
       return getRPAAudit(params);
     },
-    enabled: !!chartFiltersData, 
+    enabled: !!chartFiltersData,
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
   });
@@ -89,10 +92,10 @@ export const useAnalytics = () => {
   } = useQuery<RPAAuditDetailsResponse | null>({
     queryKey: ['rpaAuditDetails', selectedOpportunity, selectedFilters.filterBy, selectedFilters.duration, selectedFilters.location, selectedFilters.flexologist, selectedFilters.customRange],
     queryFn: async () => {
-      if (!selectedOpportunity && 
-          selectedFilters.location === "All" && 
-          selectedFilters.flexologist === "All") {
-        return null; 
+      if (!selectedOpportunity &&
+        selectedFilters.location === "All" &&
+        selectedFilters.flexologist === "All") {
+        return null;
       }
 
       const opportunityToUse = selectedOpportunity || (rpaAuditData?.note_opportunities?.[0]?.opportunity);
@@ -118,7 +121,7 @@ export const useAnalytics = () => {
 
       return getRPAAuditDetails(params);
     },
-    enabled: !!rpaAuditData, 
+    enabled: !!rpaAuditData,
     staleTime: 2 * 60 * 1000,
     refetchOnWindowFocus: false,
   });
@@ -129,7 +132,7 @@ export const useAnalytics = () => {
     error: rankingError,
     refetch: refetchRanking,
   } = useQuery<RankingAnalyticsResponse | null>({
-    queryKey: ['rankingAnalytics', selectedRankBy, selectedFilters.dataset, selectedFilters.duration, selectedFilters.customRange],
+    queryKey: ['rankingAnalytics', selectedRankBy, selectedFilters.dataset, selectedFilters.duration, selectedFilters.customRange, selectedFilters.filterMetric],
     queryFn: async () => {
       if (!selectedFilters.dataset) return null;
 
@@ -139,9 +142,10 @@ export const useAnalytics = () => {
         duration: selectedFilters.duration === 'today' ? 'custom' : selectedFilters.duration,
         start_date: "",
         end_date: "",
+        filter_metric: selectedFilters.filterMetric,
       };
 
-      
+
       if ((selectedFilters.duration === 'custom' || selectedFilters.duration === 'today') && selectedFilters.customRange) {
         params.start_date = selectedFilters.customRange.start;
         params.end_date = selectedFilters.customRange.end;
@@ -149,7 +153,7 @@ export const useAnalytics = () => {
 
       return getRankingAnalytics(params);
     },
-    enabled: !!chartFiltersData && !!selectedFilters.dataset, 
+    enabled: !!chartFiltersData && !!selectedFilters.dataset,
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
   });
@@ -158,7 +162,7 @@ export const useAnalytics = () => {
     const filterOptions: FilterOptions = {
       filterBy: ["Location", "Flexologist"],
       duration: [
-        { value: "today", label: "Today" },
+        { value: "today", label: "Yesterday" },
         { value: "last_7_days", label: "Last 7 Days" },
         { value: "last_30_days", label: "Last 30 Days" },
         { value: "last_90_days", label: "Last 90 Days" },
@@ -170,13 +174,14 @@ export const useAnalytics = () => {
       location: ["All"],
       flexologist: ["All"],
       dataset: [],
+      filterMetric: ["all", "first", "subsequent"],
     };
 
     if (chartFiltersData?.status === "success") {
       const { filters, flexologists, locations } = chartFiltersData.data;
 
       const datasetOptions = filters.map(filter => filter.label);
-      const flexologistOptions = ["All", ...flexologists.map(flex => flex.full_name)];
+      const flexologistOptions = ["All", ...flexologists];
       const locationOptions = ["All", ...locations];
 
       filterOptions.dataset = datasetOptions;
@@ -196,12 +201,13 @@ export const useAnalytics = () => {
 
   const getMetricValueFromLabel = (label: string): string => {
     if (!chartFiltersData?.data?.filters) return label;
-    
+
     const filter = chartFiltersData.data.filters.find(f => f.label === label);
     return filter ? filter.value : label;
   };
 
   const handleFilterChange = (filterKey: string, value: string) => {
+   
     setSelectedFilters(prev => {
       const newFilters = {
         ...prev,
@@ -215,7 +221,7 @@ export const useAnalytics = () => {
 
       return newFilters;
     });
-    
+
     if (filterKey !== 'dataset') {
       setSelectedOpportunity(null);
     }
@@ -225,9 +231,9 @@ export const useAnalytics = () => {
     setSelectedFilters(prev => ({
       ...prev,
       customRange: { start, end }
-      
+
     }));
-        setSelectedOpportunity(null);
+    setSelectedOpportunity(null);
   };
 
   const handleOpportunitySelect = (opportunity: string) => {
@@ -246,7 +252,7 @@ export const useAnalytics = () => {
         name: item.opportunity,
         value: item.percentage
       }))
-      .sort((a, b) => b.value - a.value); 
+      .sort((a, b) => b.value - a.value);
   };
 
   const transformDrilldownData = () => {
@@ -281,14 +287,14 @@ export const useAnalytics = () => {
 
   const transformRankingData = (): { name: string; value: number }[] => {
     if (!rankingData?.data) return [];
-       // If user has interacted and we have details data, use that
-      //  if (rpaAuditDetailsData && (
-      //   selectedOpportunity ||
-      //   selectedFilters.location !== "All" ||
-      //   selectedFilters.flexologist !== "All" ||
-      //   selectedFilters.duration !== "last_7_days"
-      // )) {
-  
+    // If user has interacted and we have details data, use that
+    //  if (rpaAuditDetailsData && (
+    //   selectedOpportunity ||
+    //   selectedFilters.location !== "All" ||
+    //   selectedFilters.flexologist !== "All" ||
+    //   selectedFilters.duration !== "last_7_days"
+    // )) {
+
     return rankingData.data
       .map((item: { name: string; count: number }) => ({
         name: item.name,
@@ -341,3 +347,6 @@ export const useAnalytics = () => {
     retryRanking: refetchRanking,
   };
 }; 
+
+
+

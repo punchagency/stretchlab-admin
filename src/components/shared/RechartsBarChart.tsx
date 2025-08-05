@@ -16,9 +16,10 @@ interface RechartsBarChartProps {
   }>;
   title?: string;
   maxValue?: number;
+  dataSet?: string;
 }
 
-export const RechartsBarChart = ({ data, title, maxValue }: RechartsBarChartProps) => {
+export const RechartsBarChart = ({ data, title, maxValue, dataSet }: RechartsBarChartProps) => {
   const safeData = data.filter(d => typeof d.value === 'number' && !isNaN(d.value));
   const max = maxValue || (safeData.length > 0 ? Math.max(...safeData.map(d => d.value)) : 100);
 
@@ -141,7 +142,7 @@ export const RechartsBarChart = ({ data, title, maxValue }: RechartsBarChartProp
                     <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg">
                       <p className="font-medium text-gray-900">{label}</p>
                       <p className="text-sm text-gray-600">
-                        Value: {data.value}
+                        Value: {data.value}{dataSet === 'Total Client Visits' ? '' : '%'}
                       </p>
                       {data.total !== undefined && (
                         <p className="text-sm text-gray-600">

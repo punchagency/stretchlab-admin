@@ -22,8 +22,11 @@ export const getChartData = async (params: ChartDataParams) => {
     const flexologistValue = params.flexologist || "all";
     queryParams.append('flexologist', flexologistValue.toString());
   }
-  if (params.customRange) {
-    queryParams.append('custom_range', JSON.stringify(params.customRange));
+  if (params.start_date) {
+    queryParams.append('start_date', params.start_date);
+  }
+  if (params.end_date) {
+    queryParams.append('end_date', params.end_date);
   }
   const response = await api.get(`/admin/dashboard/second_row?${queryParams.toString()}`);
   return response.data;
