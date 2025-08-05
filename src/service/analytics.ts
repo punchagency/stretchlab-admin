@@ -9,8 +9,14 @@ import type {
   RankingAnalyticsParams
 } from '@/types';
 
-export const getChartFilters = async (): Promise<ChartFiltersResponse> => {
-  const response = await api.get('/admin/dashboard/get_chart_filters');
+export const getChartFilters = async (filterBy?: string): Promise<ChartFiltersResponse> => {
+  const queryParams = new URLSearchParams();
+  if (filterBy) {
+    queryParams.append('filter_by', filterBy);
+  }
+  
+  const url = `/admin/dashboard/get_chart_filters${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+  const response = await api.get(url);
   return response.data;
 };
 
@@ -22,13 +28,16 @@ export const getRPAAudit = async (params: RPAAuditParams): Promise<RPAAuditRespo
     queryParams.append('location', params.location);
   }
   if (params.flexologist_name) {
-    queryParams.append('flexologist_name', params.flexologist_name);
+    queryParams.append('flexologist_name', params.flexologist_name.toLowerCase().trim());
   }
   if (params.start_date) {
     queryParams.append('start_date', params.start_date);
   }
   if (params.end_date) {
     queryParams.append('end_date', params.end_date);
+  }
+  if (params.filter_metric) {
+    queryParams.append('filter_metric', params.filter_metric);
   }
   
   const response = await api.get(`/admin/analytics/rpa_audit?${queryParams.toString()}`);

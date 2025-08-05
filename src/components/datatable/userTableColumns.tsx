@@ -73,8 +73,16 @@ export const userTableColumns: ColumnDef<UserData>[] = [
       });
       
       return (
-        <span className="text-gray-600">{formattedDate}</span>
+        <span className="text-gray-600">{lastLogin ? formattedDate : "N/A"}</span>
       );
+    },
+  },
+  {
+    accessorKey: "bookings",
+    header: "Bookings",
+    cell: ({ row }) => {
+      const bookings = row.getValue("bookings") as string;
+      return <span className="text-gray-600">{bookings}</span>;
     },
   },
 ]; 

@@ -14,13 +14,13 @@ import { ChartSkeleton } from '../shared';
 import { useIsMobile } from '@/hooks/use-mobile';
 import type { AnalyticsChartDataPoint } from '@/types/analytics';
 
-const CustomTooltip = ({ active, payload, label }: any) => {
+const CustomTooltip = ({ active, payload, label, dataSet }: any) => {
   if (active && payload && payload.length) {
     const fullName = payload[0].payload?.fullName || label;
     return (
       <div className="bg-white p-2 border border-gray-300 rounded shadow text-sm">
         <p className="text-gray-700 font-medium">{fullName}</p>
-        <p className="text-gray-600">{payload[0].value}%</p>
+        <p className="text-gray-600">{payload[0].value}{dataSet === 'Total Client Visits' ? '' : '%'}</p>
       </div>
     );
   }
@@ -35,11 +35,13 @@ const truncateText = (text: string, maxLength: number = 20): string => {
 interface RankingBarChartProps {
   data: AnalyticsChartDataPoint[];
   isLoading: boolean;
+  dataSet?: string;
 }
 
 export const RankingBarChart: React.FC<RankingBarChartProps> = ({
   data,
-  isLoading
+  isLoading,
+  dataSet
 }) => {
   const isMobile = useIsMobile();
 
@@ -85,7 +87,7 @@ export const RankingBarChart: React.FC<RankingBarChartProps> = ({
           tick={{ fontSize }}
         />
         <Tooltip 
-          content={<CustomTooltip />} 
+          content={<CustomTooltip dataSet={dataSet} />} 
           cursor={false}
           labelFormatter={(label) => {
             const originalData = processedData.find(item => item.displayName === label);

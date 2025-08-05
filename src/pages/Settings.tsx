@@ -40,7 +40,7 @@ export const Settings = () => {
       <div className="px-5 sm:px-7 mt-5 sm:mt-7">
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col lg:flex-row bg-white rounded-lg shadow-[0_0_10px_rgba(0,0,0,0.1)]">
-            
+
             {/* Desktop Sidebar */}
             <div className="hidden lg:block w-64 flex-shrink-0 p-4">
               <nav className="space-y-1">
@@ -85,12 +85,12 @@ export const Settings = () => {
                 ))}
               </div>
             </div>
-            
+
             {/* Content Area */}
             <div className="flex-1 py-4 lg:py-4 px-3 lg:px-0 lg:border-l border-border pb-10 min-h-[500px]">
               {renderContent()}
             </div>
-            
+
           </div>
         </div>
       </div>

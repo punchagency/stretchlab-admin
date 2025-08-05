@@ -17,11 +17,11 @@ interface InvoiceHistoryProps {
   onRefresh?: () => void;
 }
 
-export const InvoiceHistory = ({ 
-  flexologistQuantity, 
-  flexologistPrice, 
-  rpaPrice, 
-  noteTakingBillingDate, 
+export const InvoiceHistory = ({
+  flexologistQuantity,
+  flexologistPrice,
+  rpaPrice,
+  noteTakingBillingDate,
   rpaBillingDate,
   flexologistStatus,
   rpaStatus,
@@ -47,7 +47,7 @@ export const InvoiceHistory = ({
 
   const confirmSubscriptionAction = async () => {
     if (!subscriptionToModify || !actionType) return;
-    
+
     setIsLoading(true);
     try {
       if (actionType === "cancel") {
@@ -63,7 +63,7 @@ export const InvoiceHistory = ({
       onRefresh?.();
     } catch (error) {
       const apiError = error as ApiError;
-      renderErrorToast( apiError.response.data.message || `Failed to ${actionType} subscription. Please try again.`);
+      renderErrorToast(apiError.response.data.message || `Failed to ${actionType} subscription. Please try again.`);
     } finally {
       setIsLoading(false);
     }
@@ -77,32 +77,32 @@ export const InvoiceHistory = ({
   return (
     <div className="bg-[#E1EEF0] rounded-lg shadow-sm border border-gray-200 p-3 sm:p-4">
       <h2 className="text-xl font-semibold text-gray-900 mb-4 sm:mb-6">Invoice Information</h2>
-      
+
       <div className="space-y-4 sm:space-y-5">
-      { flexologistQuantity > 0 && <div>
+        {flexologistQuantity > 0 && <div>
           <div className="text-gray-600 mb-2 text-sm">Active Flexologists:</div>
           <div className="font-medium text-gray-900 text-base">{flexologistQuantity}</div>
         </div>}
-        
-       { flexologistQuantity > 0 && <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+
+        {flexologistQuantity > 0 && <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
           <div>
             <div className="text-gray-600 mb-2 text-sm">Subscription Tier:</div>
             <div className="font-medium text-gray-900 text-base">
               ${flexologistPrice}/month per Flexologist
             </div>
           </div>
-          
+
           {noteTakingBillingDate && (
             <div>
               <div className="text-gray-600 mb-2 text-sm">
                 {flexologistStatus === "trialing" ? "Trial Ends:" : flexologistStatus === "canceled" ? "Cancelled" : "Next Billing Date:"}
               </div>
-              { flexologistStatus !== "canceled" && <div className="font-medium text-gray-900 text-base">
+              {flexologistStatus !== "canceled" && <div className="font-medium text-gray-900 text-base">
                 {noteTakingBillingDate}
               </div>}
             </div>
           )}
-          
+
           {flexologistStatus === "canceled" ? (
             <Button
               onClick={() => handleRestartSubscription("note_taking")}
@@ -124,7 +124,7 @@ export const InvoiceHistory = ({
           )}
         </div>}
 
-        
+
         {rpaQuantity > 0 && <div className="pt-3 sm:pt-4">
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
             <div>
@@ -133,7 +133,7 @@ export const InvoiceHistory = ({
                 Enabled-${rpaPrice}/month per location
               </div>
             </div>
-            
+
             {rpaBillingDate && (
               <div>
                 <div className="text-gray-600 mb-2 text-sm">
@@ -144,14 +144,14 @@ export const InvoiceHistory = ({
                 </div>}
               </div>
             )}
-            
+
             {rpaStatus === "canceled" ? (
               <Button
                 onClick={() => handleRestartSubscription("robot_process_automation")}
                 disabled={isLoading}
                 className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 text-sm rounded-md w-fit flex items-center gap-2"
               >
-                <CheckCircle width={16} height={16}/>
+                <CheckCircle width={16} height={16} />
                 {isLoading && subscriptionToModify === "robot_process_automation" && actionType === "restart" ? "Restarting..." : "Restart"}
               </Button>
             ) : (
@@ -168,7 +168,7 @@ export const InvoiceHistory = ({
 
         </div>}
       </div>
-      
+
       <ConfirmModal
         isOpen={showConfirmModal}
         onClose={handleModalClose}

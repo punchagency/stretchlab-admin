@@ -79,7 +79,7 @@ export const Dashboard = () => {
                 </Button>
               </div>
             ) : (
-              <div className={`grid grid-cols-1 md:grid-cols-2 ${userInfo?.role_id === 1 ? 'lg:grid-cols-3' : 'lg:grid-cols-2'
+              <div className={`grid grid-cols-1 md:grid-cols-2 ${userInfo?.role_id === 1 ? 'lg:grid-cols-2' : 'lg:grid-cols-2'
                 } gap-4`}>
                 {dashboardMetrics.map((metric, index) => (
                   <MetricCard
@@ -144,6 +144,7 @@ export const Dashboard = () => {
                         options={filterOptions.location}
                         onChange={(value) => handleFilterChange('location', value)}
                         className="flex-2"
+                        showSearch={true}
                       />
                     )}
                     {shouldShowFlexologist && (
@@ -153,14 +154,16 @@ export const Dashboard = () => {
                         options={filterOptions.flexologist}
                         onChange={(value) => handleFilterChange('flexologist', value)}
                         className="flex-2"
+                        showSearch={true}
                       />
                     )}
                     <FilterDropdown
                       label="Dataset"
                       value={selectedFilters.dataset}
-                      options={filterOptions.dataset}
+                      options={filterOptions.dataset || []}
                       onChange={(value) => handleFilterChange('dataset', value)}
                       className="flex-2"
+                      showSearch={true}
                     />
                   </div>
 
@@ -186,6 +189,7 @@ export const Dashboard = () => {
                         data={chartData}
                         title=""
                         maxValue={maxValue}
+                        dataSet={selectedFilters.dataset}
                       />
                     )}
                   </div>
@@ -218,6 +222,10 @@ export const Dashboard = () => {
                 data={userTableData.filter(flexologist => flexologist?.status === 1)}
                 emptyText="No users found"
                 tableContainerClassName="bg-white"
+                enableSorting={true}
+                enableSearch={true}
+                searchFields={["full_name", "id"]}
+                searchPlaceholder="Search by Name or ID"
               />
             )}
 
@@ -246,6 +254,10 @@ export const Dashboard = () => {
                 data={businessTableData}
                 emptyText="No businesses found"
                 tableContainerClassName="bg-white"
+                enableSorting={true}
+                enableSearch={true}
+                searchFields={["business_username", "id"]}
+                searchPlaceholder="Search by Business Name or ID"
               />
             )}
 

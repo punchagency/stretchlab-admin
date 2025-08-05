@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getChartFilters, getChartData, getUserTableData, getDashboardMetrics, getBusinessTableData } from "@/service/dashboard";
+import { getChartData, getUserTableData, getDashboardMetrics, getBusinessTableData } from "@/service/dashboard";
+import { getChartFilters } from "@/service/analytics";
 import type {
   ChartFiltersResponse,
   ChartDataPoint,
@@ -41,8 +42,8 @@ export const useDashboard = () => {
     error: filtersError,
     refetch: refetchFilters,
   } = useQuery<ChartFiltersResponse>({
-    queryKey: ['chartFilters'],
-    queryFn: getChartFilters,
+    queryKey: ['chartFilters', 'dashboard'],
+    queryFn: () => getChartFilters(),
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
   });
@@ -81,7 +82,7 @@ export const useDashboard = () => {
         { value: "this_month", label: "This Month" },
         { value: "last_month", label: "Last Month" },
         { value: "this_year", label: "This Year" },
-        // { value: "custom", label: "Custom" },
+        { value: "custom", label: "Custom" },
       ],
       location: ["All"],
       flexologist: ["All"],
@@ -90,17 +91,16 @@ export const useDashboard = () => {
 
     let filtersMap = {
       datasetMap: new Map<string, string>(),
-      flexologistMap: new Map<string, number>(),
+      flexologistMap: new Map<string, string>(),
     };
 
     if (chartFiltersData?.status === "success") {
       const { filters, flexologists, locations } = chartFiltersData.data;
 
       filtersMap.datasetMap = new Map(filters.map(f => [f.label, f.value]));
-      filtersMap.flexologistMap = new Map(flexologists.map(f => [f.full_name, f.id]));
-
+      filtersMap.flexologistMap = new Map(flexologists.map(f => [f, f.toLowerCase().trim()]));
       const datasetOptions = filters.map(filter => filter.label);
-      const flexologistOptions = ["All", ...flexologists.map(flex => flex.full_name)];
+      const flexologistOptions = ["All", ...flexologists];
       const locationOptions = ["All", ...locations];
 
       filterOptions.dataset = datasetOptions;
@@ -138,7 +138,10 @@ export const useDashboard = () => {
         params.flexologist = filtersMap.flexologistMap.get(selectedFilters.flexologist);
       }
     }
-
+    if (selectedFilters.duration === "custom") {
+      params.start_date = selectedFilters.customRange?.start;
+      params.end_date = selectedFilters.customRange?.end;
+    }
     return params;
   };
 
@@ -185,14 +188,14 @@ export const useDashboard = () => {
         buttonVariant: "primary",
         showCurrency: false,
       },
-      {
-        title: "Security Incidents",
-        value: "87%",
-        subtitle: "+1% Vs Last Month",
-        // buttonText: "Utilization",
-        buttonVariant: "primary",
-        showCurrency: false,
-      }
+      // {
+      //   title: "Security Incidents",
+      //   value: "87%",
+      //   subtitle: "+1% Vs Last Month",
+      //   // buttonText: "Utilization",
+      //   buttonVariant: "primary",
+      //   showCurrency: false,
+      // }
     );
     return metrics;
   };

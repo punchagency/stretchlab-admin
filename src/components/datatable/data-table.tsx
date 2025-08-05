@@ -33,6 +33,8 @@ import {
 //   DropdownMenuContent,
 // } from "@radix-ui/react-dropdown-menu";
 import { SvgIcon } from "../shared";
+import { ChevronUp, ChevronDown, ChevronsUpDown } from "lucide-react";
+
 interface DataTableProps<TData extends { id: number | string }, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
@@ -43,6 +45,11 @@ interface DataTableProps<TData extends { id: number | string }, TValue> {
   className?: string;
   tableContainerClassName?: string;
   tableClassName?: string;
+  // New props for enhanced functionality
+  enableSorting?: boolean;
+  enableSearch?: boolean;
+  searchFields?: string[];
+  searchPlaceholder?: string;
 }
 
 export function DataTable<TData extends { id: number | string }, TValue>({
@@ -55,24 +62,49 @@ export function DataTable<TData extends { id: number | string }, TValue>({
   className,
   tableContainerClassName,
   tableClassName,
+  enableSorting = false,
+  enableSearch = false,
+  searchFields = [],
+  searchPlaceholder = "Search...",
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [globalFilter, setGlobalFilter] = useState("");
+  // Custom global filter function for multi-field search
+  const customGlobalFilterFn = (row: any, _columnId: string, filterValue: string) => {
+    if (!enableSearch || !filterValue) return true;
+    
+    const searchLower = filterValue.toLowerCase();
+    const fieldsToSearch = searchFields.length > 0 ? searchFields : Object.keys(row.original);
+    
+    return fieldsToSearch.some((field) => {
+      const value = row.original[field];
+      return value != null && String(value).toLowerCase().includes(searchLower);
+    });
+  };
+
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    onSortingChange: setSorting,
-    getSortedRowModel: getSortedRowModel(),
+    ...(enableSorting && {
+      onSortingChange: setSorting,
+      getSortedRowModel: getSortedRowModel(),
+    }),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
+    ...(enableSearch && {
+      onGlobalFilterChange: setGlobalFilter,
+      globalFilterFn: customGlobalFilterFn,
+    }),
     state: {
-      sorting,
+      ...(enableSorting && { sorting }),
       columnFilters,
       columnVisibility,
+      ...(enableSearch && { globalFilter }),
     },
   });
 
@@ -175,6 +207,21 @@ export function DataTable<TData extends { id: number | string }, TValue>({
           </Button2>
         </div>
       )}
+      
+      {/* New configurable search section */}
+      {enableSearch && !note && (
+        <div className="flex items-center py-1 justify-end">
+          <Input
+            type="search"
+            icon="search"
+            placeholder={searchPlaceholder}
+            className="max-w-sm w-full md:min-w-[30rem] py-3 rounded-md border-1 border-gray-300"
+            value={globalFilter}
+            onChange={(event) => setGlobalFilter(event.target.value)}
+          />
+        </div>
+      )}
+      
       <div
         className={`rounded-md border w-[85vw] mx-auto md:w-full overflow-x-auto border-sidebar-border ${tableContainerClassName || ""}`}
       >
@@ -183,14 +230,34 @@ export function DataTable<TData extends { id: number | string }, TValue>({
             {table.getHeaderGroups().map((headerGroup, index) => (
               <TableRow key={index} className="border-sidebar-border">
                 {headerGroup.headers.map((header, index) => {
+                  const canSort = enableSorting && header.column.getCanSort();
                   return (
-                    <TableHead key={index} className="pl-4 text-[#344054] py-2">
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                    <TableHead 
+                      key={index} 
+                      className={`pl-4 text-[#344054] py-2 ${canSort ? 'cursor-pointer select-none hover:bg-gray-50' : ''}`}
+                      onClick={canSort ? header.column.getToggleSortingHandler() : undefined}
+                    >
+                      <div className="flex items-center space-x-2">
+                        <span>
+                          {header.isPlaceholder
+                            ? null
+                            : flexRender(
+                                header.column.columnDef.header,
+                                header.getContext()
+                              )}
+                        </span>
+                        {canSort && (
+                          <span className="flex flex-col">
+                            {header.column.getIsSorted() === "desc" ? (
+                              <ChevronDown className="h-4 w-4" />
+                            ) : header.column.getIsSorted() === "asc" ? (
+                              <ChevronUp className="h-4 w-4" />
+                            ) : (
+                              <ChevronsUpDown className="h-4 w-4 opacity-50" />
+                            )}
+                          </span>
+                        )}
+                      </div>
                     </TableHead>
                   );
                 })}
