@@ -11,7 +11,7 @@ export interface Flexologist {
 export interface ChartFiltersResponse {
   data: {
     filters: FilterOption[];
-    flexologists: Flexologist[];
+    flexologists: string[];
     locations: string[];
   };
   status: string;
@@ -70,11 +70,14 @@ export interface FilterState {
   location: string;
   flexologist: string;
   dataset: string;
+  filterMetric?: string;
   customRange?: {
     start: string;
     end: string;
   };
+
 }
+
 
 export interface DurationOption {
   value: string;
@@ -86,15 +89,19 @@ export interface FilterOptions {
   duration: DurationOption[];
   location: string[];
   flexologist: string[];
-  dataset: string[];
+  dataset?: string[];
+  filterMetric?: string[];
+  dataset_analytics?: DurationOption[];
 }
 
 export interface ChartDataParams {
   duration: string;
   location?: string;
-  flexologist?: number;
+  flexologist?: string;
   dataset: string;
   filterBy: string;
+  start_date?: string;
+  end_date?: string;
   customRange?: {
     start: string;
     end: string;

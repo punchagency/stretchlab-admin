@@ -40,16 +40,31 @@ export const Analytics = () => {
           Robot Automation Audit
         </h1>
       </div>
-
+      <div className="flex flex-col sm:flex-row flex-wrap gap-4 p-3 sm:p-5">
+        <DateRangeFilter
+          label="Time Range"
+          value={filterOptions.duration.find(opt => opt.value === selectedFilters.duration)?.label || selectedFilters.duration}
+          options={filterOptions.duration}
+          onChange={(value) => handleFilterChange('duration', value)}
+          onCustomRangeChange={handleCustomRangeChange}
+          className="flex-1"
+        />
+        <FilterDropdown
+          label="Filter Metric"
+          value={selectedFilters.filterMetric || "all"}
+          options={filterOptions.filterMetric || []}
+          onChange={(value) => handleFilterChange('filterMetric', value)}
+          className="flex-1"
+        />
+      </div>
       <div className="p-3 sm:p-5 flex flex-col space-y-10">
         <div className="bg-[#F5F5F5] rounded-lg shadow-sm border border-gray-200 p-3 sm:p-5">
           <div className=''>
             <h2 className="text-base font-semibold text-gray-900 mb-2">
               Performance & Opportunity Dashboard
             </h2>
-           
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 sm:p-6 mb-6 flex flex-col gap-6">
-              
+
               {isFiltersLoading ? (
                 <div className="text-center py-8">
                   <div className="text-gray-500 mb-2">Loading filters...</div>
@@ -74,21 +89,15 @@ export const Analytics = () => {
                     onChange={(value) => handleFilterChange('filterBy', value)}
                     className="flex-1"
                   />
-                  <DateRangeFilter
-                    label="Time Range"
-                    value={filterOptions.duration.find(opt => opt.value === selectedFilters.duration)?.label || selectedFilters.duration}
-                    options={filterOptions.duration}
-                    onChange={(value) => handleFilterChange('duration', value)}
-                    onCustomRangeChange={handleCustomRangeChange}
-                    className="flex-2"
-                  />
+
                   {shouldShowLocation && (
                     <FilterDropdown
                       label="Location"
                       value={selectedFilters.location}
                       options={filterOptions.location}
                       onChange={(value) => handleFilterChange('location', value)}
-                      className="flex-2"
+                      className="flex-1"
+                      showSearch={true}
                     />
                   )}
                   {shouldShowFlexologist && (
@@ -98,6 +107,7 @@ export const Analytics = () => {
                       options={filterOptions.flexologist}
                       onChange={(value) => handleFilterChange('flexologist', value)}
                       className="flex-2"
+                      showSearch={true}
                     />
                   )}
                 </div>
@@ -165,7 +175,7 @@ export const Analytics = () => {
               <FilterDropdown
                 label="Metric"
                 value={selectedFilters.dataset}
-                options={filterOptions.dataset}
+                options={filterOptions.dataset || []}
                 onChange={(value) => handleFilterChange('dataset', value)}
                 className="flex-1"
               />
@@ -187,6 +197,7 @@ export const Analytics = () => {
             <RankingBarChart
               data={rankingData}
               isLoading={isRankingLoading}
+              dataSet={selectedFilters.dataset}
             />
           </div>
         </div>
