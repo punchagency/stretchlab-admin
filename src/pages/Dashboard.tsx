@@ -43,6 +43,7 @@ export const Dashboard = () => {
     isBusinessInfoLoading,
     openBusinessDetail,
     closeBusinessDetail,
+    refetchBusinessInfo,
   } = useBusinessDetail();
 
   const userInfo = getUserInfo();
@@ -270,6 +271,7 @@ export const Dashboard = () => {
         isOpen={isModalOpen}
         onClose={closeBusinessDetail}
         isLoading={isBusinessInfoLoading}
+        onRetry={() => refetchBusinessInfo()}
       />
     </div>
   );

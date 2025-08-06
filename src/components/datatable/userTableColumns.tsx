@@ -1,5 +1,6 @@
 import { type ColumnDef } from "@tanstack/react-table";
 import type { UserData } from "@/types";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 export const userTableColumns: ColumnDef<UserData>[] = [
   {
@@ -82,7 +83,18 @@ export const userTableColumns: ColumnDef<UserData>[] = [
     header: "Bookings",
     cell: ({ row }) => {
       const bookings = row.getValue("bookings") as string;
-      return <span className="text-gray-600">{bookings}</span>;
+      return (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span className="text-gray-600">{bookings}</span>
+            </TooltipTrigger>
+            <TooltipContent side="bottom">
+              <p className="text-xs text-white">
+                Number of bookings for this flexologist today.
+              </p>
+            </TooltipContent>
+          </Tooltip>
+      );
     },
   },
 ]; 

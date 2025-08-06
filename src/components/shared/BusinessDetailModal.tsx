@@ -1,13 +1,16 @@
 import React from "react";
 import { Modal } from "./Modal";
+import { Button } from "./Button";
 import type { BusinessInfo } from "@/types";
 import { BusinessDetailSkeleton } from "./BusinessDetailSkeleton";
+import { RefreshCcw } from "lucide-react";
 
 interface BusinessDetailModalProps {
     businessInfo: BusinessInfo | null;
     isOpen: boolean;
     onClose: () => void;
     isLoading: boolean;
+    onRetry?: () => void;
 }
 
 export const BusinessDetailModal: React.FC<BusinessDetailModalProps> = ({
@@ -15,6 +18,7 @@ export const BusinessDetailModal: React.FC<BusinessDetailModalProps> = ({
     isOpen,
     onClose,
     isLoading,
+    onRetry,
 }) => {
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);
@@ -237,9 +241,17 @@ export const BusinessDetailModal: React.FC<BusinessDetailModalProps> = ({
                         )}
                     </div>
                 ) : (
-                    <div className="text-center py-8">
+                    <div className="text-center py-8 flex items-center justify-center flex-col">
                         <div className="text-red-500 mb-2">Failed to load business details</div>
-                        <p className="text-gray-600">Please try again</p>
+                        {onRetry && (
+                            <Button
+                                onClick={onRetry}
+                                className="bg-primary-base text-white hover:bg-primary-base/80 px-4 py-2 flex items-center justify-center"
+                            >
+                                <RefreshCcw className="w-4 h-4 mr-2" />
+                                Retry
+                            </Button>
+                        )}
                     </div>
                 )}
             </div>
