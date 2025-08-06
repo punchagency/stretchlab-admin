@@ -36,10 +36,10 @@ export const useBilling = () => {
 
     const flexologistPrice = noteTakingData ? convertStripePrice(noteTakingData.price) : 0;
     const rpaPrice = rpaData ? convertStripePrice(rpaData.price) : 0;
-    
+
     const flexologistQuantity = noteTakingData?.quantity || 0;
     const rpaQuantity = rpaData?.quantity || 0;
-    
+
     const flexologistTotal = calculateTotal(flexologistQuantity, flexologistPrice);
     const rpaTotal = calculateTotal(rpaQuantity, rpaPrice);
     const totalBilled = flexologistTotal + rpaTotal;
@@ -48,10 +48,10 @@ export const useBilling = () => {
     const rpaBillingDate = rpaData?.end_date ? formatBillingDate(rpaData.end_date) : null;
 
     const hasSubscriptionData = hasValidSubscription(subscriptions, noteTakingData, rpaData);
-    
+
     const flexologistStatus = noteTakingData?.status;
     const rpaStatus = rpaData?.status;
-    
+
     return {
       flexologistQuantity,
       flexologistPrice,

@@ -207,7 +207,7 @@ export const useAnalytics = () => {
   };
 
   const handleFilterChange = (filterKey: string, value: string) => {
-   
+
     setSelectedFilters(prev => {
       const newFilters = {
         ...prev,
@@ -346,7 +346,7 @@ export const useAnalytics = () => {
     retryRPAAuditDetails: refetchRPAAuditDetails,
     retryRanking: refetchRanking,
   };
-}; 
+};
 
 
 
