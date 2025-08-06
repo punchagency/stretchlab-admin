@@ -45,7 +45,6 @@ interface DataTableProps<TData extends { id: number | string }, TValue> {
   className?: string;
   tableContainerClassName?: string;
   tableClassName?: string;
-  // New props for enhanced functionality
   enableSorting?: boolean;
   enableSearch?: boolean;
   searchFields?: string[];
@@ -71,13 +70,13 @@ export function DataTable<TData extends { id: number | string }, TValue>({
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [globalFilter, setGlobalFilter] = useState("");
-  // Custom global filter function for multi-field search
+
   const customGlobalFilterFn = (row: any, _columnId: string, filterValue: string) => {
     if (!enableSearch || !filterValue) return true;
-    
+
     const searchLower = filterValue.toLowerCase();
     const fieldsToSearch = searchFields.length > 0 ? searchFields : Object.keys(row.original);
-    
+
     return fieldsToSearch.some((field) => {
       const value = row.original[field];
       return value != null && String(value).toLowerCase().includes(searchLower);
@@ -207,8 +206,7 @@ export function DataTable<TData extends { id: number | string }, TValue>({
           </Button2>
         </div>
       )}
-      
-      {/* New configurable search section */}
+
       {enableSearch && !note && (
         <div className="flex items-center py-1 justify-end">
           <Input
@@ -221,7 +219,7 @@ export function DataTable<TData extends { id: number | string }, TValue>({
           />
         </div>
       )}
-      
+
       <div
         className={`rounded-md border w-[85vw] mx-auto md:w-full overflow-x-auto border-sidebar-border ${tableContainerClassName || ""}`}
       >
@@ -232,8 +230,8 @@ export function DataTable<TData extends { id: number | string }, TValue>({
                 {headerGroup.headers.map((header, index) => {
                   const canSort = enableSorting && header.column.getCanSort();
                   return (
-                    <TableHead 
-                      key={index} 
+                    <TableHead
+                      key={index}
                       className={`pl-4 text-[#344054] py-2 ${canSort ? 'cursor-pointer select-none hover:bg-gray-50' : ''}`}
                       onClick={canSort ? header.column.getToggleSortingHandler() : undefined}
                     >
@@ -242,9 +240,9 @@ export function DataTable<TData extends { id: number | string }, TValue>({
                           {header.isPlaceholder
                             ? null
                             : flexRender(
-                                header.column.columnDef.header,
-                                header.getContext()
-                              )}
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
                         </span>
                         {canSort && (
                           <span className="flex flex-col">
