@@ -20,7 +20,6 @@ import {
   renderWarningToast,
 } from "@/components/utils";
 import { type ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { AnimatePresence, motion } from "framer-motion";
@@ -108,7 +107,6 @@ export const NoteTakingAdmin = () => {
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
             Email
-            <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         );
       },
@@ -156,7 +154,6 @@ export const NoteTakingAdmin = () => {
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
             Date Invited
-            <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         );
       },
