@@ -1,4 +1,12 @@
 import React, { useState } from 'react';
+import { 
+  ChevronLeft, 
+  ChevronRight, 
+  BarChart3, 
+  MapPin, 
+  User, 
+  Info
+} from 'lucide-react';
 import { DrilldownSkeleton } from '../shared';
 import type { DrilldownData } from '@/types/analytics';
 
@@ -66,77 +74,187 @@ export const Drilldown: React.FC<DrilldownProps> = ({
         <button
           onClick={() => onPageChange('prev')}
           disabled={currentPage === 0}
-          className={`p-1 rounded ${currentPage === 0
+          className={`p-1.5 rounded-md transition-colors ${currentPage === 0
             ? 'text-gray-300 cursor-not-allowed'
             : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'
             }`}
         >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
+          <ChevronLeft className="w-4 h-4" />
         </button>
-        <span className="text-xs text-gray-500">
-          {currentPage + 1} of {totalPages}
+        <span className="text-xs text-gray-500 font-medium">
+          Page {currentPage + 1} of {totalPages}
         </span>
         <button
           onClick={() => onPageChange('next')}
           disabled={currentPage === totalPages - 1}
-          className={`p-1 rounded ${currentPage === totalPages - 1
+          className={`p-1.5 rounded-md transition-colors ${currentPage === totalPages - 1
             ? 'text-gray-300 cursor-not-allowed'
             : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'
             }`}
         >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
+          <ChevronRight className="w-4 h-4" />
         </button>
       </div>
     );
   };
 
-  return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 sm:p-6">
-      <h3 className="text-base font-medium text-gray-900 mb-3">
-        Drill-Down: <span className="text-primary-base">{selected || 'Overview'}</span>
-      </h3>
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-        <div>
-          <h4 className="text-sm font-semibold text-gray-500 mb-2">By Location</h4>
-          {data.locations.length > 0 ? <div className='flex flex-col gap-2'>
-            {getPaginatedData(data.locations, locationPage).map((item: any, idx: number) => (
-              <div key={idx} className="flex justify-between text-xs font-medium bg-[#F7F9FC] p-2 rounded-sm border border-gray-200">
-                <span className="text-gray-600">{item.name}</span>
-                <span className="font-medium text-gray-900">{item.value}</span>
+  const DataSection = ({ 
+    title, 
+    items, 
+    currentPage, 
+    totalPages, 
+    onPageChange, 
+    colorScheme,
+    icon 
+  }: {
+    title: string;
+    items: any[];
+    currentPage: number;
+    totalPages: number;
+    onPageChange: (direction: 'prev' | 'next') => void;
+    colorScheme: 'blue' | 'green';
+    icon: React.ReactNode;
+  }) => {
+    const colorClasses = {
+      blue: {
+        header: 'text-blue-700 bg-blue-50 border-blue-200',
+        item: 'bg-blue-50/50 border-blue-100 hover:bg-blue-100/70',
+        badge: 'bg-blue-100 text-blue-800'
+      },
+      green: {
+        header: 'text-green-700 bg-green-50 border-green-200',
+        item: 'bg-green-50/50 border-green-100 hover:bg-green-100/70',
+        badge: 'bg-green-100 text-green-800'
+      }
+    };
+
+    const colors = colorClasses[colorScheme];
+
+    return (
+      <div className="space-y-3">
+        <div className={`flex items-center gap-2 p-3 rounded-lg border ${colors.header}`}>
+          {icon}
+          <h4 className=" md:text-sm text-xs font-semibold">{title}</h4>
+          <span className={`ml-auto px-2 py-1 text-xs font-medium rounded-full ${colors.badge}`}>
+            {items.length} {items.length === 1 ? 'item' : 'items'}
+          </span>
+        </div>
+        
+        {items.length > 0 ? (
+          <div className="space-y-2">
+            {getPaginatedData(items, currentPage).map((item: any, idx: number) => (
+              <div 
+                key={idx} 
+                className={`flex justify-between items-center p-3 rounded-lg border transition-colors ${colors.item}`}
+              >
+                <span className="text-sm font-medium text-gray-700 truncate flex-1 mr-3">
+                  {item.name}
+                </span>
+                <span className="text-sm font-bold text-gray-900 bg-white px-2 py-1 rounded-md border">
+                  {item.value}
+                </span>
               </div>
             ))}
-          </div> : <div>
-            <p className='text-gray-500 text-sm font-medium'>No Location Data</p>
-          </div>}
-          <PaginationControls
+            <PaginationControls
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={onPageChange}
+            />
+          </div>
+        ) : (
+          <div className="text-center py-8 text-gray-500">
+            <div className="text-2xl mb-2">📊</div>
+            <p className="text-sm font-medium">No {title.toLowerCase()} data available</p>
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  return (
+    <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+     
+      <div className="bg-gradient-to-r from-gray-50 to-gray-100 md:p-4 p-3 border-b border-gray-200">
+        <div className="flex items-center gap-3">
+          <div className="p-2 bg-primary-base/10 rounded-lg">
+            <BarChart3 className="w-5 h-5 text-primary-base" />
+          </div>
+          <div>
+            <h3 className=" md:text-lg text-base font-semibold text-gray-900">
+              Drill-Down Analysis
+            </h3>
+            <p className=" md:text-sm text-xs text-gray-600">
+              {selected ? (
+                <>Detailed breakdown for: <span className="font-medium text-primary-base">{selected}</span></>
+              ) : (
+                'Overall distribution across locations and flexologists'
+              )}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="md:p-6 p-3">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+          <DataSection
+            title="By Location"
+            items={data.locations}
             currentPage={locationPage}
             totalPages={totalLocationPages}
             onPageChange={handleLocationPageChange}
+            colorScheme="blue"
+            icon={<MapPin className="w-4 h-4 text-blue-600" />}
           />
-        </div>
-        <div>
-          <h4 className="text-sm font-semibold text-gray-500 mb-2">By Flexologist</h4>
-          {data.flexologists.length > 0 ? <div className='flex flex-col gap-2'>
-            {getPaginatedData(data.flexologists, flexologistPage).map((item: any, idx: number) => (
-              <div key={idx} className="flex justify-between text-xs font-medium bg-[#F7F9FC] p-2 rounded-sm border border-gray-200">
-                <span className="text-gray-600">{item.name}</span>
-                <span className="font-medium text-gray-900">{item.value}</span>
-              </div>
-            ))}
-          </div> : <div >
-            <p className='text-gray-500 text-sm font-medium'>No Flexologist Data</p>
-          </div>}
-          <PaginationControls
+          
+          <DataSection
+            title="By Flexologist"
+            items={data.flexologists}
             currentPage={flexologistPage}
             totalPages={totalFlexologistPages}
             onPageChange={handleFlexologistPageChange}
+            colorScheme="green"
+            icon={<User className="w-4 h-4 text-green-600" />}
           />
+        </div>
+
+        <div className="mt-8 pt-4 border-t border-gray-200">
+          <div className="flex items-center gap-2 mb-4">
+            <Info className="w-5 h-5 text-gray-600" />
+            <h4 className=" md:text-base text-sm font-semibold text-gray-800">Understanding Your Data</h4>
+          </div>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+            <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+              <div className="flex items-start gap-3">
+                <div className="p-1.5 bg-blue-500 rounded-md">
+                  <MapPin className="w-3 h-3 text-white" />
+                </div>
+                <div>
+                  <h5 className=" md:text-base text-sm font-semibold text-blue-800 mb-1">Location Breakdown</h5>
+                  <p className=" md:text-sm text-xs text-blue-700 leading-relaxed">
+                  Each percentage indicates the proportion of high-quality notes at the location
+                  </p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+              <div className="flex items-start gap-3">
+                <div className="p-1.5 bg-green-500 rounded-md">
+                  <User className="w-3 h-3 text-white" />
+                </div>
+                <div>
+                  <h5 className=" md:text-base text-sm font-semibold text-green-800 mb-1">Flexologist Breakdown</h5>
+                  <p className=" md:text-sm text-xs text-green-700 leading-relaxed">
+                  Each percentage reflects the proportion of high-quality notes for the individual flexologist.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
   );
-}; 
+};
