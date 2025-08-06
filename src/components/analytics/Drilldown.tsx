@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { 
-  ChevronLeft, 
-  ChevronRight, 
-  BarChart3, 
-  MapPin, 
-  User, 
+import {
+  ChevronLeft,
+  ChevronRight,
+  BarChart3,
+  MapPin,
+  User,
   Info
 } from 'lucide-react';
 import { DrilldownSkeleton } from '../shared';
@@ -37,9 +37,19 @@ export const Drilldown: React.FC<DrilldownProps> = ({
   const totalLocationPages = Math.ceil(data.locations.length / itemsPerPage);
   const totalFlexologistPages = Math.ceil(data.flexologists.length / itemsPerPage);
 
+  const sortItemsByPercentage = (items: any[]) => {
+    return [...items].sort((a, b) => {
+      // Extract numeric value from percentage string (e.g., "45.2%" -> 45.2)
+      const aValue = parseFloat(a.value.replace('%', ''));
+      const bValue = parseFloat(b.value.replace('%', ''));
+      return bValue - aValue; // Sort in descending order (highest to lowest)
+    });
+  };
+
   const getPaginatedData = (items: any[], page: number) => {
+    const sortedItems = sortItemsByPercentage(items);
     const startIndex = page * itemsPerPage;
-    return items.slice(startIndex, startIndex + itemsPerPage);
+    return sortedItems.slice(startIndex, startIndex + itemsPerPage);
   };
 
   const handleLocationPageChange = (direction: 'prev' | 'next') => {
@@ -98,14 +108,14 @@ export const Drilldown: React.FC<DrilldownProps> = ({
     );
   };
 
-  const DataSection = ({ 
-    title, 
-    items, 
-    currentPage, 
-    totalPages, 
-    onPageChange, 
+  const DataSection = ({
+    title,
+    items,
+    currentPage,
+    totalPages,
+    onPageChange,
     colorScheme,
-    icon 
+    icon
   }: {
     title: string;
     items: any[];
@@ -139,12 +149,12 @@ export const Drilldown: React.FC<DrilldownProps> = ({
             {items.length} {items.length === 1 ? 'item' : 'items'}
           </span>
         </div>
-        
+
         {items.length > 0 ? (
           <div className="space-y-2">
             {getPaginatedData(items, currentPage).map((item: any, idx: number) => (
-              <div 
-                key={idx} 
+              <div
+                key={idx}
                 className={`flex justify-between items-center p-3 rounded-lg border transition-colors ${colors.item}`}
               >
                 <span className="text-sm font-medium text-gray-700 truncate flex-1 mr-3">
@@ -173,7 +183,7 @@ export const Drilldown: React.FC<DrilldownProps> = ({
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-     
+
       <div className="bg-gradient-to-r from-gray-50 to-gray-100 md:p-4 p-3 border-b border-gray-200">
         <div className="flex items-center gap-3">
           <div className="p-2 bg-primary-base/10 rounded-lg">
@@ -205,7 +215,7 @@ export const Drilldown: React.FC<DrilldownProps> = ({
             colorScheme="blue"
             icon={<MapPin className="w-4 h-4 text-blue-600" />}
           />
-          
+
           <DataSection
             title="By Flexologist"
             items={data.flexologists}
@@ -222,7 +232,7 @@ export const Drilldown: React.FC<DrilldownProps> = ({
             <Info className="w-5 h-5 text-gray-600" />
             <h4 className=" md:text-base text-sm font-semibold text-gray-800">Understanding Your Data</h4>
           </div>
-          
+
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
             <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
               <div className="flex items-start gap-3">
@@ -231,13 +241,19 @@ export const Drilldown: React.FC<DrilldownProps> = ({
                 </div>
                 <div>
                   <h5 className=" md:text-base text-sm font-semibold text-blue-800 mb-1">Location Breakdown</h5>
-                  <p className=" md:text-sm text-xs text-blue-700 leading-relaxed">
-                  Each percentage indicates the proportion of high-quality notes at the location
+                  <p className="md:text-sm text-xs text-blue-700 leading-relaxed">
+                    {selected ? (
+                      <>
+                        Each percentage represents the proportion of notes with opportunities marked by <strong>{selected}</strong> at the  location.
+                      </>
+                    ) : (
+                      "Each percentage indicates the proportion of high-quality notes at the location"
+                    )}
                   </p>
                 </div>
               </div>
             </div>
-            
+
             <div className="bg-green-50 p-4 rounded-lg border border-green-200">
               <div className="flex items-start gap-3">
                 <div className="p-1.5 bg-green-500 rounded-md">
@@ -246,7 +262,15 @@ export const Drilldown: React.FC<DrilldownProps> = ({
                 <div>
                   <h5 className=" md:text-base text-sm font-semibold text-green-800 mb-1">Flexologist Breakdown</h5>
                   <p className=" md:text-sm text-xs text-green-700 leading-relaxed">
-                  Each percentage reflects the proportion of high-quality notes for the individual flexologist.
+                    {
+                      selected ? (  
+                        <>
+                          Each percentage represents the proportion of notes with opportunities marked by <strong>{selected}</strong> for the individual flexologist.
+                        </>
+                      ) : (
+                        "Each percentage reflects the proportion of high-quality notes for the individual flexologist."
+                      )
+                    }
                   </p>
                 </div>
               </div>
