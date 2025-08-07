@@ -2,13 +2,16 @@ import { FilterDropdown, DateRangeFilter, Button } from '../components/shared';
 import { OpportunityBarChart, RankingBarChart, Drilldown, MetricsDisplay } from '../components/analytics';
 import { useAnalytics } from '@/hooks/useAnalytics';
 import { RefreshCcw } from 'lucide-react';
+import { DataTable } from '@/components/datatable';
+import { getLocationTableColumns } from '@/components/analytics';
+import { TableSkeleton } from '@/components/shared';
 
 export const Analytics = () => {
   const {
     selectedFilters,
     filterOptions,
     selectedOpportunity,
-    selectedRankBy,
+    selectedLocation,
     opportunityData,
     drilldownData,
     rankingData,
@@ -23,15 +26,17 @@ export const Analytics = () => {
     handleFilterChange,
     handleCustomRangeChange,
     handleOpportunitySelect,
-    handleRankByChange,
+    handleLocationSelect,
     shouldShowLocation,
     shouldShowFlexologist,
     retryFilters,
     retryRPAAudit,
     retryRanking,
+    locationData,
+    isLocationLoading,
+    locationError,
+    retryLocation,
   } = useAnalytics();
-
-  const rankByOptions = ['Location', 'Flexologist'];
 
   return (
     <div className="bg-white">
@@ -133,6 +138,8 @@ export const Analytics = () => {
                     totalNotesWithOpportunities={rpaAuditData?.total_notes_with_opportunities || 0}
                     totalQualityNotes={rpaAuditData?.total_quality_notes || 0}
                     isLoading={isRPAAuditLoading}
+                    totalNotesWithOpportunitiesPercentage={rpaAuditData?.total_notes_with_opportunities_percentage || 0}
+                    totalQualityNotesPercentage={rpaAuditData?.total_quality_notes_percentage || 0}
                   />
 
                   <div className="grid grid-cols-1 gap-6">
@@ -157,20 +164,20 @@ export const Analytics = () => {
           </div>
         </div>
 
-        <div className="bg-[#F5F5F5] rounded-lg shadow-sm border border-gray-200 p-3 sm:p-5">
+        {!isFiltersLoading && <div className="bg-[#F5F5F5] rounded-lg shadow-sm border border-gray-200 p-3 sm:p-5">
           <h2 className="text-base font-semibold text-gray-900 mb-2">
             Performance Ranking
           </h2>
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 sm:p-6">
 
             <div className="flex flex-col sm:flex-row flex-wrap gap-4 mb-6">
-              <FilterDropdown
+              {/* <FilterDropdown
                 label="Rank By"
                 value={selectedRankBy}
                 options={rankByOptions}
                 onChange={handleRankByChange}
                 className="flex-1"
-              />
+              /> */}
 
               <FilterDropdown
                 label="Metric"
@@ -198,9 +205,34 @@ export const Analytics = () => {
               data={rankingData}
               isLoading={isRankingLoading}
               dataSet={selectedFilters.dataset}
+              onBarClick={handleLocationSelect}
+              selectedLocation={selectedLocation}
             />
+            <div className='mt-6'>
+              {isRankingLoading || isLocationLoading ?
+                <TableSkeleton rows={5} columns={4} /> : locationError ? <div className="text-center py-8 flex items-center justify-center flex-col">
+                  <div className="text-red-500 mb-2">Error loading location data</div>
+                  <Button
+                    onClick={() => retryLocation()}
+                    className="bg-primary-base text-white hover:bg-primary-base/80 px-4 py-2 flex items-center justify-center"
+                  >
+                    <RefreshCcw className="w-4 h-4 mr-2" />
+                    Retry
+                  </Button>
+                </div> : 
+                <DataTable
+                columns={getLocationTableColumns({
+                  metric: selectedFilters.dataset
+                }) as any}
+                data={locationData || []}
+                emptyText="No data found"
+                tableContainerClassName="bg-white"
+          
+              />}
+            </div>
+
           </div>
-        </div>
+        </div>}
       </div>
     </div>
   );

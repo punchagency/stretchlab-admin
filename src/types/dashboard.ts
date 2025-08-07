@@ -34,6 +34,10 @@ export interface UserData {
   last_login: string;
   profile_picture_url: string | null;
   status: number;
+  bookings: number;
+  submitted_bookings: number;
+  percentage_submitted_bookings: number;
+
 }
 
 export interface UserTableResponse {

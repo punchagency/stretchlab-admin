@@ -4,6 +4,8 @@ interface MetricsDisplayProps {
   totalNotes: number;
   totalNotesWithOpportunities: number;
   totalQualityNotes: number;
+  totalNotesWithOpportunitiesPercentage: number;
+  totalQualityNotesPercentage: number;
   isLoading: boolean;
 }
 
@@ -11,6 +13,8 @@ export const MetricsDisplay: React.FC<MetricsDisplayProps> = ({
   totalNotes,
   totalNotesWithOpportunities,
   totalQualityNotes,
+  totalNotesWithOpportunitiesPercentage,
+  totalQualityNotesPercentage,
   isLoading
 }) => {
   if (isLoading) {
@@ -36,12 +40,14 @@ export const MetricsDisplay: React.FC<MetricsDisplayProps> = ({
     {
       title: "Notes with Opportunities",
       value: totalNotesWithOpportunities.toLocaleString(),
-      subtitle: "Notes requiring attention",
+      percentage: totalNotesWithOpportunitiesPercentage?.toLocaleString(),
+      subtitle: "Notes with opportunities",
       color: "bg-orange-50 border-orange-200"
     },
     {
       title: "Quality Notes",
       value: totalQualityNotes.toLocaleString(),
+      percentage: totalQualityNotesPercentage?.toLocaleString(),
       subtitle: "High-quality notes",
       color: "bg-green-50 border-green-200"
     }
@@ -58,8 +64,9 @@ export const MetricsDisplay: React.FC<MetricsDisplayProps> = ({
             {metric.title}
           </h3>
           <p className="text-2xl font-bold text-gray-900">
-            {metric.value}
+            {metric.value}  {metric.percentage ? `/ ${metric.percentage}%` : ''}
           </p>
+         
           <p className="text-xs text-gray-500 mt-1">
             {metric.subtitle}
           </p>

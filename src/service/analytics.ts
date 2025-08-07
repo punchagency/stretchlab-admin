@@ -6,7 +6,9 @@ import type {
   RPAAuditDetailsParams, 
   RPAAuditDetailsResponse,
   RankingAnalyticsResponse,
-  RankingAnalyticsParams
+  RankingAnalyticsParams,
+  LocationAnalyticsParams,
+  LocationAnalyticsResponse
 } from '@/types';
 
 export const getChartFilters = async (filterBy?: string): Promise<ChartFiltersResponse> => {
@@ -51,5 +53,10 @@ export const getRPAAuditDetails = async (params: RPAAuditDetailsParams): Promise
 
 export const getRankingAnalytics = async (params: RankingAnalyticsParams): Promise<RankingAnalyticsResponse> => {
   const response = await api.post('/admin/analytics/get_ranking_analytics', params);
+  return response.data;
+}; 
+
+export const getLocationAnalytics = async (params: LocationAnalyticsParams): Promise<LocationAnalyticsResponse> => {
+  const response = await api.post('/admin/analytics/get_location_analytics', params);
   return response.data;
 }; 

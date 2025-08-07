@@ -81,12 +81,13 @@ export const userTableColumns: ColumnDef<UserData>[] = [
   {
     accessorKey: "bookings",
     header: "Bookings",
+    
     cell: ({ row }) => {
       const bookings = row.getValue("bookings") as string;
       return (
           <Tooltip>
             <TooltipTrigger asChild>
-              <span className="text-gray-600">{bookings}</span>
+              <span  className="text-gray-600">{bookings}</span>
             </TooltipTrigger>
             <TooltipContent side="bottom">
               <p className="text-xs text-white">
@@ -94,6 +95,40 @@ export const userTableColumns: ColumnDef<UserData>[] = [
               </p>
             </TooltipContent>
           </Tooltip>
+      );
+    },
+  },
+  {
+    accessorKey: "submitted_bookings",
+    header: "Submitted Bookings",
+    cell: ({ row }) => {
+      const submittedBookings = row.getValue("submitted_bookings") as string;
+      return (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <span className="text-gray-600">{submittedBookings}</span>
+          </TooltipTrigger>
+          <TooltipContent side="bottom">
+            <p className="text-xs text-white">Number of submitted bookings for this flexologist.</p>
+          </TooltipContent>
+        </Tooltip>
+      );
+    },
+  },
+  {
+    accessorKey: "percentage_submitted_bookings",
+    header: "Percentage Submitted",
+    cell: ({ row }) => {
+      const percentageSubmittedBookings = row.getValue("percentage_submitted_bookings") as string;
+      return (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <span className="text-gray-600 text-center">{percentageSubmittedBookings}%</span>
+          </TooltipTrigger>
+          <TooltipContent side="bottom">
+            <p className="text-xs  text-white">Percentage of submitted bookings for this flexologist.</p>
+          </TooltipContent>
+        </Tooltip>
       );
     },
   },
