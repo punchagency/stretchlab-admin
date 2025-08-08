@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getChartData, getUserTableData, getDashboardMetrics, getBusinessTableData } from "@/service/dashboard";
+import { getChartData, getUserTableData, getDashboardMetrics, getBusinessTableData, getActivitiesData } from "@/service/dashboard";
 import { getChartFilters } from "@/service/analytics";
 import type {
   ChartFiltersResponse,
@@ -9,6 +9,7 @@ import type {
   UserTableResponse,
   DashboardMetricsResponse,
   BusinessTableResponse,
+  ActivitiesResponse,
   FilterState,
   FilterOptions,
   MetricCardData
@@ -69,6 +70,18 @@ export const useDashboard = () => {
     queryKey: ['businessTableData'],
     queryFn: getBusinessTableData,
     staleTime: 3 * 60 * 1000,
+    refetchOnWindowFocus: false,
+  });
+
+  const {
+    data: activitiesData,
+    isLoading: isActivitiesLoading,
+    error: activitiesError,
+    refetch: refetchActivities,
+  } = useQuery<ActivitiesResponse>({
+    queryKey: ['activitiesData'],
+    queryFn: getActivitiesData,
+    staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
   });
 
@@ -257,12 +270,14 @@ export const useDashboard = () => {
 
   return {
     dashboardMetrics: generateDashboardMetrics(userInfo?.role_id || 0),
+    dashboardMetricsData,
     chartData: processedChartData,
     userTableData: userTableData?.data || [],
     businessTableData: (businessTableData?.data || []).map(business => ({
       ...business,
       id: business.business_id
     })),
+    activitiesData: activitiesData?.data,
 
     selectedFilters,
     filterOptions,
@@ -272,12 +287,14 @@ export const useDashboard = () => {
     isChartLoading,
     isTableLoading,
     isBusinessTableLoading,
+    isActivitiesLoading,
 
     metricsError,
     filtersError,
     chartError,
     tableError,
     businessTableError,
+    activitiesError,
 
     maxValue,
 
@@ -291,5 +308,6 @@ export const useDashboard = () => {
     retryChart: refetchChart,
     retryUserTable: refetchUserTable,
     retryBusinessTable: refetchBusinessTable,
+    retryActivities: refetchActivities,
   };
 }; 

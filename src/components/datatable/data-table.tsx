@@ -49,6 +49,7 @@ interface DataTableProps<TData extends { id: number | string }, TValue> {
   enableSearch?: boolean;
   searchFields?: string[];
   searchPlaceholder?: string;
+  tableCellClassName?: string;
 }
 
 export function DataTable<TData extends { id: number | string }, TValue>({
@@ -65,6 +66,7 @@ export function DataTable<TData extends { id: number | string }, TValue>({
   enableSearch = false,
   searchFields = [],
   searchPlaceholder = "Search...",
+  tableCellClassName,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -274,7 +276,7 @@ export function DataTable<TData extends { id: number | string }, TValue>({
                   className="border-sidebar-border"
                 >
                   {row.getVisibleCells().map((cell, index) => (
-                    <TableCell key={index} className="pl-4">
+                    <TableCell key={index} className={`pl-4 ${tableCellClassName}`}>
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()

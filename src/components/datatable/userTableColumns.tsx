@@ -63,30 +63,39 @@ export const userTableColumns: ColumnDef<UserData>[] = [
     accessorKey: "last_login",
     header: "Last Login",
     cell: ({ row }) => {
-      const lastLogin = row.getValue("last_login") as string;
+      const lastLogin = row.getValue("last_login") as string | null;
+      if (!lastLogin) return <span className="text-gray-400 italic">No login</span>;
+  
       const date = new Date(lastLogin);
-      const formattedDate = date.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
+      const formattedDate = date.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
       });
-      
-      return (
-        <span className="text-gray-600">{lastLogin ? formattedDate : "N/A"}</span>
-      );
+  
+      return <span className="text-gray-600">{formattedDate}</span>;
+    },
+    sortingFn: (rowA, rowB, columnId) => {
+      const a = rowA.getValue(columnId) as string | null;
+      const b = rowB.getValue(columnId) as string | null;
+        if (!a && !b) return 0;
+      if (!a) return -1;
+      if (!b) return 1;
+      return new Date(a).getTime() - new Date(b).getTime();
     },
   },
   {
     accessorKey: "bookings",
     header: "Bookings",
+    
     cell: ({ row }) => {
       const bookings = row.getValue("bookings") as string;
       return (
           <Tooltip>
             <TooltipTrigger asChild>
-              <span className="text-gray-600">{bookings}</span>
+              <span  className="text-gray-600">{bookings}</span>
             </TooltipTrigger>
             <TooltipContent side="bottom">
               <p className="text-xs text-white">
@@ -94,6 +103,40 @@ export const userTableColumns: ColumnDef<UserData>[] = [
               </p>
             </TooltipContent>
           </Tooltip>
+      );
+    },
+  },
+  {
+    accessorKey: "submitted_bookings",
+    header: "Submitted Bookings",
+    cell: ({ row }) => {
+      const submittedBookings = row.getValue("submitted_bookings") as string;
+      return (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <span className="text-gray-600">{submittedBookings}</span>
+          </TooltipTrigger>
+          <TooltipContent side="bottom">
+            <p className="text-xs text-white">Number of submitted bookings for this flexologist.</p>
+          </TooltipContent>
+        </Tooltip>
+      );
+    },
+  },
+  {
+    accessorKey: "percentage_submitted_bookings",
+    header: "Percentage Submitted",
+    cell: ({ row }) => {
+      const percentageSubmittedBookings = row.getValue("percentage_submitted_bookings") as string;
+      return (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <span className="text-gray-600 text-center">{percentageSubmittedBookings}%</span>
+          </TooltipTrigger>
+          <TooltipContent side="bottom">
+            <p className="text-xs  text-white">Percentage of submitted bookings for this flexologist.</p>
+          </TooltipContent>
+        </Tooltip>
       );
     },
   },

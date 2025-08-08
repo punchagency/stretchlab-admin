@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getChartFilters, getRPAAudit, getRPAAuditDetails, getRankingAnalytics } from "@/service/analytics";
+import { getChartFilters, getRPAAudit, getRPAAuditDetails, getRankingAnalytics, getLocationAnalytics } from "@/service/analytics";
 import type {
   ChartFiltersResponse,
   FilterState,
@@ -12,7 +12,11 @@ import type {
   LocationItem,
   FlexologistItem,
   RankingAnalyticsResponse,
-  RankingAnalyticsParams
+  RankingAnalyticsParams,
+  LocationAnalyticsResponse,
+  LocationAnalyticsParams,
+  LocationAnalyticsItem,
+  RankingItem
 } from "@/types";
 
 export const useAnalytics = () => {
@@ -38,6 +42,7 @@ export const useAnalytics = () => {
   });
 
   const [selectedOpportunity, setSelectedOpportunity] = useState<string | null>(null);
+  const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
   const [selectedRankBy, setSelectedRankBy] = useState<string>("Location");
 
   const {
@@ -132,12 +137,11 @@ export const useAnalytics = () => {
     error: rankingError,
     refetch: refetchRanking,
   } = useQuery<RankingAnalyticsResponse | null>({
-    queryKey: ['rankingAnalytics', selectedRankBy, selectedFilters.dataset, selectedFilters.duration, selectedFilters.customRange, selectedFilters.filterMetric],
+    queryKey: ['rankingAnalytics', selectedFilters.dataset, selectedFilters.duration, selectedFilters.customRange, selectedFilters.filterMetric],
     queryFn: async () => {
       if (!selectedFilters.dataset) return null;
 
       const params: RankingAnalyticsParams = {
-        rank_by: selectedRankBy.toLowerCase(),
         metric: getMetricValueFromLabel(selectedFilters.dataset),
         duration: selectedFilters.duration === 'today' ? 'custom' : selectedFilters.duration,
         start_date: "",
@@ -158,6 +162,37 @@ export const useAnalytics = () => {
     refetchOnWindowFocus: false,
   });
 
+  const {
+    data: locationData,
+    isLoading: isLocationLoading,
+    error: locationError,
+    refetch: refetchLocation,
+  } = useQuery<LocationAnalyticsResponse | null>({
+    queryKey: ['locationAnalytics', selectedLocation, selectedFilters.dataset, selectedFilters.duration, selectedFilters.customRange, selectedFilters.filterMetric],
+    queryFn: async () => {
+      if (!selectedLocation) return null;
+
+      const params: LocationAnalyticsParams = {
+        metric: getMetricValueFromLabel(selectedFilters.dataset),
+        duration: selectedFilters.duration === 'today' ? 'custom' : selectedFilters.duration,
+        start_date: "",
+        end_date: "",
+        filter_metric: selectedFilters.filterMetric,
+        location: selectedLocation,
+      };
+
+      if ((selectedFilters.duration === 'custom' || selectedFilters.duration === 'today') && selectedFilters.customRange) {
+        params.start_date = selectedFilters.customRange.start;
+        params.end_date = selectedFilters.customRange.end;
+      }
+      return getLocationAnalytics(params);
+    },
+    enabled: !!selectedLocation,
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
+  });
+
+
   const processFilterOptions = () => {
     const filterOptions: FilterOptions = {
       filterBy: ["Location", "Flexologist"],
@@ -174,7 +209,11 @@ export const useAnalytics = () => {
       location: ["All"],
       flexologist: ["All"],
       dataset: [],
-      filterMetric: ["all", "first", "subsequent"],
+      filterMetric: [
+        { value: "all", label: "All Appointments" },
+        { value: "first", label: "First Appointment" },
+        { value: "subsequent", label: "Return Appointment" },
+      ],
     };
 
     if (chartFiltersData?.status === "success") {
@@ -213,17 +252,17 @@ export const useAnalytics = () => {
         ...prev,
         [filterKey]: value
       };
-
-      // Automatically set date range for "today" option
       if (filterKey === 'duration' && value === 'today') {
         newFilters.customRange = getTodayDateRange();
       }
 
       return newFilters;
     });
-
     if (filterKey !== 'dataset') {
       setSelectedOpportunity(null);
+    }
+    if (filterKey === 'dataset') {
+      setSelectedLocation(null);
     }
   };
 
@@ -234,10 +273,23 @@ export const useAnalytics = () => {
 
     }));
     setSelectedOpportunity(null);
+    setSelectedLocation(null);
   };
 
   const handleOpportunitySelect = (opportunity: string) => {
-    setSelectedOpportunity(opportunity);
+    if (selectedOpportunity === opportunity) {
+      setSelectedOpportunity(null);
+    } else {
+      setSelectedOpportunity(opportunity);
+    }
+  };
+
+  const handleLocationSelect = (location: string) => {
+    if (selectedLocation === location) {
+      setSelectedLocation(null);
+    } else {
+      setSelectedLocation(location);
+    }
   };
 
   const handleRankByChange = (value: string) => {
@@ -285,7 +337,7 @@ export const useAnalytics = () => {
     return null;
   };
 
-  const transformRankingData = (): { name: string; value: number }[] => {
+  const transformRankingData = (): { name: string; value: number, total: number }[] => {
     if (!rankingData?.data) return [];
     // If user has interacted and we have details data, use that
     //  if (rpaAuditDetailsData && (
@@ -296,11 +348,12 @@ export const useAnalytics = () => {
     // )) {
 
     return rankingData.data
-      .map((item: { name: string; count: number }) => ({
+      .map((item: { name: string; count: number; total: number }) => ({
         name: item.name,
-        value: item.count
+        value: item.count,
+        total: item.total
       }))
-      .sort((a: { name: string; value: number }, b: { name: string; value: number }) => b.value - a.value); // Sort in descending order
+      .sort((a: { name: string; value: number }, b: { name: string; value: number }) => b.value - a.value);
   };
 
   // const getCurrentOpportunityName = (): string | null => {
@@ -311,33 +364,59 @@ export const useAnalytics = () => {
   //   return null;
   // };
 
+  const transformLocationData = () => {
+    if (locationData) {
+      return locationData.data.map((item: LocationAnalyticsItem) => ({
+        id: item.name,
+        name: item.name,
+        value: `${item.count}`,
+        total: item.total
+      }));
+    }
+
+    if (rankingData) {
+      return rankingData.data_flex.map((item: RankingItem) => ({
+        id: item.name,
+        name: item.name,
+        value: `${item.count}`,
+        total: item.total
+      }));
+
+
+    }
+
+    return null;
+  };
+
   const { filterOptions } = processFilterOptions();
 
   return {
     selectedFilters,
     filterOptions,
     selectedOpportunity,
+    selectedLocation,
     selectedRankBy,
     opportunityData: transformOpportunityData(),
     drilldownData: transformDrilldownData(),
     rankingData: transformRankingData(),
     rpaAuditData,
+    locationData: transformLocationData(),
 
     isFiltersLoading,
     isRPAAuditLoading,
     isRPAAuditDetailsLoading,
     isRankingLoading,
-
+    isLocationLoading,
     filtersError,
     rpaAuditError,
     rpaAuditDetailsError,
     rankingError,
-
+    locationError,
     handleFilterChange,
     handleCustomRangeChange,
     handleOpportunitySelect,
     handleRankByChange,
-
+    handleLocationSelect,
     shouldShowLocation: selectedFilters.filterBy === "Location",
     shouldShowFlexologist: selectedFilters.filterBy === "Flexologist",
 
@@ -345,6 +424,7 @@ export const useAnalytics = () => {
     retryRPAAudit: refetchRPAAudit,
     retryRPAAuditDetails: refetchRPAAuditDetails,
     retryRanking: refetchRanking,
+    retryLocation: refetchLocation,
   };
 };
 
