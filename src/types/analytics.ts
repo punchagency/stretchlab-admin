@@ -22,6 +22,8 @@ export interface RPAAuditResponse {
   total_notes: number;
   total_notes_with_opportunities: number;
   total_quality_notes: number;
+  total_notes_with_opportunities_percentage: number;
+  total_quality_notes_percentage: number;
 }
 
 export interface RPAAuditParams {
@@ -52,22 +54,43 @@ export interface RPAAuditDetailsResponse {
 export interface RankingItem {
   count: number;
   name: string;
+  total: number;
 }
 
 export interface RankingAnalyticsResponse {
   data: RankingItem[];
+  data_flex: RankingItem[];
   metric: string;
   status: string;
 }
 
+export interface LocationAnalyticsItem {
+  count: number;
+  name: string;
+  total: number;
+}
+
+export interface LocationAnalyticsResponse {
+  data: LocationAnalyticsItem[];
+}
+
 export interface RankingAnalyticsParams {
-  rank_by: string;
   metric: string;
   duration: string;
   start_date?: string;
   end_date?: string;
   filter_metric?: string;
 }
+
+export interface LocationAnalyticsParams {
+  metric: string;
+  duration: string;
+  start_date?: string;
+  end_date?: string;
+  filter_metric?: string;
+  location?: string;
+}
+
 
 // Chart Data Types
 export interface AnalyticsChartDataPoint {

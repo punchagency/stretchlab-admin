@@ -34,6 +34,10 @@ export interface UserData {
   last_login: string;
   profile_picture_url: string | null;
   status: number;
+  bookings: number;
+  submitted_bookings: number;
+  percentage_submitted_bookings: number;
+
 }
 
 export interface UserTableResponse {
@@ -56,10 +60,20 @@ export interface BookingsInfo {
   upwards_trend: boolean;
 }
 
+export interface SubscriptionInfo {
+  average_number_of_locations_per_business: number;
+  note_taking_active_count: number;
+  number_of_subscribed_flexologists: number;
+  number_of_subscribed_locations: number;
+  rpa_active_count: number;
+  unique_businesses_with_any_subscription: number;
+}
+
 export interface DashboardMetricsResponse {
   data: {
     balance_info: BalanceInfo;
     bookings_info: BookingsInfo;
+    subscriptions_info : SubscriptionInfo;
   };
   status: string;
 }
@@ -90,7 +104,7 @@ export interface FilterOptions {
   location: string[];
   flexologist: string[];
   dataset?: string[];
-  filterMetric?: string[];
+  filterMetric?: DurationOption[];
   dataset_analytics?: DurationOption[];
 }
 
@@ -165,6 +179,20 @@ export interface BusinessInfo {
 
 export interface BusinessInfoResponse {
   data: BusinessInfo;
+  status: string;
+}
+
+export interface ActivitiesData {
+  notes_analysed_per_flexologist: Record<string, number>;
+  notes_analysed_per_location: Record<string, number>;
+  notes_submitted_with_app: number;
+  total_analysed_bookings: number;
+  notes_submitted_per_flexologist: Record<string, number>;
+  notes_submitted_per_location: Record<string, number>;
+}
+
+export interface ActivitiesResponse {
+  data: ActivitiesData;
   status: string;
 }
 

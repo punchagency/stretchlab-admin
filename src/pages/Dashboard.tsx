@@ -1,8 +1,9 @@
-import { MetricCard, RechartsBarChart, FilterDropdown, DateRangeFilter, MetricCardsSkeleton, BusinessDetailModal, Button, TableSkeleton } from "@/components/shared";
+import { MetricCard, RechartsBarChart, FilterDropdown, DateRangeFilter, MetricCardsSkeleton, BusinessDetailModal, Button, TableSkeleton, Activities } from "@/components/shared";
 import { DataTable, userTableColumns, businessTableColumns } from "@/components/datatable";
 import { ChartSkeleton } from "@/components/shared/ChartSkeleton";
 import { useDashboard } from "@/hooks/useDashboard";
 import { useBusinessDetail } from "@/hooks/useBusinessDetail";
+import { SubscriptionInfoCard } from "@/components/dashboard";
 
 import { getUserInfo } from "@/utils";
 import { RefreshCcw } from "lucide-react";
@@ -10,9 +11,11 @@ import { RefreshCcw } from "lucide-react";
 export const Dashboard = () => {
   const {
     dashboardMetrics,
+    dashboardMetricsData,
     chartData,
     userTableData,
     businessTableData,
+    activitiesData,
     selectedFilters,
     filterOptions,
     isMetricsLoading,
@@ -20,11 +23,13 @@ export const Dashboard = () => {
     isChartLoading,
     isTableLoading,
     isBusinessTableLoading,
+    isActivitiesLoading,
     metricsError,
     filtersError,
     chartError,
     tableError,
     businessTableError,
+    activitiesError,
     maxValue,
     handleFilterChange,
     handleCustomRangeChange,
@@ -35,6 +40,7 @@ export const Dashboard = () => {
     retryChart,
     retryUserTable,
     retryBusinessTable,
+    retryActivities,
   } = useDashboard();
 
   const {
@@ -55,16 +61,12 @@ export const Dashboard = () => {
   return (
     <div className="min-h-screen bg-white">
       <div className="">
-        <div className="border-b border-gray-200 px-3 sm:px-7">
-          <h1 className="text-base font-semibold mb-3 text-gray-900">
-            Performance Metrics Dashboard
-          </h1>
-        </div>
+
 
         <div className="px-3 sm:px-5 mt-5 flex flex-col space-y-10">
 
           <div className="py-4 px-3 sm:px-4 bg-[#F5F5F5] rounded-lg shadow-md">
-            <h2 className="text-base font-semibold text-gray-900 mb-3">Check-Out Countdown</h2>
+            <h2 className="text-base font-semibold text-gray-900 mb-3">Platform Live Metrics</h2>
             {isMetricsLoading ? (
               <MetricCardsSkeleton />
             ) : metricsError ? (
@@ -80,7 +82,7 @@ export const Dashboard = () => {
                 </Button>
               </div>
             ) : (
-              <div className={`grid grid-cols-1 md:grid-cols-2 ${userInfo?.role_id === 1 ? 'lg:grid-cols-2' : 'lg:grid-cols-2'
+              <div className={`grid grid-cols-1 md:grid-cols-2 ${userInfo?.role_id === 1 ? 'lg:grid-cols-3' : 'lg:grid-cols-1'
                 } gap-4`}>
                 {dashboardMetrics.map((metric, index) => (
                   <MetricCard
@@ -93,16 +95,29 @@ export const Dashboard = () => {
                     showCurrency={metric.showCurrency}
                     onButtonClick={() => handleMetricClick(metric.title)}
                   />
+
                 ))}
+                { userInfo?.role_id === 1 && <SubscriptionInfoCard 
+                 {...dashboardMetricsData?.data.subscriptions_info}
+                />}
               </div>
             )}
 
           </div>
 
+         { userInfo?.role_id === 1 && <div className="py-4 px-3 sm:px-4 bg-[#F5F5F5] rounded-lg shadow-md">
+            <h2 className="text-base font-semibold text-gray-900 mb-4">Activities</h2>
+            <Activities
+              data={activitiesData}
+              isLoading={isActivitiesLoading}
+              error={activitiesError}
+              onRetry={retryActivities}
+            />
+          </div>}
 
 
           <div className="bg-[#F5F5F5] rounded-lg shadow-md py-4 px-3 sm:px-4">
-            <h2 className="text-base font-semibold text-gray-900 mb-4">Check-Out Countdown</h2>
+            <h2 className="text-base font-semibold text-gray-900 mb-4">Company Metrics</h2>
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6">
               {isFiltersLoading ? (
                 <div className="text-center py-8">
@@ -220,7 +235,10 @@ export const Dashboard = () => {
             ) : (
               <DataTable
                 columns={userTableColumns}
-                data={userTableData.filter(flexologist => flexologist?.status === 1)}
+                data={userTableData.filter(flexologist => flexologist?.status === 1).map(flexologist => ({
+                  ...flexologist,
+                  full_name: flexologist?.full_name.trim(),
+                }))}
                 emptyText="No users found"
                 tableContainerClassName="bg-white"
                 enableSorting={true}

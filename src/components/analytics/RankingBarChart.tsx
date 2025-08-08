@@ -19,8 +19,9 @@ const CustomTooltip = ({ active, payload, label, dataSet }: any) => {
     const fullName = payload[0].payload?.fullName || label;
     return (
       <div className="bg-white p-2 border border-gray-300 rounded shadow text-sm">
-        <p className="text-gray-700 font-medium">{fullName}</p>
-        <p className="text-gray-600">{payload[0].value}{dataSet === 'Total Client Visits' ? '' : '%'}</p>
+        <p className="text-gray-700 font-bold capitalize">{fullName}</p>
+        <p className="text-gray-600">Value: {payload[0].value}{dataSet === 'Total Client Visits' ? '' : '%'}</p>
+        <p className="text-gray-600">Total: {payload[0].payload?.total}</p>
       </div>
     );
   }
@@ -36,12 +37,16 @@ interface RankingBarChartProps {
   data: AnalyticsChartDataPoint[];
   isLoading: boolean;
   dataSet?: string;
+  onBarClick: (name: string) => void;
+  selectedLocation?: string | null;
 }
 
 export const RankingBarChart: React.FC<RankingBarChartProps> = ({
   data,
   isLoading,
-  dataSet
+  dataSet,
+  onBarClick,
+  selectedLocation
 }) => {
   const isMobile = useIsMobile();
 
@@ -57,7 +62,7 @@ export const RankingBarChart: React.FC<RankingBarChartProps> = ({
     );
   }
 
-  const truncateLength = isMobile ? 12 : 25;
+  const truncateLength = isMobile ? 15 : 27;
   const yAxisWidth = isMobile ? 100 :170;
   const fontSize = isMobile ? 11 : 12;
   const barSize = isMobile ? 25 : 35;
@@ -75,6 +80,14 @@ export const RankingBarChart: React.FC<RankingBarChartProps> = ({
         data={processedData}
         margin={{ top: 20, right: 30, left: 0, bottom: 20 }}
         barSize={barSize}
+        onClick={(data) => {
+          if (data.activeLabel) {
+            const originalData = processedData.find(item => item.displayName === data.activeLabel);
+            if (originalData) {
+              onBarClick(originalData.fullName);
+            }
+          }
+        }}
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis type="number" fontSize={fontSize} fontWeight={500} />
@@ -99,11 +112,11 @@ export const RankingBarChart: React.FC<RankingBarChartProps> = ({
           {processedData.map((_, index) => (
             <Cell
               key={`cell-${index}`}
-              fill="#68C9D2"
+              fill={_.fullName === selectedLocation ? '#68C9D2' : '#FF5B55'}
               fontSize={fontSize}
               style={{
                 borderRadius: '10px',
-                opacity: 0.8,
+                opacity: _.fullName === selectedLocation ? 1 : 0.8,
                 transition: 'all 0.2s ease-in-out'
               }}
             />

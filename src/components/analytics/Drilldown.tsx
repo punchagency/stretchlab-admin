@@ -195,7 +195,7 @@ export const Drilldown: React.FC<DrilldownProps> = ({
             </h3>
             <p className=" md:text-sm text-xs text-gray-600">
               {selected ? (
-                <>Detailed breakdown for: <span className="font-medium text-primary-base">{selected}</span></>
+                <>Percent of appointments with: <span className="font-medium text-primary-base">{selected}</span></>
               ) : (
                 'Overall distribution across locations and flexologists'
               )}
@@ -244,7 +244,7 @@ export const Drilldown: React.FC<DrilldownProps> = ({
                   <p className="md:text-sm text-xs text-blue-700 leading-relaxed">
                     {selected ? (
                       <>
-                        Each percentage represents the proportion of notes with opportunities marked by <strong>{selected}</strong> at the  location.
+                         Represent percent of appointments with opportunities marked by <strong>{selected}</strong> at the  location.
                       </>
                     ) : (
                       "Each percentage indicates the proportion of high-quality notes at the location"
@@ -265,7 +265,7 @@ export const Drilldown: React.FC<DrilldownProps> = ({
                     {
                       selected ? (  
                         <>
-                          Each percentage represents the proportion of notes with opportunities marked by <strong>{selected}</strong> for the individual flexologist.
+                           Represent percent of appointments with opportunities marked by <strong>{selected}</strong> for the individual flexologist.
                         </>
                       ) : (
                         "Each percentage reflects the proportion of high-quality notes for the individual flexologist."

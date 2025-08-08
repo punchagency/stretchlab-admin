@@ -52,4 +52,9 @@ export const getBusinessInfo = async (businessId: number) => {
     business_id: businessId
   });
   return response.data;
+};
+
+export const getActivitiesData = async () => {
+  const response = await api.get("/admin/dashboard/activities");
+  return response.data;
 }; 

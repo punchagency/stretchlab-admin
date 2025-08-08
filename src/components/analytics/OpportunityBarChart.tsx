@@ -20,7 +20,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
     return (
       <div className="bg-white p-2 border border-gray-300 rounded shadow text-sm">
         <p className="text-gray-700 font-medium">{fullName}</p>
-        <p className="text-gray-600">{payload[0].value}%</p>
+        <p className="text-gray-600">{payload[0].value.toFixed(0) + '%'}</p>
       </div>
     );
   }
@@ -60,13 +60,13 @@ export const OpportunityBarChart: React.FC<OpportunityBarChartProps> = ({
   }
 
   const truncateLength = isMobile ? 15 : 25;
-  const yAxisWidth = isMobile ? 120 : 200;
+  const yAxisWidth = isMobile ? 120 : 250;
   const fontSize = isMobile ? 11 : 12;
   const barSize = isMobile ? 25 : 35;
 
   const processedData = data.map(item => ({
     ...item,
-    displayName: truncateText(item.name, truncateLength),
+    displayName: isMobile ? truncateText(item.name, truncateLength) : item.name,
     fullName: item.name
   }));
 

@@ -5,3 +5,4 @@ export * from "./ForgotForm";
 export * from "./ResetForm";
 export * from "./RobotConfigForm";
 export * from "./TwoFactorLoginForm";
+export * from "./InviteForm";

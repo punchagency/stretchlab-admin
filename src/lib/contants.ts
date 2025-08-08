@@ -15,7 +15,7 @@ export const menuList = [
     link: "/note-taking-app",
   },
   {
-    title: "Robot Process Automation",
+    title: "Audit Details",
     icon: "robot",
     link: "/robot-automation",
   },
@@ -34,4 +34,9 @@ export const menuList = [
     icon: "billing",
     link: "/billing",
   },
+  // {
+  //   title: "User Management",
+  //   icon: "users",
+  //   link: "/user-management",
+  // },
 ];

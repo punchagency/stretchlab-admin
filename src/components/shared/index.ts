@@ -25,3 +25,5 @@ export * from "./SvgIcon";
 export * from "./BusinessDetailModal";
 export * from "./BusinessDetailSkeleton";
 export * from "./TableSkeleton";
+export { default as Activities } from "./Activities";
+export * from "./ActivitiesSkeleton";

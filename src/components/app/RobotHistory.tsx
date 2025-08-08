@@ -81,6 +81,7 @@ const userColumns: ColumnDef<RobotHistoryType>[] = [
     accessorKey: "appointment_date",
     header: "Appointment Date",
   },
+
 ];
 
 const unloggedColumns: ColumnDef<RobotHistoryType>[] = [
@@ -176,7 +177,7 @@ export const RobotHistory = ({ configId }: { configId: number }) => {
       <div className="mt-10">
         <div className="flex items-center justify-between relative">
           <h4 className="text-sm md:text-lg font-semibold mb-4">
-            Today's Automation History{" "}
+            Automation History{" "}
             <span className="text-gray-500 text-xs md:text-sm">
               (
               {viewMode === "noteAutomation"
@@ -261,6 +262,10 @@ export const RobotHistory = ({ configId }: { configId: number }) => {
               handleClick={handleClick}
               data={data?.data.rpa_history}
               emptyText="No bookings processed today"
+              searchFields={["client_name", "flexologist_name", "location", "booking_id"]}
+              searchPlaceholder="Search by client name, flexologist name, location, booking id"
+              enableSearch={true}
+
             />
           ) : (
             <DataTable
