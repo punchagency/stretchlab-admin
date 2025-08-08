@@ -1,10 +1,15 @@
 import { useState } from "react";
 import { ChevronDown, Search } from "lucide-react";
 
+interface FilterOption {
+  value: string;
+  label: string;
+}
+
 interface FilterDropdownProps {
   label?: string;
   value: string;
-  options: string[];
+  options: string[] | FilterOption[];
   onChange: (value: string) => void;
   className?: string;
   showLabel?: boolean;
@@ -23,24 +28,36 @@ export const FilterDropdown = ({
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
+  // Convert options to a consistent format
+  const normalizedOptions: FilterOption[] = options.map(option => {
+    if (typeof option === 'string') {
+      return { value: option, label: option };
+    }
+    return option;
+  });
+
   // Function to sort options while keeping special options (like "All") at the top
-  const sortOptionsWithSpecialFirst = (optionsToSort: string[]) => {
+  const sortOptionsWithSpecialFirst = (optionsToSort: FilterOption[]) => {
     const specialOptions = ["All", "all"];
-    const special = optionsToSort.filter(option => specialOptions.includes(option));
+    const special = optionsToSort.filter(option => specialOptions.includes(option.value));
     const regular = optionsToSort
-      .filter(option => !specialOptions.includes(option))
-      .sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
+      .filter(option => !specialOptions.includes(option.value))
+      .sort((a, b) => a.label.toLowerCase().localeCompare(b.label.toLowerCase()));
     return [...special, ...regular];
   };
 
   // Filter and sort options based on search term
   const filteredOptions = showSearch && searchTerm
     ? sortOptionsWithSpecialFirst(
-        options.filter(option => 
-          option.toLowerCase().includes(searchTerm.toLowerCase())
+        normalizedOptions.filter(option => 
+          option.label.toLowerCase().includes(searchTerm.toLowerCase())
         )
       )
-    : sortOptionsWithSpecialFirst([...options]);
+    : sortOptionsWithSpecialFirst([...normalizedOptions]);
+
+  // Find the current option to display the label
+  const currentOption = normalizedOptions.find(option => option.value === value);
+  const displayValue = currentOption ? currentOption.label : value;
 
   const handleClose = () => {
     setIsOpen(false);
@@ -57,7 +74,7 @@ export const FilterDropdown = ({
           onClick={() => setIsOpen(!isOpen)}
           className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-base focus:border-primary-base transition-colors"
         >
-          <span className="truncate pr-2 capitalize">{value}</span>
+          <span className="truncate pr-2 capitalize">{displayValue}</span>
           <ChevronDown 
             className={`h-4 w-4 flex-shrink-0 transition-transform ${isOpen ? 'rotate-180' : ''}`}
           />
@@ -89,16 +106,16 @@ export const FilterDropdown = ({
                     <button
                       key={index}
                       onClick={() => {
-                        onChange(option);
+                        onChange(option.value);
                         handleClose();
                       }}
                       className={`w-full px-3 py-2 text-left text-sm focus:outline-none transition-colors rounded-sm capitalize ${
-                        option === value 
+                        option.value === value 
                           ? 'bg-primary-base text-white' 
                           : 'text-gray-900 hover:bg-gray-100 focus:bg-gray-100'
                       }`}
                     >
-                      {option}
+                      {option.label}
                     </button>
                   ))
                 ) : (

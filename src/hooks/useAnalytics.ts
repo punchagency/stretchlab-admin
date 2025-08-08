@@ -209,7 +209,11 @@ export const useAnalytics = () => {
       location: ["All"],
       flexologist: ["All"],
       dataset: [],
-      filterMetric: ["all", "first", "subsequent"],
+      filterMetric: [
+        { value: "all", label: "All Appointments" },
+        { value: "first", label: "First Appointment" },
+        { value: "subsequent", label: "Return Appointment" },
+      ],
     };
 
     if (chartFiltersData?.status === "success") {

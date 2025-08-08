@@ -375,9 +375,6 @@ export const RobotConfigForm = ({
   return (
     <>
       <div>
-        <h1 className="text-lg md:text-2xl font-semibold">
-          Robot Process Automation
-        </h1>
         {isConfig && data ? (
           <Config data={data} setIsConfig={setIsConfig} refetch={refetch} />
         ) : (

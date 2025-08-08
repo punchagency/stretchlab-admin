@@ -63,19 +63,27 @@ export const userTableColumns: ColumnDef<UserData>[] = [
     accessorKey: "last_login",
     header: "Last Login",
     cell: ({ row }) => {
-      const lastLogin = row.getValue("last_login") as string;
+      const lastLogin = row.getValue("last_login") as string | null;
+      if (!lastLogin) return <span className="text-gray-400 italic">No login</span>;
+  
       const date = new Date(lastLogin);
-      const formattedDate = date.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
+      const formattedDate = date.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
       });
-      
-      return (
-        <span className="text-gray-600">{lastLogin ? formattedDate : "N/A"}</span>
-      );
+  
+      return <span className="text-gray-600">{formattedDate}</span>;
+    },
+    sortingFn: (rowA, rowB, columnId) => {
+      const a = rowA.getValue(columnId) as string | null;
+      const b = rowB.getValue(columnId) as string | null;
+        if (!a && !b) return 0;
+      if (!a) return -1;
+      if (!b) return 1;
+      return new Date(a).getTime() - new Date(b).getTime();
     },
   },
   {

@@ -32,23 +32,23 @@ export const MetricsDisplay: React.FC<MetricsDisplayProps> = ({
 
   const metrics = [
     {
-      title: "Total Notes",
+      title: "Total",
       value: totalNotes.toLocaleString(),
-      subtitle: "All notes analyzed",
+      subtitle: "All appointments analyzed",
       color: "bg-blue-50 border-blue-200"
     },
     {
-      title: "Notes with Opportunities",
+      title: "Opportunities",
       value: totalNotesWithOpportunities.toLocaleString(),
       percentage: totalNotesWithOpportunitiesPercentage?.toLocaleString(),
-      subtitle: "Notes with opportunities",
+      subtitle: "Appointments requiring attention",
       color: "bg-orange-50 border-orange-200"
     },
     {
-      title: "Quality Notes",
+      title: "Rating ",
       value: totalQualityNotes.toLocaleString(),
       percentage: totalQualityNotesPercentage?.toLocaleString(),
-      subtitle: "High-quality notes",
+      subtitle: "Average appointment rating",
       color: "bg-green-50 border-green-200"
     }
   ];
@@ -64,7 +64,7 @@ export const MetricsDisplay: React.FC<MetricsDisplayProps> = ({
             {metric.title}
           </h3>
           <p className="text-2xl font-bold text-gray-900">
-            {metric.value}  {metric.percentage ? `/ ${metric.percentage}%` : ''}
+            {metric.value} <span className="text-xs text-gray-500"> {metric.percentage ? `/ ${metric.percentage}%` : ''}</span>
           </p>
          
           <p className="text-xs text-gray-500 mt-1">
