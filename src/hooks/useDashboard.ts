@@ -175,7 +175,7 @@ export const useDashboard = () => {
   const generateDashboardMetrics = (role_id: number): MetricCardData[] => {
     const metrics: MetricCardData[] = [];
 
-    if (role_id === 1) {
+    if (role_id === 1 || role_id === 4) {
       metrics.push({
         title: "Revenue",
         value: dashboardMetricsData?.data?.balance_info?.month_transactions

@@ -3,16 +3,16 @@ import type { UserData } from "@/types";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 export const userTableColumns: ColumnDef<UserData>[] = [
-  {
-    accessorKey: "id",
-    header: "ID",
-    cell: ({ row }) => {
-      const id = row.getValue("id") as number;
-      return (
-        <span className="text-gray-700 font-mono text-sm">#{id}</span>
-      );
-    },
-  },
+  // {
+  //   accessorKey: "id",
+  //   header: "ID",
+  //   cell: ({ row }) => {
+  //     const id = row.getValue("id") as number;
+  //     return (
+  //       <span className="text-gray-700 font-mono text-sm">#{id}</span>
+  //     );
+  //   },
+  // },
   {
     accessorKey: "full_name",
     header: "Name",

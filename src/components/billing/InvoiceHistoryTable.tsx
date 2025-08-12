@@ -43,7 +43,7 @@ export const InvoiceHistoryTable = () => {
       day: '2-digit'
     }),
     invoiceId: invoice.invoice_id,
-    amount: `$${convertStripePrice(invoice.amount).toFixed(2)}`,
+    amount: `$${Math.round(convertStripePrice(invoice.amount))}`,
     status: invoice.status === "paid" ? "Paid" : "Unpaid",
     downloadUrl: invoice.invoice_pdf_url || "#"
   }));

@@ -4,6 +4,7 @@ import { verify, resendCode } from "@/service/auth";
 import type { ApiError } from "@/types";
 import { renderSuccessToast, renderErrorToast } from "../utils";
 import { useNavigate } from "react-router";
+import { setUserCookie, getTempUserCookie, getTempUserInfo } from "@/utils";
 
 export const VerificationForm = () => {
   const [code, setCode] = useState("");
@@ -11,7 +12,8 @@ export const VerificationForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isResending, setIsResending] = useState(false);
   const navigate = useNavigate();
-
+  const tempUserInfo = getTempUserInfo();
+  console.log({ tempUserInfo });
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!code) {
@@ -27,7 +29,15 @@ export const VerificationForm = () => {
       const response = await verify(code);
       if (response.status === 200) {
         renderSuccessToast(response.data.message);
-        navigate("/robot-setup");
+        if (tempUserInfo?.role_id === 4) {
+          const tempToken = getTempUserCookie();
+          if (tempToken) {
+            setUserCookie(tempToken);
+            navigate("/dashboard");
+          }
+        } else {
+          navigate("/robot-setup");
+        }
       } else {
         renderErrorToast(response.data.message);
       }
