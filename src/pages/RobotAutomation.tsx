@@ -4,12 +4,14 @@ import { getRobotConfig } from "@/service/robot";
 import { RobotHistory } from "@/components/app";
 import { useQuery } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
+import { getUserInfo } from "@/utils";
 
 export const RobotAutomation = () => {
   const { data, isFetching, isPending, refetch } = useQuery({
     queryKey: ["robot-config"],
     queryFn: getRobotConfig,
   });
+  const userInfo = getUserInfo();
 
   if (isPending) {
     return (
@@ -33,10 +35,10 @@ export const RobotAutomation = () => {
           </motion.div>
         </AnimatePresence>
       )}
-      <RobotConfigForm
+    { userInfo?.role_id !== 4 && <RobotConfigForm
         refetch={refetch}
         data={data?.data.config ? data.data.robot_config : undefined}
-      />
+      />}
 
       {data?.data.config && (
         <RobotHistory configId={data?.data.robot_config.id} />

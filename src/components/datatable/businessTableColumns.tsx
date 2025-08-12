@@ -3,16 +3,16 @@ import type { BusinessData } from "@/types";
 
 
 export const businessTableColumns = (onViewDetails: (businessId: number) => void): ColumnDef<BusinessData>[] => [
-  {
-    accessorKey: "id",
-    header: "ID",
-    cell: ({ row }) => {
-      const id = row.getValue("id") as number;
-      return (
-        <span className="text-gray-700">{id}</span>
-      );
-    },
-  },
+  // {
+  //   accessorKey: "id",
+  //   header: "ID",
+  //   cell: ({ row }) => {
+  //     const id = row.getValue("id") as number;
+  //     return (
+  //       <span className="text-gray-700">{id}</span>
+  //     );
+  //   },
+  // },
   {
     accessorKey: "business_username",
     header: "Business Username",

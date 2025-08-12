@@ -21,13 +21,12 @@ import type {
 
 export const useAnalytics = () => {
   const getTodayDateRange = () => {
-    const today = new Date();
-    const yesterday = new Date(today);
-    yesterday.setDate(yesterday.getDate() - 1);
-
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1); // subtract 1 day
+    const isoDate = yesterday.toISOString().split('T')[0];
     return {
-      start: today.toISOString().split('T')[0],
-      end: today.toISOString().split('T')[0]
+      start: isoDate,
+      end: isoDate
     };
   };
 
@@ -246,7 +245,7 @@ export const useAnalytics = () => {
   };
 
   const handleFilterChange = (filterKey: string, value: string) => {
-
+    console.log({ selectedFilters });
     setSelectedFilters(prev => {
       const newFilters = {
         ...prev,
@@ -261,9 +260,9 @@ export const useAnalytics = () => {
     if (filterKey !== 'dataset') {
       setSelectedOpportunity(null);
     }
-    if (filterKey === 'dataset') {
-      setSelectedLocation(null);
-    }
+    setSelectedLocation(null);
+  
+
   };
 
   const handleCustomRangeChange = (start: string, end: string) => {
@@ -302,7 +301,7 @@ export const useAnalytics = () => {
     return rpaAuditData.note_opportunities
       .map(item => ({
         name: item.opportunity,
-        value: item.percentage
+        value: Math.round(item.percentage)
       }))
       .sort((a, b) => b.value - a.value);
   };
@@ -312,11 +311,11 @@ export const useAnalytics = () => {
       return {
         locations: rpaAuditDetailsData.location.map((item: LocationItem) => ({
           name: item.location,
-          value: `${item.percentage.toFixed(1)}%`
+          value: `${Math.round(item.percentage)}%`
         })),
         flexologists: rpaAuditDetailsData.flexologist.map((item: FlexologistItem) => ({
           name: item.flexologist,
-          value: `${item.percentage.toFixed(1)}%`
+          value: `${Math.round(item.percentage)}%`
         }))
       };
     }
@@ -325,11 +324,11 @@ export const useAnalytics = () => {
       return {
         locations: rpaAuditData.location.map((item: LocationItem) => ({
           name: item.location,
-          value: `${item.percentage.toFixed(1)}%`
+          value: `${Math.round(item.percentage)}%`
         })),
         flexologists: rpaAuditData.flexologist.map((item: FlexologistItem) => ({
           name: item.flexologist,
-          value: `${item.percentage.toFixed(1)}%`
+          value: `${Math.round(item.percentage)}%`
         }))
       };
     }
@@ -350,7 +349,7 @@ export const useAnalytics = () => {
     return rankingData.data
       .map((item: { name: string; count: number; total: number }) => ({
         name: item.name,
-        value: item.count,
+        value: Math.round(item.count),
         total: item.total
       }))
       .sort((a: { name: string; value: number }, b: { name: string; value: number }) => b.value - a.value);
@@ -366,19 +365,19 @@ export const useAnalytics = () => {
 
   const transformLocationData = () => {
     if (locationData) {
-      return locationData.data.map((item: LocationAnalyticsItem) => ({
+      return locationData.data?.map((item: LocationAnalyticsItem) => ({
         id: item.name,
         name: item.name,
-        value: `${item.count}`,
+        value: `${Math.round(item.count)}`,
         total: item.total
       }));
     }
 
     if (rankingData) {
-      return rankingData.data_flex.map((item: RankingItem) => ({
+      return rankingData?.data_flex?.map((item: RankingItem) => ({
         id: item.name,
         name: item.name,
-        value: `${item.count}`,
+        value: `${Math.round(item.count)}`,
         total: item.total
       }));
 

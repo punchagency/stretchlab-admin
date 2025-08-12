@@ -25,20 +25,20 @@ export const MonthlyCharges = ({
         {flexologistQuantity > 0 && <div>
           <div className="text-gray-600 mb-2 text-sm">Flexologist Access:</div>
           <div className="font-medium text-gray-900 text-base">
-            {flexologistQuantity} Flexologists × ${flexologistPrice} = ${flexologistTotal.toFixed(2)}
+            {flexologistQuantity} Flexologists × ${flexologistPrice} = ${Math.round(flexologistTotal)}
           </div>
         </div>}
 
         <div>
           <div className="text-gray-600 mb-2 text-sm">RPA Automation Add-on:</div>
           <div className="font-medium text-gray-900 text-base">
-            {rpaQuantity} Locations × ${rpaPrice} = ${rpaTotal.toFixed(2)}
+            {rpaQuantity} Locations × ${rpaPrice} = ${Math.round(rpaTotal)}
           </div>
         </div>
 
         {(flexologistQuantity > 0 || rpaQuantity > 0) && <div className="pt-3 sm:pt-4">
           <div className="text-gray-600 mb-2 text-sm">Total Billed:</div>
-          <div className="font-bold text-gray-900 text-base">${totalBilled.toFixed(2)}</div>
+          <div className="font-bold text-gray-900 text-base">${Math.round(totalBilled)}</div>
         </div>}
       </div>
     </div>

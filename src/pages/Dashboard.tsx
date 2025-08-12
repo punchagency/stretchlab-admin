@@ -97,15 +97,15 @@ export const Dashboard = () => {
                   />
 
                 ))}
-                { userInfo?.role_id === 1 && <SubscriptionInfoCard 
-                 {...dashboardMetricsData?.data.subscriptions_info}
+                {(userInfo?.role_id === 1 || userInfo?.role_id === 4) && <SubscriptionInfoCard
+                  {...dashboardMetricsData?.data.subscriptions_info}
                 />}
               </div>
             )}
 
           </div>
 
-         { userInfo?.role_id === 1 && <div className="py-4 px-3 sm:px-4 bg-[#F5F5F5] rounded-lg shadow-md">
+          {(userInfo?.role_id === 1 || userInfo?.role_id === 4) && <div className="py-4 px-3 sm:px-4 bg-[#F5F5F5] rounded-lg shadow-md">
             <h2 className="text-base font-semibold text-gray-900 mb-4">Activities</h2>
             <Activities
               data={activitiesData}
@@ -214,7 +214,7 @@ export const Dashboard = () => {
             </div>
 
           </div>
-          <div className="mb-8 py-4  sm:px-4 bg-[#F5F5F5] rounded-lg shadow-md">
+          {(userInfo?.role_id === 1 || userInfo?.note_verified) && <div className="mb-8 py-4  sm:px-4 bg-[#F5F5F5] rounded-lg shadow-md">
             <h2 className="text-base font-semibold text-gray-900 mb-4 pl-2 sm:pl-0">My Team</h2>
 
             {isTableLoading ? (
@@ -248,9 +248,9 @@ export const Dashboard = () => {
               />
             )}
 
-          </div>
+          </div>}
 
-          {userInfo?.role_id === 1 && <div className="mb-8 py-4 sm:px-4 bg-[#F5F5F5] rounded-lg shadow-md">
+          {(userInfo?.role_id === 1 || userInfo?.role_id === 4) && <div className="mb-8 py-4 sm:px-4 bg-[#F5F5F5] rounded-lg shadow-md">
             <h2 className="text-base font-semibold text-gray-900 mb-4 pl-2 sm:pl-0"> Business List</h2>
 
             {isBusinessTableLoading ? (

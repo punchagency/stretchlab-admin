@@ -20,7 +20,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
     return (
       <div className="bg-white p-2 border border-gray-300 rounded shadow text-sm">
         <p className="text-gray-700 font-medium">{fullName}</p>
-        <p className="text-gray-600">{payload[0].value.toFixed(0) + '%'}</p>
+        <p className="text-gray-600">{Math.round(payload[0].value) + '%'}</p>
       </div>
     );
   }
