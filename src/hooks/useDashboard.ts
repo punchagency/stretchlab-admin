@@ -25,6 +25,9 @@ export const useDashboard = () => {
     dataset: "",
   });
 
+  const [myTeamDuration, setMyTeamDuration] = useState("yesterday");
+  const [myTeamCustomRange, setMyTeamCustomRange] = useState<{ start: string; end: string } | null>(null);
+
   const {
     data: dashboardMetricsData,
     isLoading: isMetricsLoading,
@@ -55,8 +58,13 @@ export const useDashboard = () => {
     error: tableError,
     refetch: refetchUserTable,
   } = useQuery<UserTableResponse>({
-    queryKey: ['userTableData'],
-    queryFn: getUserTableData,
+    queryKey: ['userTableData', myTeamDuration, myTeamCustomRange],
+    queryFn: () => {
+      if (myTeamDuration === "custom" && myTeamCustomRange) {
+        return getUserTableData(myTeamDuration, myTeamCustomRange.start, myTeamCustomRange.end);
+      }
+      return getUserTableData(myTeamDuration);
+    },
     staleTime: 3 * 60 * 1000,
     refetchOnWindowFocus: false,
   });
@@ -94,7 +102,7 @@ export const useDashboard = () => {
         { value: "last_30_days", label: "Last 30 Days" },
         { value: "this_month", label: "This Month" },
         { value: "last_month", label: "Last Month" },
-        { value: "this_year", label: "This Year" },
+        // { value: "this_year", label: "This Year" },
         { value: "custom", label: "Custom" },
       ],
       location: ["All"],
@@ -175,7 +183,7 @@ export const useDashboard = () => {
   const generateDashboardMetrics = (role_id: number): MetricCardData[] => {
     const metrics: MetricCardData[] = [];
 
-    if (role_id === 1 || role_id === 4) {
+    if (role_id === 1) {
       metrics.push({
         title: "Revenue",
         value: dashboardMetricsData?.data?.balance_info?.month_transactions
@@ -248,6 +256,14 @@ export const useDashboard = () => {
     }));
   };
 
+  const handleMyTeamDurationChange = (duration: string) => {
+    setMyTeamDuration(duration);
+  };
+
+  const handleMyTeamCustomRangeChange = (start: string, end: string) => {
+    setMyTeamCustomRange({ start, end });
+  };
+
   // const generateChartData = (): ChartDataPoint[] => {
   //   const labels = getLabels(selectedFilters.duration as any, selectedFilters.customRange);
   //   const values = generateDummyData(labels);
@@ -300,6 +316,9 @@ export const useDashboard = () => {
 
     handleFilterChange,
     handleCustomRangeChange,
+    handleMyTeamDurationChange,
+    handleMyTeamCustomRangeChange,
+    myTeamDuration,
     shouldShowLocation: selectedFilters.filterBy === "Location",
     shouldShowFlexologist: selectedFilters.filterBy === "Flexologist",
 

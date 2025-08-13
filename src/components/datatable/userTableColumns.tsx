@@ -99,7 +99,7 @@ export const userTableColumns: ColumnDef<UserData>[] = [
             </TooltipTrigger>
             <TooltipContent side="bottom">
               <p className="text-xs text-white">
-                Number of bookings for this flexologist today.
+                Number of bookings for this flexologist.
               </p>
             </TooltipContent>
           </Tooltip>
@@ -131,7 +131,7 @@ export const userTableColumns: ColumnDef<UserData>[] = [
       return (
         <Tooltip>
           <TooltipTrigger asChild>
-            <span className="text-gray-600 text-center">{percentageSubmittedBookings}%</span>
+            <span className="text-gray-600 text-center">{Math.round(Number(percentageSubmittedBookings))}%</span>
           </TooltipTrigger>
           <TooltipContent side="bottom">
             <p className="text-xs  text-white">Percentage of submitted bookings for this flexologist.</p>
