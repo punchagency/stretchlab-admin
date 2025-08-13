@@ -33,6 +33,9 @@ export const Dashboard = () => {
     maxValue,
     handleFilterChange,
     handleCustomRangeChange,
+    handleMyTeamDurationChange,
+    handleMyTeamCustomRangeChange,
+    myTeamDuration,
     shouldShowLocation,
     shouldShowFlexologist,
     retryMetrics,
@@ -97,7 +100,7 @@ export const Dashboard = () => {
                   />
 
                 ))}
-                {(userInfo?.role_id === 1 || userInfo?.role_id === 4) && <SubscriptionInfoCard
+                {userInfo?.role_id === 1 && <SubscriptionInfoCard
                   {...dashboardMetricsData?.data.subscriptions_info}
                 />}
               </div>
@@ -245,12 +248,17 @@ export const Dashboard = () => {
                 enableSearch={true}
                 searchFields={["full_name", "id"]}
                 searchPlaceholder="Search by Name or ID"
+                enableMyTeamDropdown={true}
+                selectedDuration={myTeamDuration}
+                onDurationChange={handleMyTeamDurationChange}
+                onCustomRangeChange={handleMyTeamCustomRangeChange}
+                durationOptions={filterOptions.duration}
               />
             )}
 
           </div>}
 
-          {(userInfo?.role_id === 1 || userInfo?.role_id === 4) && <div className="mb-8 py-4 sm:px-4 bg-[#F5F5F5] rounded-lg shadow-md">
+          {userInfo?.role_id === 1  && <div className="mb-8 py-4 sm:px-4 bg-[#F5F5F5] rounded-lg shadow-md">
             <h2 className="text-base font-semibold text-gray-900 mb-4 pl-2 sm:pl-0"> Business List</h2>
 
             {isBusinessTableLoading ? (

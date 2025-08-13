@@ -44,13 +44,16 @@ export const updateRobotStatus = async (data: { status: string }) => {
 
 export const getRobotHistory = async (
   configId: number,
+  duration?: string,
   startDate?: string,
   endDate?: string
 ) => {
-  const response = await api.get(
-    `/admin/process/get-rpa-history/${configId}${
-      startDate && endDate ? `?start_date=${startDate}&end_date=${endDate}` : ""
-    }`
-  );
+  let queryParams = `?duration=${duration}`;
+  
+  if (duration === "custom" && startDate && endDate) {
+    queryParams += `&start_date=${startDate}&end_date=${endDate}`;
+  }
+  
+  const response = await api.get(`/admin/process/get-rpa-history/${configId}${queryParams}`);
   return response;
 };

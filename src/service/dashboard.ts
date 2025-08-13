@@ -32,8 +32,18 @@ export const getChartData = async (params: ChartDataParams) => {
   return response.data;
 };
 
-export const getUserTableData = async () => {
-  const response = await api.get("/admin/dashboard/third_row");
+export const getUserTableData = async (duration?: string, startDate?: string, endDate?: string) => {
+  let queryParams = "";
+  
+  if (duration && duration !== "all") {
+    queryParams = `?duration=${duration}`;
+    
+    if (duration === "custom" && startDate && endDate) {
+      queryParams += `&start_date=${startDate}&end_date=${endDate}`;
+    }
+  }
+  
+  const response = await api.get(`/admin/dashboard/third_row${queryParams}`);
   return response.data;
 };
 
