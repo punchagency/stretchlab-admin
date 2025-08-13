@@ -49,7 +49,7 @@ export const SubscriptionInfoCard = ({
                         </div>
                     </TooltipTrigger>
                     <TooltipContent>
-                        <p>{average_number_of_locations_per_business || 0} Average number of locations per business.</p>
+                        <p>{Math.round(Number(average_number_of_locations_per_business)) || 0} Average number of locations per business.</p>
                     </TooltipContent>
                 </Tooltip>
                 </div>
