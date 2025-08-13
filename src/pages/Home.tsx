@@ -41,9 +41,16 @@ export const Home = () => {
     }
   }, []);
   const userInfo = getUserInfo();
-  const filteredMenuList = menuList.filter(
-    (menu) => !(userInfo?.role_id === 1 && menu.title === "Billing")
-  );
+  const filteredMenuList = menuList.filter((menu) => {
+    if ((userInfo?.role_id === 1 || userInfo?.role_id === 4) && menu.title === "Billing") {
+      return false;
+    }
+    if (menu.title === "User Management" && userInfo?.role_id !== 1) {
+      return false;
+    }
+  
+    return true;
+  });
   
   return (
     <ProfilePictureProvider>

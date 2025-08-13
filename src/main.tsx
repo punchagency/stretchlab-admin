@@ -20,6 +20,8 @@ import {
   Billing,
   NotFound,
   ErrorPage,
+  AcceptInvite,
+  UserManagement,
 } from "./pages";
 import { Toaster } from "./components/ui/sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -64,6 +66,10 @@ const router = createBrowserRouter([
         path: "settings",
         element: <Settings />,
       },
+      {
+        path: "user-management",
+        element: <UserManagement />,
+      },
     ],
   },
   {
@@ -99,6 +105,11 @@ const router = createBrowserRouter([
   {
     path: "/forgot-password",
     element: <ForgotPassword />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/invitation",
+    element: <AcceptInvite />,
     errorElement: <ErrorPage />,
   },
   {

@@ -34,9 +34,9 @@ export const menuList = [
     icon: "billing",
     link: "/billing",
   },
-  // {
-  //   title: "User Management",
-  //   icon: "users",
-  //   link: "/user-management",
-  // },
+  {
+    title: "User Management",
+    icon: "users",
+    link: "/user-management",
+  },
 ];

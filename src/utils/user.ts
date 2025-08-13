@@ -10,6 +10,7 @@ interface CustomJwtPayload extends JwtPayload {
   avatar?: string;
   rpa_verified?: boolean | null;
   role_id?: number;
+  note_verified?: boolean | null;
 }
 
 export const setUserCookie = (token: string): void => {
@@ -35,6 +36,15 @@ export const getUserCookie = (): string | null => {
 
 export const getUserInfo = (): CustomJwtPayload | null => {
   const token = getUserCookie();
+  if (token) {
+    const decoded = jwtDecode<CustomJwtPayload>(token);
+    return decoded;
+  }
+  return null;
+};
+
+export const getTempUserInfo = (): CustomJwtPayload | null => {
+  const token = getTempUserCookie();
   if (token) {
     const decoded = jwtDecode<CustomJwtPayload>(token);
     return decoded;

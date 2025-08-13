@@ -4,10 +4,12 @@ import { type ColumnDef } from "@tanstack/react-table";
 import { Switch } from "../ui/switch";
 import { SvgIcon } from "../shared";
 export type Payment = {
-  id: string;
-  amount: number;
-  status: "pending" | "processing" | "success" | "failed";
+  id: number;
+  full_name: string;
   email: string;
+  status: number;
+  invited_at: string;
+  resend_invite: boolean;
 };
 
 const resendInvite = (email: string) => {
