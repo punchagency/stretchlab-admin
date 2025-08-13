@@ -19,7 +19,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "../ui/button";
-import { Button as Button2, Input } from "@/components/shared";
+import { Button as Button2, Input, DateRangeFilter } from "@/components/shared";
 import { useState } from "react";
 import {
   type SortingState,
@@ -50,6 +50,11 @@ interface DataTableProps<TData extends { id: number | string }, TValue> {
   searchFields?: string[];
   searchPlaceholder?: string;
   tableCellClassName?: string;
+  enableMyTeamDropdown?: boolean;
+  selectedDuration?: string;
+  onDurationChange?: (duration: string) => void;
+  onCustomRangeChange?: (start: string, end: string) => void;
+  durationOptions?: { value: string; label: string }[];
 }
 
 export function DataTable<TData extends { id: number | string }, TValue>({
@@ -67,6 +72,11 @@ export function DataTable<TData extends { id: number | string }, TValue>({
   searchFields = [],
   searchPlaceholder = "Search...",
   tableCellClassName,
+  enableMyTeamDropdown = false,
+  selectedDuration,
+  onDurationChange,
+  onCustomRangeChange,
+  durationOptions = [],
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -210,7 +220,8 @@ export function DataTable<TData extends { id: number | string }, TValue>({
       )}
 
       {enableSearch && !note && (
-        <div className="flex items-center py-1 justify-end">
+        <div className="flex items-center py-1 justify-between">
+        
           <Input
             type="search"
             icon="search"
@@ -219,6 +230,17 @@ export function DataTable<TData extends { id: number | string }, TValue>({
             value={globalFilter}
             onChange={(event) => setGlobalFilter(event.target.value)}
           />
+            {enableMyTeamDropdown && (
+            <DateRangeFilter
+              label="Duration"
+              value={durationOptions.find(opt => opt.value === selectedDuration)?.label || "Yesterday"}
+              options={durationOptions}
+              onChange={onDurationChange || (() => {})}
+              onCustomRangeChange={onCustomRangeChange}
+              className="w-48"
+              showLabel={false}
+            />
+          )}
         </div>
       )}
 
