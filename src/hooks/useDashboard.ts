@@ -187,7 +187,7 @@ export const useDashboard = () => {
       metrics.push({
         title: "Revenue",
         value: dashboardMetricsData?.data?.balance_info?.month_transactions
-          ? `$${dashboardMetricsData.data.balance_info.month_transactions.toFixed(2)}`
+          ? `$${Math.round(dashboardMetricsData.data.balance_info.month_transactions)}`
           : "$0.00",
         subtitle: "This Month",
         // buttonText: "View Details",
@@ -203,7 +203,7 @@ export const useDashboard = () => {
           ? `${dashboardMetricsData.data.bookings_info.bookings_in_month}`
           : "0",
         subtitle: dashboardMetricsData?.data?.bookings_info
-          ? `${dashboardMetricsData.data.bookings_info.upwards_trend ? '+' : ''}${dashboardMetricsData.data.bookings_info.aggregation.toFixed(2)} %`
+          ? `${dashboardMetricsData.data.bookings_info.upwards_trend ? '+' : ''}${Math.round(dashboardMetricsData.data.bookings_info.aggregation)} %`
           : "No data",
         // buttonText: "See Sessions",
         buttonVariant: "primary",
