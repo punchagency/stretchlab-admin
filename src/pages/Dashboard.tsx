@@ -6,7 +6,7 @@ import { useBusinessDetail } from "@/hooks/useBusinessDetail";
 import { SubscriptionInfoCard } from "@/components/dashboard";
 
 import { getUserInfo } from "@/utils";
-import { RefreshCcw } from "lucide-react";
+import { Info, RefreshCcw } from "lucide-react";
 
 export const Dashboard = () => {
   const {
@@ -59,8 +59,8 @@ export const Dashboard = () => {
   const handleMetricClick = (title: string) => {
     console.log(`Clicked on ${title}`);
   };
-   console.log(isChartLoading)
-   console.log(isTableLoading)
+  console.log(isChartLoading)
+  console.log(isTableLoading)
   return (
     <div className="min-h-screen bg-white">
       <div className="">
@@ -203,13 +203,28 @@ export const Dashboard = () => {
                         </Button>
                       </div>
                     )}
+
                     {!chartError && !isChartLoading && (
-                      <RechartsBarChart
-                        data={chartData}
-                        title=""
-                        maxValue={maxValue}
-                        dataSet={selectedFilters.dataset}
-                      />
+                      <>
+                        {
+                          selectedFilters.dataset === "% App Submissions" && (
+                            <div className='flex items-center gap-2 mb-4 p-3 rounded-lg border bg-orange-50 border-orange-200'>
+                              <Info className="w-5 h-5 text-orange-500" />
+                              <p className=" md:text-sm text-xs text-orange-600">
+                                Data older than 2 days old might be incorrect for App Submissions
+                              </p>
+
+                            </div>)
+
+                        }
+                        <RechartsBarChart
+                          data={chartData}
+                          title=""
+                          maxValue={maxValue}
+                          dataSet={selectedFilters.dataset}
+                        />
+                      </>
+
                     )}
                   </div>
                 </>
@@ -258,7 +273,7 @@ export const Dashboard = () => {
 
           </div>}
 
-          {userInfo?.role_id === 1  && <div className="mb-8 py-4 sm:px-4 bg-[#F5F5F5] rounded-lg shadow-md">
+          {userInfo?.role_id === 1 && <div className="mb-8 py-4 sm:px-4 bg-[#F5F5F5] rounded-lg shadow-md">
             <h2 className="text-base font-semibold text-gray-900 mb-4 pl-2 sm:pl-0"> Business List</h2>
 
             {isBusinessTableLoading ? (
