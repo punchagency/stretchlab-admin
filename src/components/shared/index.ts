@@ -27,3 +27,4 @@ export * from "./BusinessDetailSkeleton";
 export * from "./TableSkeleton";
 export { default as Activities } from "./Activities";
 export * from "./ActivitiesSkeleton";
+export * from "./DataSection";

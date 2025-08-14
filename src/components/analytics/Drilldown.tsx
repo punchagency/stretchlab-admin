@@ -195,7 +195,7 @@ export const Drilldown: React.FC<DrilldownProps> = ({
             </h3>
             <p className=" md:text-sm text-xs text-gray-600">
               {selected ? (
-                <>Percent of appointments with: <span className="font-medium text-primary-base">{selected}</span></>
+                <>Percent of appointments with opportunities: <span className="font-medium text-primary-base">{selected}</span></>
               ) : (
                 'Overall distribution across locations and flexologists'
               )}
@@ -205,6 +205,22 @@ export const Drilldown: React.FC<DrilldownProps> = ({
       </div>
 
       <div className="md:p-6 p-3">
+
+        {(data.flexologists.length > 0 || data.locations.length > 0) && <div className="flex items-center gap-2 mb-4 p-3 rounded-lg border bg-primary-base/10">
+          <Info className="w-5 h-5 text-primary-base/80" />
+          <p className="md:text-sm text-xs text-primary-base leading-relaxed">
+            {selected ? (
+              <>
+                Represent percent of appointments with opportunities marked by <strong>{selected}</strong>.
+              </>
+            ) : (
+              "Each percentage indicates the proportion of high-quality notes"
+            )}
+          </p>
+        </div>}
+
+
+
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
           <DataSection
             title="By Location"
@@ -225,58 +241,6 @@ export const Drilldown: React.FC<DrilldownProps> = ({
             colorScheme="green"
             icon={<User className="w-4 h-4 text-green-600" />}
           />
-        </div>
-
-        <div className="mt-8 pt-4 border-t border-gray-200">
-          <div className="flex items-center gap-2 mb-4">
-            <Info className="w-5 h-5 text-gray-600" />
-            <h4 className=" md:text-base text-sm font-semibold text-gray-800">Understanding Your Data</h4>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
-            <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-              <div className="flex items-start gap-3">
-                <div className="p-1.5 bg-blue-500 rounded-md">
-                  <MapPin className="w-3 h-3 text-white" />
-                </div>
-                <div>
-                  <h5 className=" md:text-base text-sm font-semibold text-blue-800 mb-1">Location Breakdown</h5>
-                  <p className="md:text-sm text-xs text-blue-700 leading-relaxed">
-                    {selected ? (
-                      <>
-                         Represent percent of appointments with opportunities marked by <strong>{selected}</strong> at the  location.
-                      </>
-                    ) : (
-                      "Each percentage indicates the proportion of high-quality notes at the location"
-                    )}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-              <div className="flex items-start gap-3">
-                <div className="p-1.5 bg-green-500 rounded-md">
-                  <User className="w-3 h-3 text-white" />
-                </div>
-                <div>
-                  <h5 className=" md:text-base text-sm font-semibold text-green-800 mb-1">Flexologist Breakdown</h5>
-                  <p className=" md:text-sm text-xs text-green-700 leading-relaxed">
-                    {
-                      selected ? (  
-                        <>
-                           Represent percent of appointments with opportunities marked by <strong>{selected}</strong> for the individual flexologist.
-                        </>
-                      ) : (
-                        "Each percentage reflects the proportion of high-quality notes for the individual flexologist."
-                      )
-                    }
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
         </div>
       </div>
     </div>

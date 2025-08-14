@@ -1,53 +1,96 @@
 import { type ColumnDef } from "@tanstack/react-table";
 import type { LocationAnalyticsItem, } from "@/types";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+
+
+const getDescription = (dataSet: string | undefined) => {
+    switch (dataSet) {
+        case "% App Submissions":
+            return {
+                valueColumn: "% App Submission",
+                totalColumn: "Total Flexologist Appointment",
+                hoveredValueText: "% of Appointment Submitted with the App",
+            }
+
+        case "Total Client Visits":
+            return {
+                valueColumn: "Flexologist Appointment",
+                totalColumn: "Total Appointment",
+                hoveredValueText: "Total Appointment of Flexologist",
+            }
+
+        case "Avg. Note Quality %":
+            return {
+                valueColumn: "Average Note Quality %",
+                totalColumn: "Total Flexologist Appointment",
+                hoveredValueText: "Average % Quality of Appointment Notes",
+            }
+
+
+        default:
+            return {
+                valueColumn: "",
+                totalColumn: "",
+                hoveredValueText: "",
+            }
+    }
+};
 
 interface LocationTableColumnsProps {
-  metric?: string;
+    metric?: string;
+    selectedLocation?: string;
 }
 
 export const getLocationTableColumns = (props?: LocationTableColumnsProps): ColumnDef<LocationAnalyticsItem>[] => {
-  const { metric } = props || {};
-
-  return [
-    {
-        accessorKey: "name",
-        header: "Flexologist Name",
-        cell: ({ row }) => {
-            const name = row.getValue("name") as string;
-            return (
-                <span className="text-gray-700 text-sm capitalize">{name}</span>
-            );
+    const { metric, selectedLocation } = props || {};
+    const { valueColumn, totalColumn, hoveredValueText } = getDescription(metric);
+    return [
+        {
+            accessorKey: "name",
+            header: "Flexologist Name",
+            cell: ({ row }) => {
+                const name = row.getValue("name") as string;
+                return (
+                    <span className="text-gray-700 text-sm capitalize">{name}</span>
+                );
+            },
         },
-    },
-    {
-        accessorKey: "value",
-        header: "Value",
-        cell: ({ row }) => {
-            const value = row.getValue("value") as number;
+        {
+            accessorKey: "value",
+            header: valueColumn,
+            cell: ({ row }) => {
+                const value = row.getValue("value") as number;
 
-            return (
-                <div className="flex items-center gap-3">
-                    <span className="text-sm font-medium text-gray-600">
-                        { metric === "Total Client Visits" ? value : `${value}%`}
+                return (
+                    <Tooltip>
+                        <TooltipTrigger>
+                            <div className="flex items-center gap-3">
+                                <span className="text-sm font-medium text-gray-600">
+                                    {metric === "Total Client Visits" ? value : `${value}%`}
+                                </span>
+                            </div>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            <p>{hoveredValueText} {selectedLocation ? `at ` : ""}  <span className="font-bold capitalize">{selectedLocation ? ` ${selectedLocation}` : ""}</span></p>
+                        </TooltipContent>
+                    </Tooltip>
+                );
+            },
+        },
+        {
+            accessorKey: "total",
+            header: totalColumn,
+            cell: ({ row }) => {
+                const total = row.getValue("total") as number;
+
+                return (
+                    <span className={`px-3 py-1 rounded-full text-xs font-medium`}>
+                        {total}
                     </span>
-                </div>
-            );
+                );
+            },
         },
-    },
-    {
-        accessorKey: "total",
-        header: "Total",
-        cell: ({ row }) => {
-            const total = row.getValue("total") as number;
-
-            return (
-                <span className={`px-3 py-1 rounded-full text-xs font-medium`}>
-                    {total}
-                </span>
-            );
-        },
-    },
-  ];
+    ];
 };
 
 export const locationTableColumns: ColumnDef<LocationAnalyticsItem>[] = getLocationTableColumns(); 
