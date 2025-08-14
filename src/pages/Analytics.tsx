@@ -1,7 +1,7 @@
 import { FilterDropdown, DateRangeFilter, Button } from '../components/shared';
 import { OpportunityBarChart, RankingBarChart, Drilldown, MetricsDisplay } from '../components/analytics';
 import { useAnalytics } from '@/hooks/useAnalytics';
-import { RefreshCcw } from 'lucide-react';
+import { Info, RefreshCcw } from 'lucide-react';
 import { DataTable } from '@/components/datatable';
 import { getLocationTableColumns } from '@/components/analytics';
 import { TableSkeleton } from '@/components/shared';
@@ -38,7 +38,7 @@ export const Analytics = () => {
     locationError,
     retryLocation,
   } = useAnalytics();
-   
+
 
   return (
     <div className="bg-white">
@@ -221,17 +221,33 @@ export const Analytics = () => {
                     <RefreshCcw className="w-4 h-4 mr-2" />
                     Retry
                   </Button>
-                </div> : 
-                <DataTable
-                columns={getLocationTableColumns({
-                  metric: selectedFilters.dataset,
-                  selectedLocation : selectedLocation || undefined
-                }) as any}
-                data={locationData || []}
-                emptyText="No data found"
-                tableContainerClassName="bg-white"
-          
-              />}
+                </div> :
+                  <>
+                    {
+                      selectedFilters.dataset === "% App Submissions" && (
+                        <div className='flex items-center gap-2 mb-4 p-3 rounded-lg border bg-orange-50 border-orange-200'>
+                          <Info className="w-5 h-5 text-orange-500" />
+                          <p className=" md:text-sm text-xs text-orange-600">
+                          Data older than 2 days old might be incorrect for App Submissions
+                          </p>
+
+                        </div>)
+
+                    }
+
+
+                    <DataTable
+                      columns={getLocationTableColumns({
+                        metric: selectedFilters.dataset,
+                        selectedLocation: selectedLocation || undefined
+                      }) as any}
+                      data={locationData || []}
+                      emptyText="No data found"
+                      tableContainerClassName="bg-white"
+
+                    />
+                  </>
+              }
             </div>
 
           </div>
