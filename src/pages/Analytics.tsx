@@ -6,6 +6,7 @@ import { DataTable } from '@/components/datatable';
 import { getLocationTableColumns } from '@/components/analytics';
 import { TableSkeleton } from '@/components/shared';
 
+
 export const Analytics = () => {
   const {
     selectedFilters,
@@ -37,6 +38,7 @@ export const Analytics = () => {
     locationError,
     retryLocation,
   } = useAnalytics();
+   
 
   return (
     <div className="bg-white">
@@ -222,7 +224,8 @@ export const Analytics = () => {
                 </div> : 
                 <DataTable
                 columns={getLocationTableColumns({
-                  metric: selectedFilters.dataset
+                  metric: selectedFilters.dataset,
+                  selectedLocation : selectedLocation || undefined
                 }) as any}
                 data={locationData || []}
                 emptyText="No data found"

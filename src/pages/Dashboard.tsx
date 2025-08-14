@@ -59,8 +59,8 @@ export const Dashboard = () => {
   const handleMetricClick = (title: string) => {
     console.log(`Clicked on ${title}`);
   };
-
-
+   console.log(isChartLoading)
+   console.log(isTableLoading)
   return (
     <div className="min-h-screen bg-white">
       <div className="">

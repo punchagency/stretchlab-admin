@@ -19,6 +19,28 @@ interface RechartsBarChartProps {
   dataSet?: string;
 }
 
+const getDescription = (dataSet: string | undefined) => {
+  switch (dataSet) {
+    case "% App Submissions":
+      return "% App Submissions";
+
+    case "Total Client Visits":
+      return "Total Client Visits";
+
+    case "Avg 1st Visit Quality %":
+      return "Avg 1st Visit Quality %";
+
+    case "Avg Subsequent Visit Quality %":
+      return "Avg Subsequent Visit Quality %";
+
+    case "Avg Aggregate Note Quality %":
+      return "Avg Aggregate Note Quality %";
+
+    default:
+      return "";
+  }
+};
+
 export const RechartsBarChart = ({ data, title, maxValue, dataSet }: RechartsBarChartProps) => {
   const safeData = data.filter(d => typeof d.value === 'number' && !isNaN(d.value));
   const max = maxValue || (safeData.length > 0 ? Math.max(...safeData.map(d => d.value)) : 100);
@@ -141,6 +163,7 @@ export const RechartsBarChart = ({ data, title, maxValue, dataSet }: RechartsBar
                   return (
                     <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg">
                       <p className="font-medium text-gray-900">{label}</p>
+                      <p className="text-sm text-gray-600 font-medium">{getDescription(dataSet)}</p>
                       <p className="text-sm text-gray-600">
                         Value: {data.value}{dataSet === 'Total Client Visits' ? '' : '%'}
                       </p>
