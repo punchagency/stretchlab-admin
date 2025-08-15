@@ -20,7 +20,11 @@ export const updateManagerAccess = async (user_id: number, enable: boolean) => {
   return response;
 };
 
-export const addPassword = async (email: string, password: string, full_name: string) => {
+export const addPassword = async (
+  email: string,
+  password: string,
+  full_name: string
+) => {
   const response = await api.post("/admin/user-management/add-details", {
     email,
     password,
