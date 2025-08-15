@@ -134,8 +134,9 @@ export const NoteTakingAdmin = () => {
 
         return status ? (
           <div
-            className={`${badgeColor[status as keyof typeof badgeColor]
-              } px-2 py-1.5 rounded-2xl w-20 text-center font-medium`}
+            className={`${
+              badgeColor[status as keyof typeof badgeColor]
+            } px-2 py-1.5 rounded-2xl w-20 text-center font-medium`}
           >
             {statuses[status]}
           </div>
@@ -197,7 +198,12 @@ export const NoteTakingAdmin = () => {
 
         return (
           <Button
-            disabled={status === 1 || status === 2 || isResending === email}
+            disabled={
+              status === 1 ||
+              status === 2 ||
+              status === 5 ||
+              isResending === email
+            }
             onClick={() => resendInvite(email)}
             className="cursor-pointer w-32"
             variant="outline"
