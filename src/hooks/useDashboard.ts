@@ -23,6 +23,7 @@ export const useDashboard = () => {
     location: "All",
     flexologist: "All",
     dataset: "",
+    filterMetric: "aggregate_note_quality_percentage",
   });
 
   const [myTeamDuration, setMyTeamDuration] = useState("yesterday");
@@ -108,6 +109,11 @@ export const useDashboard = () => {
       location: ["All"],
       flexologist: ["All"],
       dataset: [],
+      filterMetric: [
+        { value: "aggregate_note_quality_percentage", label: "All Appointments" },
+        { value: "1st_visit_quality_percentage", label: "First Appointment" },
+        { value: "subsequent_visit_quality_percentage", label: "Return Appointment" },
+      ],
     };
 
     let filtersMap = {
@@ -145,9 +151,14 @@ export const useDashboard = () => {
 
     if (!selectedFilters.dataset) return null;
 
+    let datasetValue = filtersMap.datasetMap.get(selectedFilters.dataset) || selectedFilters.dataset;
+        if (selectedFilters.dataset === "Avg Note Quality %" && selectedFilters.filterMetric) {
+      datasetValue = `${datasetValue}${selectedFilters.filterMetric}`;
+    }
+
     const params: any = {
       duration: selectedFilters.duration,
-      dataset: filtersMap.datasetMap.get(selectedFilters.dataset) || selectedFilters.dataset,
+      dataset: datasetValue,
       filterBy: selectedFilters.filterBy,
       customRange: selectedFilters.customRange,
     };
@@ -192,7 +203,7 @@ export const useDashboard = () => {
         subtitle: "This Month",
         // buttonText: "View Details",
         buttonVariant: "primary",
-        showCurrency: true,
+        showCurrency: false,
       });
     }
 
@@ -321,6 +332,7 @@ export const useDashboard = () => {
     myTeamDuration,
     shouldShowLocation: selectedFilters.filterBy === "Location",
     shouldShowFlexologist: selectedFilters.filterBy === "Flexologist",
+    shouldShowAppointmentType: selectedFilters.dataset === "Avg Note Quality %",
 
     retryMetrics: refetchMetrics,
     retryFilters: refetchFilters,

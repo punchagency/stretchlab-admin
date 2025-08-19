@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   Users,
   MapPin,
   FileText,
   BarChart3,
-  RefreshCcw
+  RefreshCcw,
 } from 'lucide-react';
-import { Button } from "@/components/shared";
+import { Button, Input } from "@/components/shared";
 import { ActivitiesSkeleton, DataSection } from "./index";
 import type { ActivitiesData } from "@/types";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface ActivitiesProps {
   data: ActivitiesData | undefined;
@@ -17,13 +18,53 @@ interface ActivitiesProps {
   onRetry: () => void;
 }
 
-const ITEMS_PER_PAGE = 5;
-
 const Activities: React.FC<ActivitiesProps> = ({ data, isLoading, error, onRetry }) => {
   const [flexologistPage, setFlexologistPage] = useState(0);
   const [locationPage, setLocationPage] = useState(0);
   const [flexologistSubmittedPage, setFlexologistSubmittedPage] = useState(0);
   const [locationSubmittedPage, setLocationSubmittedPage] = useState(0);
+  const [searchQuery, setSearchQuery] = useState('');
+  
+  const isMobile = useIsMobile();
+  const ITEMS_PER_PAGE = isMobile ? 5 : 10;
+
+  const sortEntries = (obj: Record<string, number>) =>
+    Object.entries(obj).sort(([, a], [, b]) => b - a);
+
+  const filterEntries = (entries: [string, number][]) => {
+    if (!searchQuery.trim()) return entries;
+    
+    return entries.filter(([name]) => 
+      name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  };
+
+  const flexologistEntries = useMemo(() => 
+    data ? filterEntries(sortEntries(data.notes_analysed_per_flexologist)) : [], 
+    [data?.notes_analysed_per_flexologist, searchQuery]
+  );
+  
+  const locationEntries = useMemo(() => 
+    data ? filterEntries(sortEntries(data.notes_analysed_per_location)) : [], 
+    [data?.notes_analysed_per_location, searchQuery]
+  );
+  
+  const flexologistSubmittedEntries = useMemo(() => 
+    data ? filterEntries(sortEntries(data.notes_submitted_per_flexologist)) : [], 
+    [data?.notes_submitted_per_flexologist, searchQuery]
+  );
+  
+  const locationSubmittedEntries = useMemo(() => 
+    data ? filterEntries(sortEntries(data.notes_submitted_per_location)) : [], 
+    [data?.notes_submitted_per_location, searchQuery]
+  );
+
+  React.useEffect(() => {
+    setFlexologistPage(0);
+    setLocationPage(0);
+    setFlexologistSubmittedPage(0);
+    setLocationSubmittedPage(0);
+  }, [searchQuery]);
 
   if (isLoading) return <ActivitiesSkeleton />;
 
@@ -53,19 +94,26 @@ const Activities: React.FC<ActivitiesProps> = ({ data, isLoading, error, onRetry
     );
   }
 
-  const sortEntries = (obj: Record<string, number>) =>
-    Object.entries(obj).sort(([, a], [, b]) => b - a);
-
-  const flexologistEntries = sortEntries(data.notes_analysed_per_flexologist);
-  const locationEntries = sortEntries(data.notes_analysed_per_location);
-  const flexologistSubmittedEntries = sortEntries(data.notes_submitted_per_flexologist);
-  const locationSubmittedEntries = sortEntries(data.notes_submitted_per_location);
-
   const totalPages = (length: number) => Math.ceil(length / ITEMS_PER_PAGE);
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6 space-y-12">
-      {/* Total Analysed */}
+    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6 space-y-6">
+      <div className="relative">
+        <Input
+          type="text"
+          placeholder="Search flexologists and locations..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          icon="search"
+          className="w-full rounded-md"
+        />
+        {searchQuery && (
+          <div className="mt-2 text-sm text-gray-600">
+            Showing results for <span className="font-bold text-gray-900">"{searchQuery}"</span>
+          </div>
+        )}
+      </div>
+
       <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm">
         <div className="flex items-center mb-2">
           <BarChart3 className="w-5 h-5 text-gray-600 mr-2" />
@@ -75,7 +123,6 @@ const Activities: React.FC<ActivitiesProps> = ({ data, isLoading, error, onRetry
         <p className="text-xs text-gray-600 mt-1">Total Analysed Bookings</p>
       </div>
 
-      {/* Analysed by Flexologist / Location */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
         <DataSection
           title="Note Analysed By Flexologist"
@@ -98,7 +145,6 @@ const Activities: React.FC<ActivitiesProps> = ({ data, isLoading, error, onRetry
         />
       </div>
 
-      {/* Notes with App */}
       <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm">
         <div className="flex items-center mb-2">
           <FileText className="w-5 h-5 text-gray-600 mr-2" />
@@ -108,8 +154,7 @@ const Activities: React.FC<ActivitiesProps> = ({ data, isLoading, error, onRetry
         <p className="text-xs text-gray-600 mt-1">Submitted via app</p>
       </div>
 
-      {/* Submitted by Flexologist / Location */}
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mt-4">
         <DataSection
           title="Note Submitted By Flexologist"
           items={flexologistSubmittedEntries}

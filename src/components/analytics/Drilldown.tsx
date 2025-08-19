@@ -9,6 +9,8 @@ import {
 } from 'lucide-react';
 import { DrilldownSkeleton } from '../shared';
 import type { DrilldownData } from '@/types/analytics';
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+
 
 interface DrilldownProps {
   selected: string | null;
@@ -115,7 +117,8 @@ export const Drilldown: React.FC<DrilldownProps> = ({
     totalPages,
     onPageChange,
     colorScheme,
-    icon
+    icon,
+    selected
   }: {
     title: string;
     items: any[];
@@ -124,6 +127,7 @@ export const Drilldown: React.FC<DrilldownProps> = ({
     onPageChange: (direction: 'prev' | 'next') => void;
     colorScheme: 'blue' | 'green';
     icon: React.ReactNode;
+    selected: string | null;
   }) => {
     const colorClasses = {
       blue: {
@@ -160,9 +164,16 @@ export const Drilldown: React.FC<DrilldownProps> = ({
                 <span className="text-sm font-medium text-gray-700 truncate flex-1 mr-3">
                   {item.name}
                 </span>
-                <span className="text-sm font-bold text-gray-900 bg-white px-2 py-1 rounded-md border">
+                {selected ? <Tooltip> <TooltipTrigger> <div className='flex items-center gap-2 bg-white px-2 py-1 rounded-md border'>
+                  <span className='text-sm font-bold text-gray-900 '>{item.percentage_note_quality}</span>
+                  <div>
+                    <span className='text-sm text-gray-500 font-medium'>({item.particular_count} / {item.total_count})</span>
+                  </div>
+                </div> </TooltipTrigger> <TooltipContent>
+                    <p>{item.value} of the appointments with opportunities as <strong>{selected}</strong></p>
+                  </TooltipContent> </Tooltip> : <span className="text-sm font-bold text-gray-900 bg-white px-2 py-1 rounded-md border">
                   {item.value}
-                </span>
+                </span>}
               </div>
             ))}
             <PaginationControls
@@ -230,6 +241,7 @@ export const Drilldown: React.FC<DrilldownProps> = ({
             onPageChange={handleLocationPageChange}
             colorScheme="blue"
             icon={<MapPin className="w-4 h-4 text-blue-600" />}
+            selected={selected}
           />
 
           <DataSection
@@ -240,6 +252,7 @@ export const Drilldown: React.FC<DrilldownProps> = ({
             onPageChange={handleFlexologistPageChange}
             colorScheme="green"
             icon={<User className="w-4 h-4 text-green-600" />}
+            selected={selected}
           />
         </div>
       </div>
