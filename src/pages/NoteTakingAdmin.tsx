@@ -24,6 +24,8 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { AnimatePresence, motion } from "framer-motion";
 import { ErrorHandle, PaymentCollection } from "@/components/app";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+
 export const NoteTakingAdmin = () => {
   const { data, isPending, error, isFetching, refetch } = useQuery({
     queryKey: ["users"],
@@ -39,6 +41,24 @@ export const NoteTakingAdmin = () => {
   const [billingInfo, setBillingInfo] = useState<BillingInfo | null>(null);
   const [update, setUpdate] = useState(false);
   const [proceed, setProceed] = useState(false);
+
+  const getTooltipDescription = (status: number) => {
+    switch (status) {
+      case 1:
+        return "Flexologist is Active";
+      case 2:
+        return "Flexologist is Disabled";
+      case 3:
+        return "Flexologist is Invited, but not yet accepted";
+      case 4:
+        return "Flexologist has accept invite, but has not yet to verify clubready details.";
+      case 5:
+        return "Flexologist has accepted invite, but has not yet added clubready details.";
+
+      default:
+        return "";
+    }
+  };
 
   if (isPending) {
     return (
@@ -132,16 +152,24 @@ export const NoteTakingAdmin = () => {
           5: "bg-[#FEF6E7] text-[#865503]",
         } as const;
 
-        return status ? (
-          <div
-            className={`${badgeColor[status as keyof typeof badgeColor]
-              } px-2 py-1.5 rounded-2xl w-20 text-center font-medium`}
-          >
-            {statuses[status]}
-          </div>
-        ) : (
-          <p className="text-gray-500">Not Invited</p>
-        );
+        return (
+          <Tooltip>
+            <TooltipTrigger>
+              <div
+                className={`${badgeColor[status as keyof typeof badgeColor]
+                  } px-2 py-1.5 rounded-2xl w-20 text-center font-medium`}
+              >
+                {statuses[status]}
+              </div>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>
+                {getTooltipDescription(status)}
+              </p>
+            </TooltipContent>
+          </Tooltip>
+        )
+
       },
     },
     {

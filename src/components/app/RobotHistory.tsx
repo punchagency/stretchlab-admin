@@ -184,7 +184,7 @@ export const RobotHistory = ({ configId }: { configId: number }) => {
   return (
     <>
       <div className="mt-10">
-        <div className="flex items-center justify-between relative">
+        <div className="flex md:items-center justify-between relative md:flex-row flex-col md:mb-0 mb-4">
           <h4 className="text-sm md:text-lg font-semibold mb-4">
             Automation History{" "}
             <span className="text-gray-500 text-xs md:text-sm">
@@ -206,8 +206,9 @@ export const RobotHistory = ({ configId }: { configId: number }) => {
               options={dateRangeOptions}
               onChange={handleRangeChange}
               onCustomRangeChange={handleCustomRangeChange}
-              className="w-50"
+              className="w-full md:w-50"
               showLabel={false}
+              inputClassName="py-3"
             />
           </div>
         </div>

@@ -10,6 +10,7 @@ interface DateRangeFilterProps {
   onCustomRangeChange?: (start: string, end: string) => void;
   className?: string;
   showLabel?: boolean;
+  inputClassName?: string;
 }
 
 export const DateRangeFilter = ({
@@ -20,6 +21,7 @@ export const DateRangeFilter = ({
   onCustomRangeChange,
   className = "",
   showLabel = true,
+  inputClassName = "",
 }: DateRangeFilterProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -59,7 +61,7 @@ export const DateRangeFilter = ({
       <div className="relative">
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-base focus:border-primary-base transition-colors"
+          className={`flex items-center justify-between w-full px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-base focus:border-primary-base transition-colors ${inputClassName}`}
         >
           <span className="truncate pr-2">{value}</span>
           <ChevronDown 

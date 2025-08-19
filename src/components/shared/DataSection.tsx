@@ -1,5 +1,6 @@
 import React from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface DataSectionProps {
   title: string;
@@ -58,7 +59,8 @@ export const DataSection: React.FC<DataSectionProps> = ({
   icon,
   colorScheme,
 }) => {
-  const itemsPerPage = 5;
+      const isMobile = useIsMobile();
+      const itemsPerPage = isMobile ? 5 : 10;
   const startIndex = currentPage * itemsPerPage;
   const paginatedItems = items.slice(startIndex, startIndex + itemsPerPage);
 

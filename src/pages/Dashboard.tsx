@@ -38,6 +38,7 @@ export const Dashboard = () => {
     myTeamDuration,
     shouldShowLocation,
     shouldShowFlexologist,
+    shouldShowAppointmentType,
     retryMetrics,
     retryFilters,
     retryChart,
@@ -59,8 +60,7 @@ export const Dashboard = () => {
   const handleMetricClick = (title: string) => {
     console.log(`Clicked on ${title}`);
   };
-  console.log(isChartLoading)
-  console.log(isTableLoading)
+
   return (
     <div className="min-h-screen bg-white">
       <div className="">
@@ -184,6 +184,13 @@ export const Dashboard = () => {
                       className="flex-2"
                       showSearch={true}
                     />
+                    {shouldShowAppointmentType && <FilterDropdown
+                      label="Appointment Type"
+                      value={filterOptions.filterMetric?.find(opt => opt.value === selectedFilters.filterMetric)?.label || selectedFilters.filterMetric || "all"}
+                      options={filterOptions.filterMetric || []}
+                      onChange={(value) => handleFilterChange('filterMetric', value)}
+                      className="flex-1"
+                    />}
                   </div>
 
 
@@ -211,7 +218,7 @@ export const Dashboard = () => {
                             <div className='flex items-center gap-2 mb-4 p-3 rounded-lg border bg-orange-50 border-orange-200'>
                               <Info className="w-5 h-5 text-orange-500" />
                               <p className=" md:text-sm text-xs text-orange-600">
-                                Data older than 2 days old might be incorrect for App Submissions
+                                Data older than 2 days might be incorrect for App Submissions
                               </p>
 
                             </div>)
