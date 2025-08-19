@@ -152,7 +152,7 @@ export const NoteTakingAdmin = () => {
           5: "bg-[#FEF6E7] text-[#865503]",
         } as const;
 
-        return (
+        return status ? (
           <Tooltip>
             <TooltipTrigger>
               <div
@@ -168,8 +168,9 @@ export const NoteTakingAdmin = () => {
               </p>
             </TooltipContent>
           </Tooltip>
-        )
-
+        ) : (
+          <p className="text-gray-500">Not Invited</p>
+        );
       },
     },
     {
@@ -225,7 +226,12 @@ export const NoteTakingAdmin = () => {
 
         return (
           <Button
-            disabled={status === 1 || status === 2 || isResending === email}
+            disabled={
+              status === 1 ||
+              status === 2 ||
+              status === 5 ||
+              isResending === email
+            }
             onClick={() => resendInvite(email)}
             className="cursor-pointer w-32"
             variant="outline"

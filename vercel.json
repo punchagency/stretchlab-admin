@@ -1,6 +1,14 @@
 {
   "routes": [
     {
+      "src": "/reset-password/(.*)",
+      "dest": "/"
+    },
+    {
+      "src": "/invitation/(.*)",
+      "dest": "/"
+    },
+    {
       "src": "/[^.]+",
       "dest": "/",
       "status": 200
