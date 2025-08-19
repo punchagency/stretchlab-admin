@@ -7,11 +7,17 @@ export interface OpportunityItem {
 export interface LocationItem {
   location: string;
   percentage: number;
+  particular_count?: string;
+  percentage_note_quality: number;
+  total_count?: string;
 }
 
 export interface FlexologistItem {
   flexologist: string;
   percentage: number;
+  particular_count?: string;
+  percentage_note_quality: number;
+  total_count?: string;
 }
 
 export interface RPAAuditResponse {

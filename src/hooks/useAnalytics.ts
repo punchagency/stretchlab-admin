@@ -101,8 +101,7 @@ export const useAnalytics = () => {
         selectedFilters.flexologist === "All") {
         return null;
       }
-
-      const opportunityToUse = selectedOpportunity || (rpaAuditData?.note_opportunities?.[0]?.opportunity);
+      const opportunityToUse = selectedOpportunity ;
       if (!opportunityToUse) return null;
 
       const params: RPAAuditDetailsParams = {
@@ -311,11 +310,17 @@ export const useAnalytics = () => {
       return {
         locations: rpaAuditDetailsData.location.map((item: LocationItem) => ({
           name: item.location,
-          value: `${Math.round(item.percentage)}%`
+          value: `${Math.round(item.percentage)}%`,
+          particular_count: `${item.particular_count}`,
+          percentage_note_quality: `${Math.round(item.percentage_note_quality)}%`,
+          total_count: `${item.total_count}`
         })),
         flexologists: rpaAuditDetailsData.flexologist.map((item: FlexologistItem) => ({
           name: item.flexologist,
-          value: `${Math.round(item.percentage)}%`
+          value: `${Math.round(item.percentage)}%`,
+          particular_count: `${item.particular_count}`,
+          percentage_note_quality: `${Math.round(item.percentage_note_quality)}%`,
+          total_count: `${item.total_count}`
         }))
       };
     }

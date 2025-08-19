@@ -220,7 +220,7 @@ export function DataTable<TData extends { id: number | string }, TValue>({
       )}
 
       {enableSearch && !note && (
-        <div className="flex items-center py-1 justify-between">
+        <div className="flex md:items-center py-1 justify-between md:flex-row flex-col gap-1 md:mb-0 mb-2">
         
           <Input
             type="search"
@@ -237,8 +237,9 @@ export function DataTable<TData extends { id: number | string }, TValue>({
               options={durationOptions}
               onChange={onDurationChange || (() => {})}
               onCustomRangeChange={onCustomRangeChange}
-              className="w-48"
+              className="w-full md:w-60 md:mr-2"
               showLabel={false}
+              inputClassName="py-3.5"
             />
           )}
         </div>

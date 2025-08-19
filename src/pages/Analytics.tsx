@@ -228,7 +228,7 @@ export const Analytics = () => {
                         <div className='flex items-center gap-2 mb-4 p-3 rounded-lg border bg-orange-50 border-orange-200'>
                           <Info className="w-5 h-5 text-orange-500" />
                           <p className=" md:text-sm text-xs text-orange-600">
-                          Data older than 2 days old might be incorrect for App Submissions
+                            Data older than 2 days might be incorrect for App Submissions
                           </p>
 
                         </div>)
@@ -243,7 +243,7 @@ export const Analytics = () => {
                       }) as any}
                       data={locationData || []}
                       emptyText="No data found"
-                      tableContainerClassName="bg-white"
+                      tableContainerClassName="bg-white xs:w-[80vw]"
 
                     />
                   </>
