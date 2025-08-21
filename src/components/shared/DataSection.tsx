@@ -10,6 +10,7 @@ interface DataSectionProps {
   onPageChange: (direction: 'prev' | 'next') => void;
   icon: React.ReactNode;
   colorScheme: 'blue' | 'green';
+  text: string;
 }
 
 const PaginationControls: React.FC<{
@@ -58,6 +59,7 @@ export const DataSection: React.FC<DataSectionProps> = ({
   onPageChange,
   icon,
   colorScheme,
+  text
 }) => {
       const isMobile = useIsMobile();
       const itemsPerPage = isMobile ? 5 : 10;
@@ -89,9 +91,9 @@ export const DataSection: React.FC<DataSectionProps> = ({
         {icon}
         <h4 className="md:text-sm text-xs font-semibold">{title}</h4>
         <span
-          className={`ml-auto px-2 py-1 text-xs font-medium rounded-full ${colors.badge}`}
+          className={`ml-auto px-2 py-1 text-xs font-bold rounded-full ${colors.badge} `}
         >
-          {items.length} {items.length === 1 ? 'item' : 'items'}
+          {items.length} {text}
         </span>
       </div>
 

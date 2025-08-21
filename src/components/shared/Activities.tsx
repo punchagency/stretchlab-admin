@@ -28,34 +28,37 @@ const Activities: React.FC<ActivitiesProps> = ({ data, isLoading, error, onRetry
   const isMobile = useIsMobile();
   const ITEMS_PER_PAGE = isMobile ? 5 : 10;
 
-  const sortEntries = (obj: Record<string, number>) =>
-    Object.entries(obj).sort(([, a], [, b]) => b - a);
+  const sortEntries = (obj: Record<string, number> | undefined | null) => {
+    if (!obj) return [];
+    return Object.entries(obj).sort(([, a], [, b]) => b - a);
+  };
 
   const filterEntries = (entries: [string, number][]) => {
+    if (!entries || !Array.isArray(entries)) return [];
     if (!searchQuery.trim()) return entries;
     
     return entries.filter(([name]) => 
-      name.toLowerCase().includes(searchQuery.toLowerCase())
+      name && typeof name === 'string' && name.toLowerCase().includes(searchQuery.toLowerCase())
     );
   };
 
   const flexologistEntries = useMemo(() => 
-    data ? filterEntries(sortEntries(data.notes_analysed_per_flexologist)) : [], 
+    data?.notes_analysed_per_flexologist ? filterEntries(sortEntries(data.notes_analysed_per_flexologist)) : [], 
     [data?.notes_analysed_per_flexologist, searchQuery]
   );
   
   const locationEntries = useMemo(() => 
-    data ? filterEntries(sortEntries(data.notes_analysed_per_location)) : [], 
+    data?.notes_analysed_per_location ? filterEntries(sortEntries(data.notes_analysed_per_location)) : [], 
     [data?.notes_analysed_per_location, searchQuery]
   );
   
   const flexologistSubmittedEntries = useMemo(() => 
-    data ? filterEntries(sortEntries(data.notes_submitted_per_flexologist)) : [], 
+    data?.notes_submitted_per_flexologist ? filterEntries(sortEntries(data.notes_submitted_per_flexologist)) : [], 
     [data?.notes_submitted_per_flexologist, searchQuery]
   );
   
   const locationSubmittedEntries = useMemo(() => 
-    data ? filterEntries(sortEntries(data.notes_submitted_per_location)) : [], 
+    data?.notes_submitted_per_location ? filterEntries(sortEntries(data.notes_submitted_per_location)) : [], 
     [data?.notes_submitted_per_location, searchQuery]
   );
 
@@ -94,7 +97,7 @@ const Activities: React.FC<ActivitiesProps> = ({ data, isLoading, error, onRetry
     );
   }
 
-  const totalPages = (length: number) => Math.ceil(length / ITEMS_PER_PAGE);
+  const totalPages = (length: number) => Math.ceil((length || 0) / ITEMS_PER_PAGE);
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6 space-y-6">
@@ -102,12 +105,12 @@ const Activities: React.FC<ActivitiesProps> = ({ data, isLoading, error, onRetry
         <Input
           type="text"
           placeholder="Search flexologists and locations..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
+          value={searchQuery || ''}
+          onChange={(e) => setSearchQuery(e.target.value || '')}
           icon="search"
           className="w-full rounded-md"
         />
-        {searchQuery && (
+        {searchQuery && searchQuery.trim() && (
           <div className="mt-2 text-sm text-gray-600">
             Showing results for <span className="font-bold text-gray-900">"{searchQuery}"</span>
           </div>
@@ -117,31 +120,35 @@ const Activities: React.FC<ActivitiesProps> = ({ data, isLoading, error, onRetry
       <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm">
         <div className="flex items-center mb-2">
           <BarChart3 className="w-5 h-5 text-gray-600 mr-2" />
-          <h3 className="text-sm font-medium text-gray-900">Total Analysed</h3>
+          <h3 className="text-sm font-medium text-gray-900">Total Analyzed</h3>
         </div>
-        <p className="text-2xl font-bold text-gray-800">{data.total_analysed_bookings.toLocaleString()}</p>
+        <p className="text-2xl font-bold text-gray-800">
+          {(data.total_analysed_bookings ?? 0).toLocaleString()}
+        </p>
         <p className="text-xs text-gray-600 mt-1">Total Analysed Bookings</p>
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
         <DataSection
-          title="Note Analysed By Flexologist"
+          title="Note Analyzed By Flexologist"
           items={flexologistEntries}
           currentPage={flexologistPage}
           totalPages={totalPages(flexologistEntries.length)}
-          onPageChange={dir => setFlexologistPage(p => p + (dir === 'next' ? 1 : -1))}
+          onPageChange={dir => setFlexologistPage(p => Math.max(0, p + (dir === 'next' ? 1 : -1)))}
           icon={<Users className="w-4 h-4 text-blue-600" />}
           colorScheme="blue"
+          text="Flexologists"
         />
 
         <DataSection
-          title="Note Analysed By Location"
+          title="Note Analyzed By Location"
           items={locationEntries}
           currentPage={locationPage}
           totalPages={totalPages(locationEntries.length)}
-          onPageChange={dir => setLocationPage(p => p + (dir === 'next' ? 1 : -1))}
+          onPageChange={dir => setLocationPage(p => Math.max(0, p + (dir === 'next' ? 1 : -1)))}
           icon={<MapPin className="w-4 h-4 text-green-600" />}
           colorScheme="green"
+          text="Locations"
         />
       </div>
 
@@ -150,7 +157,9 @@ const Activities: React.FC<ActivitiesProps> = ({ data, isLoading, error, onRetry
           <FileText className="w-5 h-5 text-gray-600 mr-2" />
           <h3 className="text-sm font-medium text-gray-900">Notes with App</h3>
         </div>
-        <p className="text-2xl font-bold text-gray-800">{data.notes_submitted_with_app.toLocaleString()}</p>
+        <p className="text-2xl font-bold text-gray-800">
+          {(data.notes_submitted_with_app ?? 0).toLocaleString()}
+        </p>
         <p className="text-xs text-gray-600 mt-1">Submitted via app</p>
       </div>
 
@@ -160,9 +169,10 @@ const Activities: React.FC<ActivitiesProps> = ({ data, isLoading, error, onRetry
           items={flexologistSubmittedEntries}
           currentPage={flexologistSubmittedPage}
           totalPages={totalPages(flexologistSubmittedEntries.length)}
-          onPageChange={dir => setFlexologistSubmittedPage(p => p + (dir === 'next' ? 1 : -1))}
+          onPageChange={dir => setFlexologistSubmittedPage(p => Math.max(0, p + (dir === 'next' ? 1 : -1)))}
           icon={<Users className="w-4 h-4 text-blue-600" />}
           colorScheme="blue"
+          text="Flexologists"
         />
 
         <DataSection
@@ -170,9 +180,10 @@ const Activities: React.FC<ActivitiesProps> = ({ data, isLoading, error, onRetry
           items={locationSubmittedEntries}
           currentPage={locationSubmittedPage}
           totalPages={totalPages(locationSubmittedEntries.length)}
-          onPageChange={dir => setLocationSubmittedPage(p => p + (dir === 'next' ? 1 : -1))}
+          onPageChange={dir => setLocationSubmittedPage(p => Math.max(0, p + (dir === 'next' ? 1 : -1)))}
           icon={<MapPin className="w-4 h-4 text-green-600" />}
           colorScheme="green"
+          text="Locations"
         />
       </div>
     </div>

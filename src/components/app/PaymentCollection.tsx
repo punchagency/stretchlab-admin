@@ -12,6 +12,8 @@ import { renderSuccessToast, renderWarningToast } from "../utils";
 import type { ApiError } from "@/types/response";
 import { Loader2 } from "lucide-react";
 import type { BillingInfo } from "@/types";
+import logo from "@/assets/images/stretchlab.png";
+
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
@@ -115,7 +117,10 @@ const CheckoutForm = ({
 
   return (
     <form onSubmit={handleSubmit}>
-      <p className="text-sm text-gray-500 mb-4">
+      <div className="flex items-center justify-center mb-4">
+        <img src={logo} alt="StretchLab" className="w-40 h-auto mx-auto" />
+      </div>
+      <p className="text-sm text-gray-500 mb-4 font-medium text-center">
         {`This will charge you $${price} per ${robot ? "location" : "flexologist"
           } per month.`}
       </p>
