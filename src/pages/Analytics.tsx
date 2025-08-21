@@ -244,6 +244,9 @@ export const Analytics = () => {
                       data={locationData || []}
                       emptyText="No data found"
                       tableContainerClassName="bg-white xs:w-[80vw]"
+                      enableSearch
+                      searchPlaceholder="Search by Flexologist Name"
+                      searchFields={["name"]}
 
                     />
                   </>

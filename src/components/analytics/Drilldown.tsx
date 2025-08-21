@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   ChevronLeft,
   ChevronRight,
@@ -27,6 +27,12 @@ export const Drilldown: React.FC<DrilldownProps> = ({
   const [locationPage, setLocationPage] = useState(0);
   const [flexologistPage, setFlexologistPage] = useState(0);
   const itemsPerPage = 5;
+
+  // Reset pagination when opportunity selection or data changes
+  useEffect(() => {
+    setLocationPage(0);
+    setFlexologistPage(0);
+  }, [selected, data]);
 
   if (isLoading) {
     return <DrilldownSkeleton />;
@@ -118,7 +124,8 @@ export const Drilldown: React.FC<DrilldownProps> = ({
     onPageChange,
     colorScheme,
     icon,
-    selected
+    selected,
+    text
   }: {
     title: string;
     items: any[];
@@ -128,6 +135,7 @@ export const Drilldown: React.FC<DrilldownProps> = ({
     colorScheme: 'blue' | 'green';
     icon: React.ReactNode;
     selected: string | null;
+    text: string;
   }) => {
     const colorClasses = {
       blue: {
@@ -149,8 +157,8 @@ export const Drilldown: React.FC<DrilldownProps> = ({
         <div className={`flex items-center gap-2 p-3 rounded-lg border ${colors.header}`}>
           {icon}
           <h4 className=" md:text-sm text-xs font-semibold">{title}</h4>
-          <span className={`ml-auto px-2 py-1 text-xs font-medium rounded-full ${colors.badge}`}>
-            {items.length} {items.length === 1 ? 'item' : 'items'}
+          <span className={`ml-auto px-2 py-1 text-xs font-bold rounded-full ${colors.badge}`}>
+            {items.length} {text}
           </span>
         </div>
 
@@ -242,6 +250,7 @@ export const Drilldown: React.FC<DrilldownProps> = ({
             colorScheme="blue"
             icon={<MapPin className="w-4 h-4 text-blue-600" />}
             selected={selected}
+            text="Locations"
           />
 
           <DataSection
@@ -253,6 +262,7 @@ export const Drilldown: React.FC<DrilldownProps> = ({
             colorScheme="green"
             icon={<User className="w-4 h-4 text-green-600" />}
             selected={selected}
+            text="Flexologists"
           />
         </div>
       </div>
