@@ -22,7 +22,7 @@ interface RechartsBarChartProps {
 const getDescription = (dataSet: string | undefined) => {
   switch (dataSet) {
     case "% App Submissions":
-      return "% App Submissions";
+      return "App Submissions";
 
     case "Total Client Visits":
       return "Total Client Visits";
@@ -35,6 +35,9 @@ const getDescription = (dataSet: string | undefined) => {
 
     case "Avg Aggregate Note Quality %":
       return "Avg Aggregate Note Quality %";
+    
+      case "Avg Note Quality %":
+      return "Note Quality";
 
     default:
       return "";
@@ -163,13 +166,13 @@ export const RechartsBarChart = ({ data, title, maxValue, dataSet }: RechartsBar
                   return (
                     <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg">
                       <p className="font-medium text-gray-900">{label}</p>
-                      <p className="text-sm text-gray-600 font-medium">{getDescription(dataSet)}</p>
+                      {/* <p className="text-sm text-gray-600 font-medium">{getDescription(dataSet)}</p> */}
                       <p className="text-sm text-gray-600">
-                        Value: {data.value}{dataSet === 'Total Client Visits' ? '' : '%'}
+                        <strong>{getDescription(dataSet)}:</strong> {Math.round(data.value)}{dataSet === 'Total Client Visits' ? '' : '%'}
                       </p>
                       {data.total !== undefined && (
                         <p className="text-sm text-gray-600">
-                          Total: {data.total}
+                          <strong>Total Record:</strong> {Math.round(data.total)}
                         </p>
                       )}
                     </div>
