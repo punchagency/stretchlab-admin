@@ -1,13 +1,5 @@
-import { useState } from "react";
 import { type ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/components/datatable";
-import { Input, Button, SvgIcon } from "@/components/shared";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-  DropdownMenuItem
-} from "@/components/ui/dropdown-menu";
 import { Download } from "lucide-react";
 import { useInvoiceHistory, type InvoiceHistoryItem } from "@/service/billing";
 import { convertStripePrice } from "@/utils/billing";
@@ -23,8 +15,6 @@ interface ProcessedInvoiceData {
 }
 
 export const InvoiceHistoryTable = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filterPeriod, setFilterPeriod] = useState("All");
   const { data: invoiceHistory = [], isLoading, error } = useInvoiceHistory();
 
   const handleDownload = (invoiceId: string, downloadUrl: string) => {
@@ -109,31 +99,31 @@ export const InvoiceHistoryTable = () => {
     },
   ];
 
-  const filteredData = processedInvoiceData.filter((invoice: ProcessedInvoiceData) => {
-    const matchesSearch = searchTerm === "" ||
-      invoice.invoiceId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      invoice.invoiceDate.toLowerCase().includes(searchTerm.toLowerCase());
-    let matchesPeriod = true;
-    if (filterPeriod !== "All") {
-      const originalInvoice = invoiceHistory.find(orig => orig.id === invoice.id);
-      if (originalInvoice) {
-        const invoiceDate = new Date(originalInvoice.created_at);
-        const currentDate = new Date();
+  // const filteredData = processedInvoiceData.filter((invoice: ProcessedInvoiceData) => {
+  //   const matchesSearch = searchTerm === "" ||
+  //     invoice.invoiceId.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  //     invoice.invoiceDate.toLowerCase().includes(searchTerm.toLowerCase());
+  //   let matchesPeriod = true;
+  //   if (filterPeriod !== "All") {
+  //     const originalInvoice = invoiceHistory.find(orig => orig.id === invoice.id);
+  //     if (originalInvoice) {
+  //       const invoiceDate = new Date(originalInvoice.created_at);
+  //       const currentDate = new Date();
 
-        if (filterPeriod === "Monthly") {
-          const oneMonthAgo = new Date();
-          oneMonthAgo.setMonth(currentDate.getMonth() - 1);
-          matchesPeriod = invoiceDate >= oneMonthAgo;
-        } else if (filterPeriod === "Yearly") {
-          const oneYearAgo = new Date();
-          oneYearAgo.setFullYear(currentDate.getFullYear() - 1);
-          matchesPeriod = invoiceDate >= oneYearAgo;
-        }
-      }
-    }
+  //       if (filterPeriod === "Monthly") {
+  //         const oneMonthAgo = new Date();
+  //         oneMonthAgo.setMonth(currentDate.getMonth() - 1);
+  //         matchesPeriod = invoiceDate >= oneMonthAgo;
+  //       } else if (filterPeriod === "Yearly") {
+  //         const oneYearAgo = new Date();
+  //         oneYearAgo.setFullYear(currentDate.getFullYear() - 1);
+  //         matchesPeriod = invoiceDate >= oneYearAgo;
+  //       }
+  //     }
+  //   }
 
-    return matchesSearch && matchesPeriod;
-  });
+  //   return matchesSearch && matchesPeriod;
+  // });
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200">
@@ -142,7 +132,7 @@ export const InvoiceHistoryTable = () => {
           <h2 className="text-xl font-semibold text-gray-900">Invoice History</h2>
 
           <div className="flex flex-col gap-3 sm:flex-row sm:gap-4 items-stretch sm:items-center">
-            <div className="flex-1 sm:min-w-[280px]">
+            {/* <div className="flex-1 sm:min-w-[300px]">
               <Input
                 type="search"
                 icon="search"
@@ -151,9 +141,9 @@ export const InvoiceHistoryTable = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full py-3 rounded-md"
               />
-            </div>
+            </div> */}
 
-            <DropdownMenu>
+            {/* <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button className="flex items-center justify-center gap-2 py-3 px-4 border border-primary-base rounded-md bg-white text-primary-base hover:bg-primary-base hover:text-white whitespace-nowrap">
                   <SvgIcon name="filter" width={16} height={16} fill="currentColor" />
@@ -180,7 +170,7 @@ export const InvoiceHistoryTable = () => {
                   Yearly
                 </DropdownMenuItem>
               </DropdownMenuContent>
-            </DropdownMenu>
+            </DropdownMenu> */}
           </div>
         </div>
       </div>
@@ -205,9 +195,12 @@ export const InvoiceHistoryTable = () => {
           <div className="overflow-x-auto">
             <DataTable
               columns={columns}
-              data={filteredData}
+              data={processedInvoiceData}
               emptyText="No invoices found"
               tableContainerClassName="xs:w-[80vw]"
+              enableSearch={false}
+              searchPlaceholder="Search by invoice ID"
+              searchFields={["invoiceId"]}
             />
           </div>
         )}
