@@ -172,16 +172,16 @@ export const Drilldown: React.FC<DrilldownProps> = ({
                 <span className="text-sm font-medium text-gray-700 truncate flex-1 mr-3">
                   {item.name}
                 </span>
-                {selected ? <Tooltip> <TooltipTrigger> <div className='flex items-center gap-2 bg-white px-2 py-1 rounded-md border'>
+                {selected ? <div className='flex items-center gap-2 bg-white px-2 py-1 rounded-md border'>
                   <span className='text-sm font-bold text-gray-900 '>{item.percentage_note_quality}</span>
                   <div>
                     <span className='text-sm text-gray-500 font-medium'>({item.particular_count} / {item.total_count})</span>
                   </div>
-                </div> </TooltipTrigger> <TooltipContent>
-                    <p>{item.value} of the appointments with opportunities as <strong>{selected}</strong></p>
-                  </TooltipContent> </Tooltip> : <span className="text-sm font-bold text-gray-900 bg-white px-2 py-1 rounded-md border">
-                  {item.value}
-                </span>}
+                </div>
+
+                  : <span className="text-sm font-bold text-gray-900 bg-white px-2 py-1 rounded-md border">
+                    {item.value}
+                  </span>}
               </div>
             ))}
             <PaginationControls
@@ -225,17 +225,16 @@ export const Drilldown: React.FC<DrilldownProps> = ({
 
       <div className="md:p-6 p-3">
 
-        {(data.flexologists.length > 0 || data.locations.length > 0) && <div className="flex items-center gap-2 mb-4 p-3 rounded-lg border bg-primary-base/10">
+        {(data.flexologists.length > 0 || data.locations.length > 0) && !selected  && <div className="flex items-center gap-2 mb-4 p-3 rounded-lg border bg-primary-base/10">
           <Info className="w-5 h-5 text-primary-base/80" />
-          <p className="md:text-sm text-xs text-primary-base leading-relaxed">
-            {selected ? (
-              <>
-                Represent percent of appointments with opportunities marked by <strong>{selected}</strong>.
-              </>
-            ) : (
-              "Each percentage indicates the proportion of high-quality notes"
-            )}
-          </p>
+         
+            <p className="md:text-sm text-xs text-primary-base leading-relaxed">
+
+              Each percentage indicates the proportion of high-quality notes
+
+            </p>
+          
+
         </div>}
 
 

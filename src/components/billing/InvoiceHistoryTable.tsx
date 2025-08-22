@@ -142,7 +142,7 @@ export const InvoiceHistoryTable = () => {
           <h2 className="text-xl font-semibold text-gray-900">Invoice History</h2>
 
           <div className="flex flex-col gap-3 sm:flex-row sm:gap-4 items-stretch sm:items-center">
-            <div className="flex-1 sm:min-w-[280px]">
+            <div className="flex-1 sm:min-w-[300px]">
               <Input
                 type="search"
                 icon="search"
@@ -153,7 +153,7 @@ export const InvoiceHistoryTable = () => {
               />
             </div>
 
-            <DropdownMenu>
+            {/* <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button className="flex items-center justify-center gap-2 py-3 px-4 border border-primary-base rounded-md bg-white text-primary-base hover:bg-primary-base hover:text-white whitespace-nowrap">
                   <SvgIcon name="filter" width={16} height={16} fill="currentColor" />
@@ -180,7 +180,7 @@ export const InvoiceHistoryTable = () => {
                   Yearly
                 </DropdownMenuItem>
               </DropdownMenuContent>
-            </DropdownMenu>
+            </DropdownMenu> */}
           </div>
         </div>
       </div>
