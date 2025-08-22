@@ -9,7 +9,6 @@ import {
 } from 'lucide-react';
 import { DrilldownSkeleton } from '../shared';
 import type { DrilldownData } from '@/types/analytics';
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 
 interface DrilldownProps {
