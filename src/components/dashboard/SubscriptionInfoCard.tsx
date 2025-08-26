@@ -36,26 +36,26 @@ export const SubscriptionInfoCard = ({
                     </div>
 
                     <Tooltip>
-                    <TooltipTrigger>
+                        <TooltipTrigger>
 
-                        <div>
-                            <p className="text-lg font-bold text-gray-900">
-                                {number_of_subscribed_locations} {number_of_subscribed_locations <= 1 ? "Location" : "Locations"}
-                            </p>
-                            <span className="text-xs text-gray-500"> {rpa_active_count || 0} Active RPA</span>
-                            <p className="text-xs text-gray-500 mt-1 text-center">
-                                {unique_businesses_with_any_subscription || 0} subscribed businesses.
-                            </p>
-                        </div>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                        <p>{Math.round(Number(average_number_of_locations_per_business)) || 0} Average number of locations per business.</p>
-                    </TooltipContent>
-                </Tooltip>
+                            <div>
+                                <p className="text-lg font-bold text-gray-900">
+                                    {number_of_subscribed_locations} {number_of_subscribed_locations <= 1 ? "Location" : "Locations"}
+                                </p>
+                                <span className="text-xs text-gray-500"> {rpa_active_count || 0} Active RPA</span>
+                                <p className="text-xs text-gray-500 mt-1 text-center">
+                                    {unique_businesses_with_any_subscription || 0} subscribed businesses.
+                                </p>
+                            </div>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            <p>{Math.round(Number(average_number_of_locations_per_business)) || 0} Average number of locations per business.</p>
+                        </TooltipContent>
+                    </Tooltip>
                 </div>
 
 
-               
+
 
 
 

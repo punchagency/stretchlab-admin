@@ -44,7 +44,7 @@ export const businessTableColumns = (onViewDetails: (businessId: number) => void
         month: 'short',
         day: 'numeric',
       });
-      
+
       return (
         <span className="text-gray-600">{formattedDate}</span>
       );
@@ -60,10 +60,10 @@ export const businessTableColumns = (onViewDetails: (businessId: number) => void
         "active": { label: "Active", color: "bg-green-100 text-green-800" },
         "inactive": { label: "Inactive", color: "bg-red-100 text-red-800" },
       };
-      const config = status ? statusConfig[status as keyof typeof statusConfig] || 
-                   { label: status, color: "bg-gray-100 text-gray-800" } :
-                   { label: "None", color: "bg-gray-100 text-gray-600" };
-      
+      const config = status ? statusConfig[status as keyof typeof statusConfig] ||
+        { label: status, color: "bg-gray-100 text-gray-800" } :
+        { label: "None", color: "bg-gray-100 text-gray-600" };
+
       return (
         <span className={`px-3 py-1 rounded-full text-xs font-medium ${config.color}`}>
           {config.label}
@@ -81,10 +81,10 @@ export const businessTableColumns = (onViewDetails: (businessId: number) => void
         "active": { label: "Active", color: "bg-green-100 text-green-800" },
         "inactive": { label: "Inactive", color: "bg-red-100 text-red-800" },
       };
-      const config = status ? statusConfig[status as keyof typeof statusConfig] || 
-                   { label: status, color: "bg-gray-100 text-gray-800" } :
-                   { label: "None", color: "bg-gray-100 text-gray-600" };
-      
+      const config = status ? statusConfig[status as keyof typeof statusConfig] ||
+        { label: status, color: "bg-gray-100 text-gray-800" } :
+        { label: "None", color: "bg-gray-100 text-gray-600" };
+
       return (
         <span className={`px-3 py-1 rounded-full text-xs font-medium ${config.color}`}>
           {config.label}
@@ -97,7 +97,7 @@ export const businessTableColumns = (onViewDetails: (businessId: number) => void
     header: "Actions",
     cell: ({ row }) => {
       const business = row.original;
-      
+
       return (
         <button
           onClick={(e) => {

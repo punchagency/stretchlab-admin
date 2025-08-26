@@ -58,4 +58,6 @@ export type BookingType = {
   status: string;
   unpaid_booking: string;
   workout_type: string;
+  plagiarism_percentage: number;
+  seven_days_ago_notes: string;
 };
