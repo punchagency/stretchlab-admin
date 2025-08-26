@@ -8,7 +8,7 @@ export const BillingEmptyState = () => {
       </div>
       <h3 className="text-lg font-medium text-gray-900">No Billing Information Found</h3>
       <p className="text-gray-600 text-sm max-w-md mx-auto">
-      We couldn't locate any active billing details for your account. Please check your subscription status.
+        We couldn't locate any active billing details for your account. Please check your subscription status.
       </p>
     </div>
   );
