@@ -198,7 +198,7 @@ export const InvoiceHistoryTable = () => {
               data={processedInvoiceData}
               emptyText="No invoices found"
               tableContainerClassName="xs:w-[80vw]"
-              enableSearch={false}
+              enableSearch={true}
               searchPlaceholder="Search by invoice ID"
               searchFields={["invoiceId"]}
             />

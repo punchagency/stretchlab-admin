@@ -156,12 +156,12 @@ export const HistoryInformation = ({
                     (item: string, index: number) => (
                       <div
                         className={`rounded-md font-semibold text-sm px-3 py-2 ${item.toLowerCase().includes("need")
-                            ? "bg-blue-500 text-white"
-                            : item.toLowerCase().includes("session")
-                              ? "bg-green-500 text-white"
-                              : item.toLowerCase().includes("post")
-                                ? "bg-orange-500 text-white"
-                                : "bg-purple-500 text-white"
+                          ? "bg-blue-500 text-white"
+                          : item.toLowerCase().includes("session")
+                            ? "bg-green-500 text-white"
+                            : item.toLowerCase().includes("post")
+                              ? "bg-orange-500 text-white"
+                              : "bg-purple-500 text-white"
                           }`}
                         key={index}
                       >
@@ -175,6 +175,22 @@ export const HistoryInformation = ({
               )}
             </div>
           )}
+            <div>
+            <h3 className="text-[#344054] font-semibold text-lg">
+              Plagiarism Percentage
+            </h3>
+
+            <div className=" bg-gray-200 rounded-full h-4 mt-2 w-full sm:w-[40%]">
+              <div
+                className="bg-green-500/80 h-4 rounded-full"
+                style={{ width: `${Math.min(Math.round(data?.plagiarism_percentage || 0), 100)}%` }}
+              />
+            </div>
+
+            <p className="text-dark-1 text-base mt-2">
+              {data?.plagiarism_percentage ? `${Math.round(data.plagiarism_percentage)}%` : '0%'}
+            </p>
+          </div>
           <div>
             <h3 className="text-[#344054] font-semibold text-lg">Key Note</h3>
             <p className="text-dark-1 text-base mt-2">
@@ -221,6 +237,15 @@ export const HistoryInformation = ({
                     </Fragment>
                   ))
                 : "N/A"}
+            </p>
+          </div>
+        
+          <div>
+            <h3 className="text-[#344054] font-semibold text-lg">
+              Last 7 Days Notes
+            </h3>
+            <p className="text-dark-1 text-base mt-2 whitespace-pre-line">
+              {data?.seven_days_ago_notes}
             </p>
           </div>
         </div>
