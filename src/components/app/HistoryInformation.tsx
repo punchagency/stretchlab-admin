@@ -175,20 +175,25 @@ export const HistoryInformation = ({
               )}
             </div>
           )}
-            <div>
+          <div>
             <h3 className="text-[#344054] font-semibold text-lg">
               Plagiarism Percentage
             </h3>
 
-            <div className=" bg-gray-200 rounded-full h-4 mt-2 w-full sm:w-[40%]">
+            <div className="bg-gray-200 rounded-full h-4 mt-2 w-full sm:w-[40%] overflow-hidden">
               <div
-                className="bg-green-500/80 h-4 rounded-full"
+                className={`
+        h-4 rounded-full transition-all duration-500
+        ${data?.plagiarism_percentage < 75 ? "bg-gradient-to-r from-green-400 to-green-600" : ""}
+        ${data?.plagiarism_percentage >= 75 && data?.plagiarism_percentage < 85 ? "bg-gradient-to-r from-yellow-400 to-yellow-600" : ""}
+        ${data?.plagiarism_percentage >= 85 ? "bg-gradient-to-r from-red-400 to-red-600" : ""}
+      `}
                 style={{ width: `${Math.min(Math.round(data?.plagiarism_percentage || 0), 100)}%` }}
               />
             </div>
 
             <p className="text-dark-1 text-base mt-2">
-              {data?.plagiarism_percentage ? `${Math.round(data.plagiarism_percentage)}%` : '0%'}
+              {data?.plagiarism_percentage && !isNaN(data?.plagiarism_percentage) ? `${Math.round(data.plagiarism_percentage)}%` : "0%"}
             </p>
           </div>
           <div>
@@ -239,7 +244,7 @@ export const HistoryInformation = ({
                 : "N/A"}
             </p>
           </div>
-        
+
           <div>
             <h3 className="text-[#344054] font-semibold text-lg">
               Last 7 Days Notes
