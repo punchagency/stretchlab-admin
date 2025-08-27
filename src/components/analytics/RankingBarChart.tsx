@@ -90,7 +90,7 @@ export const RankingBarChart: React.FC<RankingBarChartProps> = ({
         }}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis type="number" fontSize={fontSize} fontWeight={500} />
+        <XAxis type="number" fontSize={fontSize} fontWeight={500}  tickFormatter={(value) => `${value}%`} />
         <YAxis 
           dataKey="displayName" 
           type="category" 
@@ -108,7 +108,7 @@ export const RankingBarChart: React.FC<RankingBarChartProps> = ({
           }}
         />
         <Bar dataKey="value">
-          <LabelList dataKey="value" position="right" />
+          <LabelList dataKey="value" position="right"  formatter={(value: any) => `${value}%`}/>
           {processedData.map((_, index) => (
             <Cell
               key={`cell-${index}`}

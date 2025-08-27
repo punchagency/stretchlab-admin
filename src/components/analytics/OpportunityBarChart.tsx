@@ -87,7 +87,7 @@ export const OpportunityBarChart: React.FC<OpportunityBarChartProps> = ({
         }}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis type="number" fontSize={fontSize} fontWeight={500} />
+        <XAxis type="number" fontSize={fontSize} fontWeight={500}  tickFormatter={(value) => `${value}%`} />
         <YAxis
           dataKey="displayName"
           type="category"
@@ -105,7 +105,7 @@ export const OpportunityBarChart: React.FC<OpportunityBarChartProps> = ({
           }}
         />
         <Bar dataKey="value">
-          <LabelList dataKey="value" position="right" />
+          <LabelList dataKey="value" position="right" formatter={(value: any) => `${value}%`}/>
           {processedData.map((entry, index) => (
             <Cell
               key={`cell-${index}`}
