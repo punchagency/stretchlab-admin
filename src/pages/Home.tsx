@@ -39,7 +39,6 @@ export const Home = () => {
       navigate("/login");
     }
     // add the is_verified and rpa_verified to the token
-    console.log({ userInfo });
     if (
       Object.keys(userInfo as object).find((key) => key === "is_verified") &&
       !userInfo?.is_verified
