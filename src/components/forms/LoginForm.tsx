@@ -9,6 +9,9 @@ import {
   renderErrorToast,
 } from "../utils";
 
+
+const redirectUrl = import.meta.env.VITE_REDIRECT_URL;
+
 export const LoginForm = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -60,7 +63,14 @@ export const LoginForm = () => {
       }
     } catch (error) {
       const apiError = error as ApiError;
-      console.log(apiError);
+      console.log({ apiError: apiError.response.data });
+      if (apiError.response.status === 403) {
+        setUserCookie(apiError.response.data.token as string);
+        renderSuccessToast(apiError.response.data.message);
+        window.location.href = redirectUrl;
+        // window.location.reload();
+        return;
+      }
       renderErrorToast(apiError.response.data.message);
     } finally {
       setIsLoading(false);

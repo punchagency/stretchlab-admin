@@ -177,7 +177,7 @@ export const HistoryInformation = ({
           )}
           <div>
             <h3 className="text-[#344054] font-semibold text-lg">
-              Plagiarism Percentage
+              Copied
             </h3>
 
             <div className="bg-gray-200 rounded-full h-4 mt-2 w-full sm:w-[40%] overflow-hidden">

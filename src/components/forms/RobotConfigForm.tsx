@@ -58,6 +58,7 @@ export const RobotConfigForm = ({
     clubReadyUsername: data?.users?.clubready_username || "",
     clubReadyPassword: data?.users?.clubready_password || "",
     numberOfStudioLocations: data?.number_of_locations?.toString() || parseLocations(data?.selected_locations).length.toString(),
+    excludeClientNames: "",
     // unloggedBookings: data?.unlogged_booking ? data.unlogged_booking : false,
     // dailyRunTime: data?.run_time ? data.run_time : "09:00",
   });
@@ -66,7 +67,7 @@ export const RobotConfigForm = ({
     const { name, type, checked, value } = e.target;
     setFormData({
       ...formData,
-      [name]: type === "checkbox" ? checked : value.trim(),
+      [name]: type === "checkbox" ? checked : (name === "excludeClientNames" ? value : value.trim()),
     });
   };
 
@@ -136,7 +137,9 @@ export const RobotConfigForm = ({
       let response;
       if (isEditing) {
         response = await updateSettings({
-          ...formData,
+          // ...formData,
+          clubReadyUsername: formData.clubReadyUsername,
+          clubReadyPassword: formData.clubReadyPassword,
           id: data!.id,
           numberOfStudioLocations: parseInt(
             formData.numberOfStudioLocations as string
@@ -145,14 +148,20 @@ export const RobotConfigForm = ({
           studioLocations: locations,
         });
       } else {
+        let excludeClientNames: string[] = [];
+        if(formData.excludeClientNames && formData.excludeClientNames.length > 0){
+          excludeClientNames = formData.excludeClientNames.split(",");
+        }
         response = await saveSettings({
           proceed,
-          ...formData,
+          clubReadyUsername: formData.clubReadyUsername,
+          clubReadyPassword: formData.clubReadyPassword,
           numberOfStudioLocations: parseInt(
             formData.numberOfStudioLocations as string
           ),
           selectedStudioLocations: selectedLocations,
           studioLocations: locations,
+          excludedNames: excludeClientNames.filter((name: string) => name.trim().length > 0),
         });
       }
       if (response.status === 200) {
@@ -175,13 +184,16 @@ export const RobotConfigForm = ({
     } catch (error) {
       const apiError = error as ApiError;
       if (apiError.response.status === 402) {
+    
         if (apiError.response.data.payment_id) {
           setPaymentInfo(true);
           setBillingInfo(apiError.response.data.payment_info as BillingInfo);
         } else {
+          renderErrorToast(apiError.response.data.message  || "Something went wrong, please try again.");
           setPaymentInfo(true);
         }
       } else {
+        
         renderErrorToast(apiError.response.data.message  || "Something went wrong, please try again.");
       }
     } finally {
@@ -325,7 +337,15 @@ export const RobotConfigForm = ({
                     disabled={true}
                     helperText="This will automatically update based on your selected locations"
                   />
-
+                  <Input
+                    label="Enter Client Name To Exclude"
+                    type="text"
+                    name="excludeClientNames"
+                    placeholder="Enter client name to exclude"
+                    value={formData.excludeClientNames}
+                    onChange={handleChange}
+                    helperText="Enter client name to exclude from robot automation"
+                  />
                   {formError && (
                     <div className="bg-red-100 rounded-lg px-4 py-3">
                       <p className="text-red-600 text-sm font-medium text-center">
