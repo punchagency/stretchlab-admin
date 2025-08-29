@@ -15,12 +15,14 @@ export const MainHeader = () => {
   const user = getUserInfo();
   const { profilePictureUrl } = useProfilePictureContext();
   const { data: notificationsResponse } = useNotifications();
+
   const notifications =
     notificationsResponse?.notifications?.map(transformNotification) || [];
   const unreadCount = notifications.filter((n) => !n.isRead).length;
 
   const handleVisitFlexologist = () => {
     window.open(redirectURL, "_self");
+
   };
 
   return (
@@ -38,6 +40,7 @@ export const MainHeader = () => {
             Switch to Note App
           </Button>
         )}
+
         <NotificationDropdown>
           <div className="relative cursor-pointer">
             <Bell className="h-6 w-6 text-primary-base" />
@@ -61,3 +64,4 @@ export const MainHeader = () => {
     </header>
   );
 };
+

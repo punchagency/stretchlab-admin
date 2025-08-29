@@ -48,7 +48,6 @@ export const NoteTakingAdmin = () => {
   const [update, setUpdate] = useState(false);
   const [proceed, setProceed] = useState(false);
   const [isUpdating, setIsUpdating] = useState("");
-
   // Confirmation modal states
   const [showAccessConfirmation, setShowAccessConfirmation] = useState(false);
   const [showStatusConfirmation, setShowStatusConfirmation] = useState(false);
@@ -59,6 +58,7 @@ export const NoteTakingAdmin = () => {
   } | null>(null);
 
   const userInfo = getUserInfo();
+
 
   const getTooltipDescription = (status: number) => {
     switch (status) {
@@ -119,6 +119,7 @@ export const NoteTakingAdmin = () => {
   const confirmUpdateUserStatus = async () => {
     if (!pendingAction || pendingAction.type !== "status") return;
 
+
     const { email, value } = pendingAction;
     setIsUpdating(email);
     try {
@@ -139,12 +140,12 @@ export const NoteTakingAdmin = () => {
 
   const handleAccess = async (status: number, email: string) => {
     setPendingAction({ type: "access", email, value: status });
+
     setShowAccessConfirmation(true);
   };
 
   const confirmUpdateAccess = async () => {
     if (!pendingAction || pendingAction.type !== "access") return;
-
     const { email, value } = pendingAction;
     setIsAccessing(email);
     try {
@@ -278,7 +279,7 @@ export const NoteTakingAdmin = () => {
       cell: ({ row }) => {
         const email = row.getValue("email") as string;
         const status = row.getValue("status") as number;
-
+ 
         return (
           <Button
             disabled={
@@ -447,6 +448,7 @@ export const NoteTakingAdmin = () => {
       )}
 
       {/* Access Confirmation Modal */}
+
       <Modal
         show={showAccessConfirmation}
         onClose={() => setShowAccessConfirmation(false)}
@@ -457,8 +459,7 @@ export const NoteTakingAdmin = () => {
             Confirm Access Change
           </h1>
           <p className="text-gray-600 text-center mb-4">
-            Are you sure you want to{" "}
-            {pendingAction?.value === 1 ? "disable" : "enable"} access for{" "}
+            Are you sure you want to {pendingAction?.value === 1 ? 'disable' : 'enable'} access for{" "}
             <span className="font-semibold">{pendingAction?.email}</span>?
           </p>
           <div className="flex gap-3 justify-center">
@@ -480,18 +481,13 @@ export const NoteTakingAdmin = () => {
       </Modal>
 
       {/* Status Confirmation Modal */}
-      <Modal
-        show={showStatusConfirmation}
-        onClose={() => setShowStatusConfirmation(false)}
-        size="sm"
-      >
+      <Modal show={showStatusConfirmation} onClose={() => setShowStatusConfirmation(false)} size="sm">
         <div className="flex flex-col gap-4 py-4 px-2 md:px-6">
           <h1 className="text-lg md:text-xl font-semibold text-center mb-2">
             Confirm Admin Access Change
           </h1>
           <p className="text-gray-600 text-center mb-4">
-            Are you sure you want to{" "}
-            {pendingAction?.value ? "give" : "restrict"} admin access for{" "}
+            Are you sure you want to {pendingAction?.value ? 'give' : 'restrict'} admin access for{" "}
             <span className="font-semibold">{pendingAction?.email}</span>?
           </p>
           <div className="flex gap-3 justify-center">
@@ -505,16 +501,12 @@ export const NoteTakingAdmin = () => {
               onClick={confirmUpdateUserStatus}
               disabled={isUpdating === pendingAction?.email}
               className={`px-6 py-2 rounded-lg text-white ${
-                pendingAction?.value
-                  ? "bg-primary-base hover:bg-primary-base/80"
+                pendingAction?.value 
+                  ? "bg-primary-base hover:bg-primary-base/80" 
                   : "bg-red-500 hover:bg-red-600"
               }`}
             >
-              {isUpdating === pendingAction?.email
-                ? "Updating..."
-                : pendingAction?.value
-                ? "Give Access"
-                : "Restrict"}
+              {isUpdating === pendingAction?.email ? "Updating..." : pendingAction?.value ? "Give Access" : "Restrict"}
             </Button2>
           </div>
         </div>
