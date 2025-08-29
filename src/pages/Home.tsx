@@ -30,42 +30,52 @@ const SidebarLogo = () => {
   );
 };
 
-
-
 export const Home = () => {
   const navigate = useNavigate();
   const userInfo = getUserInfo();
-  console.log({userInfo});
   useEffect(() => {
     const userCookie = getUserCookie();
-    console.log({userInfo});
     if (!userCookie) {
       navigate("/login");
-    } 
+    }
     // add the is_verified and rpa_verified to the token
-    if (userInfo?.is_verified && !userInfo.is_verified) {
+    console.log({ userInfo });
+    if (
+      Object.keys(userInfo as object).find((key) => key === "is_verified") &&
+      !userInfo?.is_verified
+    ) {
       navigate(`/verification`);
     }
     if (userInfo?.requires_2fa) {
       navigate(`/2fa-login?email=${encodeURIComponent(userInfo.email)}`);
     }
-    if((userInfo?.rpa_verified && !userInfo?.rpa_verified) && userInfo?.role_id !== 1) {
+    if (
+      Object.keys(userInfo as object).find((key) => key === "rpa_verified") &&
+      !userInfo?.rpa_verified &&
+      userInfo?.role_id !== 1 &&
+      userInfo?.role_id !== 8 &&
+      userInfo?.role_id !== 4
+    ) {
       navigate("/robot-setup");
     }
   }, []);
 
-  
   const filteredMenuList = menuList.filter((menu) => {
-    if ((userInfo?.role_id === 1 || userInfo?.role_id === 8 || userInfo?.role_id === 4) && menu.title === "Billing") {
+    if (
+      (userInfo?.role_id === 1 ||
+        userInfo?.role_id === 8 ||
+        userInfo?.role_id === 4) &&
+      menu.title === "Billing"
+    ) {
       return false;
     }
     if (menu.title === "User Management" && userInfo?.role_id !== 1) {
       return false;
     }
-  
+
     return true;
   });
-  
+
   return (
     <ProfilePictureProvider>
       <SidebarProvider>
