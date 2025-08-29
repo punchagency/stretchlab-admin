@@ -4,11 +4,14 @@ import { ChartSkeleton } from "@/components/shared/ChartSkeleton";
 import { useDashboard } from "@/hooks/useDashboard";
 import { useBusinessDetail } from "@/hooks/useBusinessDetail";
 import { SubscriptionInfoCard } from "@/components/dashboard";
-
 import { getUserInfo } from "@/utils";
 import { Info, RefreshCcw } from "lucide-react";
 
+
 export const Dashboard = () => {
+  const userInfo = getUserInfo();
+
+
   const {
     dashboardMetrics,
     dashboardMetricsData,
@@ -56,7 +59,6 @@ export const Dashboard = () => {
     refetchBusinessInfo,
   } = useBusinessDetail();
 
-  const userInfo = getUserInfo();
   const handleMetricClick = (title: string) => {
     console.log(`Clicked on ${title}`);
   };

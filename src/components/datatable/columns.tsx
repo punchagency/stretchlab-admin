@@ -10,6 +10,7 @@ export type Payment = {
   status: number;
   invited_at: string;
   resend_invite: boolean;
+  role_id: number;
 };
 
 const resendInvite = (email: string) => {

@@ -10,7 +10,7 @@ export const menuList = [
     link: "/analytics",
   },
   {
-    title: "Note Taking",
+    title: "Flexologists",
     icon: "note",
     link: "/note-taking-app",
   },

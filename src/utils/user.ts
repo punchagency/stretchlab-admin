@@ -11,6 +11,8 @@ interface CustomJwtPayload extends JwtPayload {
   rpa_verified?: boolean | null;
   role_id?: number;
   note_verified?: boolean | null;
+  requires_2fa?: boolean | null;
+  is_verified?: boolean | null;
 }
 
 export const setUserCookie = (token: string): void => {
@@ -39,6 +41,7 @@ export const getUserInfo = (): CustomJwtPayload | null => {
   if (token) {
     const decoded = jwtDecode<CustomJwtPayload>(token);
     return decoded;
+
   }
   return null;
 };

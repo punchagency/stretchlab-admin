@@ -3,6 +3,7 @@ import {
   fetchUsers,
   inviteFlexologist,
   updateUserAccess,
+  updateUserStatus,
 } from "@/service/notetaking";
 import { useState } from "react";
 import {
@@ -41,6 +42,16 @@ export const NoteTakingAdmin = () => {
   const [billingInfo, setBillingInfo] = useState<BillingInfo | null>(null);
   const [update, setUpdate] = useState(false);
   const [proceed, setProceed] = useState(false);
+  const [isUpdating, setIsUpdating] = useState("");
+  
+  // Confirmation modal states
+  const [showAccessConfirmation, setShowAccessConfirmation] = useState(false);
+  const [showStatusConfirmation, setShowStatusConfirmation] = useState(false);
+  const [pendingAction, setPendingAction] = useState<{
+    type: 'access' | 'status';
+    email: string;
+    value: number | boolean;
+  } | null>(null);
 
   const getTooltipDescription = (status: number) => {
     switch (status) {
@@ -93,10 +104,44 @@ export const NoteTakingAdmin = () => {
     }
   };
 
+  const handleUpdateUserStatus = async (email: string, restrict: boolean) => {
+    setPendingAction({ type: 'status', email, value: restrict });
+    setShowStatusConfirmation(true);
+  };
+
+  const confirmUpdateUserStatus = async () => {
+    if (!pendingAction || pendingAction.type !== 'status') return;
+    
+    const { email, value } = pendingAction;
+    setIsUpdating(email);
+    try {
+      const response = await updateUserStatus(email, value as boolean);
+      if (response.status === 200) {
+        renderSuccessToast(response.data.message);
+        refetch();
+      }
+    } catch (error) {
+      const apiError = error as ApiError;
+      renderErrorToast(apiError.response.data.message);
+    } finally {
+      setIsUpdating("");
+      setShowStatusConfirmation(false);
+      setPendingAction(null);
+    }
+  };
+
   const handleAccess = async (status: number, email: string) => {
+    setPendingAction({ type: 'access', email, value: status });
+    setShowAccessConfirmation(true);
+  };
+
+  const confirmUpdateAccess = async () => {
+    if (!pendingAction || pendingAction.type !== 'access') return;
+    
+    const { email, value } = pendingAction;
     setIsAccessing(email);
     try {
-      const response = await updateUserAccess(email, status);
+      const response = await updateUserAccess(email, value as number);
       if (response.status === 200) {
         renderSuccessToast(response.data.message);
         refetch().finally(() => {
@@ -110,6 +155,9 @@ export const NoteTakingAdmin = () => {
       const apiError = error as ApiError;
       renderErrorToast(apiError.response.data.message);
       setIsAccessing("");
+    } finally {
+      setShowAccessConfirmation(false);
+      setPendingAction(null);
     }
   };
   const userColumns: ColumnDef<Payment>[] = [
@@ -217,13 +265,14 @@ export const NoteTakingAdmin = () => {
         );
       },
     },
+
     {
       accessorKey: "resend_invite",
       header: "Resend Invite",
       cell: ({ row }) => {
         const email = row.getValue("email") as string;
         const status = row.getValue("status") as number;
-
+ 
         return (
           <Button
             disabled={
@@ -238,6 +287,30 @@ export const NoteTakingAdmin = () => {
           >
             <SvgIcon name="email-send" fill="#98A2B3" />
             {!status ? "Send Invite" : "Resend"}
+          </Button>
+        );
+      },
+    },
+    {
+      accessorKey: "update_status",
+      header: "Give Admin Access",
+      cell: ({ row }) => {
+        const email = row.getValue("email") as string;
+        const role_id = row.original.role_id as number;
+        const status = row.original.status as number;
+        const isRestricting = role_id === 8;
+        return (
+          <Button
+            onClick={() => handleUpdateUserStatus(email, isRestricting ? false : true)}
+            className={`cursor-pointer w-32 ${
+              isRestricting 
+                ? "bg-red-500 text-white hover:bg-red-600 transition-all duration-300 border-red-500 hover:text-white" 
+                : "bg-primary-base text-white hover:bg-primary-base/80 transition-all duration-300 border-primary-base hover:text-white"
+            }`} 
+            variant="outline"
+            disabled={status !== 1}
+          >
+            {isUpdating === email ? "Updating..." : isRestricting ? "Restrict" : "Give Access"}
           </Button>
         );
       },
@@ -356,6 +429,66 @@ export const NoteTakingAdmin = () => {
           setProceed={setProceed}
         />
       )}
+
+      {/* Access Confirmation Modal */}
+      <Modal show={showAccessConfirmation} onClose={() => setShowAccessConfirmation(false)} size="sm">
+        <div className="flex flex-col gap-4 py-4 px-2 md:px-6">
+          <h1 className="text-lg md:text-xl font-semibold text-center mb-2">
+            Confirm Access Change
+          </h1>
+          <p className="text-gray-600 text-center mb-4">
+            Are you sure you want to {pendingAction?.value === 1 ? 'disable' : 'enable'} access for{" "}
+            <span className="font-semibold">{pendingAction?.email}</span>?
+          </p>
+          <div className="flex gap-3 justify-center">
+            <Button2
+              onClick={() => setShowAccessConfirmation(false)}
+              className="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-lg"
+            >
+              Cancel
+            </Button2>
+            <Button2
+              onClick={confirmUpdateAccess}
+              disabled={isAccessing === pendingAction?.email}
+              className="bg-primary-base hover:bg-primary-base/80 text-white px-6 py-2 rounded-lg"
+            >
+              {isAccessing === pendingAction?.email ? "Updating..." : "Confirm"}
+            </Button2>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Status Confirmation Modal */}
+      <Modal show={showStatusConfirmation} onClose={() => setShowStatusConfirmation(false)} size="sm">
+        <div className="flex flex-col gap-4 py-4 px-2 md:px-6">
+          <h1 className="text-lg md:text-xl font-semibold text-center mb-2">
+            Confirm Admin Access Change
+          </h1>
+          <p className="text-gray-600 text-center mb-4">
+            Are you sure you want to {pendingAction?.value ? 'give' : 'restrict'} admin access for{" "}
+            <span className="font-semibold">{pendingAction?.email}</span>?
+          </p>
+          <div className="flex gap-3 justify-center">
+            <Button2
+              onClick={() => setShowStatusConfirmation(false)}
+              className="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-lg"
+            >
+              Cancel
+            </Button2>
+            <Button2
+              onClick={confirmUpdateUserStatus}
+              disabled={isUpdating === pendingAction?.email}
+              className={`px-6 py-2 rounded-lg text-white ${
+                pendingAction?.value 
+                  ? "bg-primary-base hover:bg-primary-base/80" 
+                  : "bg-red-500 hover:bg-red-600"
+              }`}
+            >
+              {isUpdating === pendingAction?.email ? "Updating..." : pendingAction?.value ? "Give Access" : "Restrict"}
+            </Button2>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };

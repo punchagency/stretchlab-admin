@@ -4,7 +4,8 @@ import { ProfileSection, PasswordSection } from "@/components/settings";
 
 const SETTINGS_NAV_ITEMS = [
   { id: "profile", label: "Profile", icon: User },
-  { id: "password", label: "Password & Security", icon: Lock }
+  { id: "password", label: "Password & Security", icon: Lock },
+  // { id: "edit client names", label: "Update Client Names", icon: User }
 ] as const;
 
 export const Settings = () => {
@@ -24,6 +25,8 @@ export const Settings = () => {
         return <ProfileSection settingsData={settingsData} />;
       case "password":
         return <PasswordSection settingsData={settingsData} />;
+      // case 'edit client names':
+      //   return <UpdateClientName />;
       default:
         return <ProfileSection settingsData={settingsData} />;
     }

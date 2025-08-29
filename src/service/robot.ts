@@ -15,6 +15,7 @@ export const saveSettings = async (data: {
   clubReadyPassword: string;
   selectedStudioLocations: string[];
   studioLocations: string[];
+  excludedNames: string[];
 }) => {
   const response = await api.post("/admin/process/save-robot-config", data);
   return response;
