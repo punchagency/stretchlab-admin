@@ -13,6 +13,7 @@ export interface ApiError {
       payment_info?: BillingInfo;
       message: string;
       error?: string;
+      token?: string;
     };
     status: number;
   };
