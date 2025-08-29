@@ -35,10 +35,12 @@ export const RobotAutomation = () => {
           </motion.div>
         </AnimatePresence>
       )}
-    { userInfo?.role_id !== 4 && <RobotConfigForm
-        refetch={refetch}
-        data={data?.data.config ? data.data.robot_config : undefined}
-      />}
+      {userInfo?.role_id !== 4 && userInfo?.role_id !== 8 && (
+        <RobotConfigForm
+          refetch={refetch}
+          data={data?.data.config ? data.data.robot_config : undefined}
+        />
+      )}
 
       {data?.data.config && (
         <RobotHistory configId={data?.data.robot_config.id} />

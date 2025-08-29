@@ -20,12 +20,17 @@ import {
   renderSuccessToast,
   renderWarningToast,
 } from "@/components/utils";
-import { type ColumnDef } from "@tanstack/react-table";
+import { type ColumnDef, type Row } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { AnimatePresence, motion } from "framer-motion";
 import { ErrorHandle, PaymentCollection } from "@/components/app";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { getUserInfo } from "@/utils/user";
 
 export const NoteTakingAdmin = () => {
   const { data, isPending, error, isFetching, refetch } = useQuery({
@@ -43,15 +48,17 @@ export const NoteTakingAdmin = () => {
   const [update, setUpdate] = useState(false);
   const [proceed, setProceed] = useState(false);
   const [isUpdating, setIsUpdating] = useState("");
-  
   // Confirmation modal states
   const [showAccessConfirmation, setShowAccessConfirmation] = useState(false);
   const [showStatusConfirmation, setShowStatusConfirmation] = useState(false);
   const [pendingAction, setPendingAction] = useState<{
-    type: 'access' | 'status';
+    type: "access" | "status";
     email: string;
     value: number | boolean;
   } | null>(null);
+
+  const userInfo = getUserInfo();
+
 
   const getTooltipDescription = (status: number) => {
     switch (status) {
@@ -105,13 +112,14 @@ export const NoteTakingAdmin = () => {
   };
 
   const handleUpdateUserStatus = async (email: string, restrict: boolean) => {
-    setPendingAction({ type: 'status', email, value: restrict });
+    setPendingAction({ type: "status", email, value: restrict });
     setShowStatusConfirmation(true);
   };
 
   const confirmUpdateUserStatus = async () => {
-    if (!pendingAction || pendingAction.type !== 'status') return;
-    
+    if (!pendingAction || pendingAction.type !== "status") return;
+
+
     const { email, value } = pendingAction;
     setIsUpdating(email);
     try {
@@ -131,13 +139,13 @@ export const NoteTakingAdmin = () => {
   };
 
   const handleAccess = async (status: number, email: string) => {
-    setPendingAction({ type: 'access', email, value: status });
+    setPendingAction({ type: "access", email, value: status });
+
     setShowAccessConfirmation(true);
   };
 
   const confirmUpdateAccess = async () => {
-    if (!pendingAction || pendingAction.type !== 'access') return;
-    
+    if (!pendingAction || pendingAction.type !== "access") return;
     const { email, value } = pendingAction;
     setIsAccessing(email);
     try {
@@ -204,16 +212,15 @@ export const NoteTakingAdmin = () => {
           <Tooltip>
             <TooltipTrigger>
               <div
-                className={`${badgeColor[status as keyof typeof badgeColor]
-                  } px-2 py-1.5 rounded-2xl w-20 text-center font-medium`}
+                className={`${
+                  badgeColor[status as keyof typeof badgeColor]
+                } px-2 py-1.5 rounded-2xl w-20 text-center font-medium`}
               >
                 {statuses[status]}
               </div>
             </TooltipTrigger>
             <TooltipContent>
-              <p>
-                {getTooltipDescription(status)}
-              </p>
+              <p>{getTooltipDescription(status)}</p>
             </TooltipContent>
           </Tooltip>
         ) : (
@@ -291,30 +298,40 @@ export const NoteTakingAdmin = () => {
         );
       },
     },
-    {
-      accessorKey: "update_status",
-      header: "Give Admin Access",
-      cell: ({ row }) => {
-        const email = row.getValue("email") as string;
-        const role_id = row.original.role_id as number;
-        const status = row.original.status as number;
-        const isRestricting = role_id === 8;
-        return (
-          <Button
-            onClick={() => handleUpdateUserStatus(email, isRestricting ? false : true)}
-            className={`cursor-pointer w-32 ${
-              isRestricting 
-                ? "bg-red-500 text-white hover:bg-red-600 transition-all duration-300 border-red-500 hover:text-white" 
-                : "bg-primary-base text-white hover:bg-primary-base/80 transition-all duration-300 border-primary-base hover:text-white"
-            }`} 
-            variant="outline"
-            disabled={status !== 1}
-          >
-            {isUpdating === email ? "Updating..." : isRestricting ? "Restrict" : "Give Access"}
-          </Button>
-        );
-      },
-    },
+    ...(userInfo?.role_id === 1 || userInfo?.role_id === 2
+      ? [
+          {
+            accessorKey: "update_status",
+            header: "Give Admin Access",
+            cell: ({ row }: { row: Row<Payment> }) => {
+              const email = row.getValue("email") as string;
+              const role_id = row.original.role_id as number;
+              const status = row.original.status as number;
+              const isRestricting = role_id === 8;
+              return (
+                <Button
+                  onClick={() =>
+                    handleUpdateUserStatus(email, isRestricting ? false : true)
+                  }
+                  className={`cursor-pointer w-32 ${
+                    isRestricting
+                      ? "bg-red-500 text-white hover:bg-red-600 transition-all duration-300 border-red-500 hover:text-white"
+                      : "bg-primary-base text-white hover:bg-primary-base/80 transition-all duration-300 border-primary-base hover:text-white"
+                  }`}
+                  variant="outline"
+                  disabled={status !== 1}
+                >
+                  {isUpdating === email
+                    ? "Updating..."
+                    : isRestricting
+                    ? "Restrict"
+                    : "Give Access"}
+                </Button>
+              );
+            },
+          },
+        ]
+      : []),
   ];
 
   const validateEmail = (email: string) => {
@@ -431,7 +448,12 @@ export const NoteTakingAdmin = () => {
       )}
 
       {/* Access Confirmation Modal */}
-      <Modal show={showAccessConfirmation} onClose={() => setShowAccessConfirmation(false)} size="sm">
+
+      <Modal
+        show={showAccessConfirmation}
+        onClose={() => setShowAccessConfirmation(false)}
+        size="sm"
+      >
         <div className="flex flex-col gap-4 py-4 px-2 md:px-6">
           <h1 className="text-lg md:text-xl font-semibold text-center mb-2">
             Confirm Access Change
