@@ -15,17 +15,31 @@ interface CustomJwtPayload extends JwtPayload {
   is_verified?: boolean | null;
 }
 
+const cookieDomain = import.meta.env.VITE_COOKIE_DOMAIN;
+
 export const setUserCookie = (token: string): void => {
   const expireAt = new Date();
   expireAt.setHours(23, 59, 59, 999);
 
-  Cookies.set("token", token, { expires: expireAt });
+  Cookies.set("token", token, {
+    expires: expireAt,
+    domain: cookieDomain,
+    secure: true,
+    sameSite: "strict",
+    path: "/",
+  });
 };
 
 export const setTempUserCookie = (token: string): void => {
   const expireAt = new Date();
   expireAt.setHours(23, 59, 59, 999);
-  Cookies.set("temp_token", token, { expires: expireAt });
+  Cookies.set("temp_token", token, {
+    expires: expireAt,
+    domain: cookieDomain,
+    secure: true,
+    sameSite: "strict",
+    path: "/",
+  });
 };
 
 export const getTempUserCookie = (): string | null => {
@@ -41,7 +55,6 @@ export const getUserInfo = (): CustomJwtPayload | null => {
   if (token) {
     const decoded = jwtDecode<CustomJwtPayload>(token);
     return decoded;
-
   }
   return null;
 };
