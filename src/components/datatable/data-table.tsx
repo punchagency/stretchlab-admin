@@ -84,9 +84,23 @@ export function DataTable<TData extends { id: number | string }, TValue>({
   const [globalFilter, setGlobalFilter] = useState("");
 
   const customGlobalFilterFn = (row: any, _columnId: string, filterValue: string) => {
-    if (!enableSearch || !filterValue) return true;
+    if (!filterValue) return true;
 
     const searchLower = filterValue.toLowerCase();
+    
+    // When note is true, specifically search in email and full_name fields
+    if (note) {
+      const email = row.original.email;
+      const fullName = row.original.full_name;
+      return (
+        (email != null && String(email).toLowerCase().includes(searchLower)) ||
+        (fullName != null && String(fullName).toLowerCase().includes(searchLower))
+      );
+    }
+    
+    // For other cases, use the existing logic
+    if (!enableSearch) return true;
+    
     const fieldsToSearch = searchFields.length > 0 ? searchFields : Object.keys(row.original);
 
     return fieldsToSearch.some((field) => {
@@ -107,7 +121,7 @@ export function DataTable<TData extends { id: number | string }, TValue>({
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
-    ...(enableSearch && {
+    ...((enableSearch || note) && {
       onGlobalFilterChange: setGlobalFilter,
       globalFilterFn: customGlobalFilterFn,
     }),
@@ -115,7 +129,7 @@ export function DataTable<TData extends { id: number | string }, TValue>({
       ...(enableSorting && { sorting }),
       columnFilters,
       columnVisibility,
-      ...(enableSearch && { globalFilter }),
+      ...((enableSearch || note) && { globalFilter }),
     },
   });
 
@@ -126,12 +140,10 @@ export function DataTable<TData extends { id: number | string }, TValue>({
           <Input
             type="search"
             icon="search"
-            placeholder="Search by email"
+            placeholder="Search by email or full name"
             className="max-w-sm w-full md:min-w-[30rem] py-3 rounded-md"
-            value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
-            onChange={(event) =>
-              table.getColumn("email")?.setFilterValue(event.target.value)
-            }
+            value={globalFilter}
+            onChange={(event) => setGlobalFilter(event.target.value)}
           />
           {/* <DropdownMenu>
           <DropdownMenuTrigger asChild>
