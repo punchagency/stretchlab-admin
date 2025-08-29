@@ -40,7 +40,7 @@ export const MainHeader = () => {
                 {unreadCount > 9 ? '9+' : unreadCount}
               </span>
             )}
-          </div>
+          </div> 
         </NotificationDropdown>
 
         <div className="flex items-center gap-3">
