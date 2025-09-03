@@ -35,10 +35,10 @@ export const Home = () => {
   const userInfo = getUserInfo();
   useEffect(() => {
     const userCookie = getUserCookie();
-    console.log({userInfo});
+    console.log({ userInfo });
     if (!userCookie) {
       navigate("/login");
-    } 
+    }
     // add the is_verified and rpa_verified to the token
     if (userInfo?.is_verified && !userInfo.is_verified) {
       navigate(`/verification`);
@@ -46,7 +46,7 @@ export const Home = () => {
     if (userInfo?.requires_2fa) {
       navigate(`/2fa-login?email=${encodeURIComponent(userInfo.email)}`);
     }
-    if((userInfo?.rpa_verified && !userInfo?.rpa_verified) && userInfo?.role_id !== 1) {
+    if ((userInfo?.rpa_verified && !userInfo?.rpa_verified) && userInfo?.role_id !== 1) {
       navigate("/robot-setup");
     }
     // add the is_verified and rpa_verified to the token

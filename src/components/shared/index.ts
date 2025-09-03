@@ -28,3 +28,5 @@ export * from "./TableSkeleton";
 export { default as Activities } from "./Activities";
 export * from "./ActivitiesSkeleton";
 export * from "./DataSection";
+export * from "./PricingCard";
+export * from "./PricingSection";

@@ -25,11 +25,10 @@ const PaginationControls: React.FC<{
       <button
         onClick={() => onPageChange('prev')}
         disabled={currentPage === 0}
-        className={`p-1.5 rounded-md transition-colors ${
-          currentPage === 0
+        className={`p-1.5 rounded-md transition-colors ${currentPage === 0
             ? 'text-gray-300 cursor-not-allowed'
             : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'
-        }`}
+          }`}
       >
         <ChevronLeft className="w-4 h-4" />
       </button>
@@ -39,11 +38,10 @@ const PaginationControls: React.FC<{
       <button
         onClick={() => onPageChange('next')}
         disabled={currentPage === totalPages - 1}
-        className={`p-1.5 rounded-md transition-colors ${
-          currentPage === totalPages - 1
+        className={`p-1.5 rounded-md transition-colors ${currentPage === totalPages - 1
             ? 'text-gray-300 cursor-not-allowed'
             : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'
-        }`}
+          }`}
       >
         <ChevronRight className="w-4 h-4" />
       </button>
@@ -61,8 +59,8 @@ export const DataSection: React.FC<DataSectionProps> = ({
   colorScheme,
   text
 }) => {
-      const isMobile = useIsMobile();
-      const itemsPerPage = isMobile ? 5 : 10;
+  const isMobile = useIsMobile();
+  const itemsPerPage = isMobile ? 5 : 10;
   const startIndex = currentPage * itemsPerPage;
   const paginatedItems = items.slice(startIndex, startIndex + itemsPerPage);
 
