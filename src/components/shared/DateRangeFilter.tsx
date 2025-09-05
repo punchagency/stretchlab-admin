@@ -64,15 +64,15 @@ export const DateRangeFilter = ({
           className={`flex items-center justify-between w-full px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-base focus:border-primary-base transition-colors ${inputClassName}`}
         >
           <span className="truncate pr-2">{value}</span>
-          <ChevronDown 
+          <ChevronDown
             className={`h-4 w-4 flex-shrink-0 transition-transform ${isOpen ? 'rotate-180' : ''}`}
           />
         </button>
 
         {isOpen && (
           <>
-            <div 
-              className="fixed inset-0 z-10" 
+            <div
+              className="fixed inset-0 z-10"
               onClick={() => setIsOpen(false)}
             />
             <div className="absolute z-20 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-80 overflow-auto">
@@ -83,11 +83,10 @@ export const DateRangeFilter = ({
                     <button
                       key={index}
                       onClick={() => handleOptionClick(option)}
-                      className={`w-full px-3 py-2 text-left text-sm focus:outline-none transition-colors rounded-sm ${
-                        option.value === value 
-                          ? 'bg-primary-base text-white' 
+                      className={`w-full px-3 py-2 text-left text-sm focus:outline-none transition-colors rounded-sm ${option.value === value
+                          ? 'bg-primary-base text-white'
                           : 'text-gray-900 hover:bg-gray-100 focus:bg-gray-100'
-                      }`}
+                        }`}
                     >
                       {option.label}
                     </button>
@@ -99,7 +98,7 @@ export const DateRangeFilter = ({
                       <Calendar className="h-4 w-4" />
                       Select Date Range
                     </div>
-                    
+
                     <div className="space-y-3">
                       <div>
                         <label className="block text-xs font-medium text-gray-600 mb-1">
@@ -112,7 +111,7 @@ export const DateRangeFilter = ({
                           className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-base focus:border-primary-base"
                         />
                       </div>
-                      
+
                       <div>
                         <label className="block text-xs font-medium text-gray-600 mb-1">
                           End Date
@@ -126,7 +125,7 @@ export const DateRangeFilter = ({
                         />
                       </div>
                     </div>
-                    
+
                     <div className="flex gap-2 pt-2">
                       <button
                         onClick={handleCustomRangeSubmit}
