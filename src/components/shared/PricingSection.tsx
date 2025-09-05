@@ -11,6 +11,7 @@ interface PricingPlan {
   features: PricingFeature[];
   buttonText?: string;
   onButtonClick?: () => void;
+  billingPeriod?: string;
 }
 
 interface PricingSectionProps {
@@ -33,6 +34,7 @@ export const PricingSection = ({ plans, className = "" }: PricingSectionProps) =
               // buttonText={plan.buttonText}
               // onButtonClick={plan.onButtonClick}
               // buttonVariant={plan.buttonVariant}
+              billingPeriod={plan.billingPeriod}
             />
           ))}
         </div>

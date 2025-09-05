@@ -30,3 +30,4 @@ export * from "./ActivitiesSkeleton";
 export * from "./DataSection";
 export * from "./PricingCard";
 export * from "./PricingSection";
+export * from "./BulkInviteModal";

@@ -39,6 +39,9 @@ interface DataTableProps<TData extends { id: number | string }, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   handleModal?: () => void;
+  handleBulkInvite?: () => void;
+  handleResendInvite?: () => void;
+  selectedUsersCount?: number;
   note?: boolean;
   emptyText?: string;
   handleClick?: (id: number) => void;
@@ -61,6 +64,9 @@ export function DataTable<TData extends { id: number | string }, TValue>({
   columns,
   data,
   handleModal,
+  handleBulkInvite,
+  handleResendInvite,
+  selectedUsersCount = 0,
   handleClick,
   note = false,
   emptyText = "No data found",
@@ -87,7 +93,7 @@ export function DataTable<TData extends { id: number | string }, TValue>({
     if (!filterValue) return true;
 
     const searchLower = filterValue.toLowerCase();
-    
+
     // When note is true, specifically search in email and full_name fields
     if (note) {
       const email = row.original.email;
@@ -97,10 +103,10 @@ export function DataTable<TData extends { id: number | string }, TValue>({
         (fullName != null && String(fullName).toLowerCase().includes(searchLower))
       );
     }
-    
+
     // For other cases, use the existing logic
     if (!enableSearch) return true;
-    
+
     const fieldsToSearch = searchFields.length > 0 ? searchFields : Object.keys(row.original);
 
     return fieldsToSearch.some((field) => {
@@ -136,15 +142,42 @@ export function DataTable<TData extends { id: number | string }, TValue>({
   return (
     <div className={`w-full max-w-full overflow-hidden px-2 sm:px-0 ${className || ""}`}>
       {note && (
-        <div className="flex flex-col-reverse md:flex-row item-start xl:items-center gap-4 justify-start xl:justify-end py-4">
-          <Input
-            type="search"
-            icon="search"
-            placeholder="Search by email or full name"
-            className="max-w-sm w-full md:min-w-[30rem] py-3 rounded-md"
-            value={globalFilter}
-            onChange={(event) => setGlobalFilter(event.target.value)}
-          />
+        <div className="flex flex-col md:flex-row md:items-center gap-4 justify-between py-3 md:py-4 mb-3 md:mb-0">
+          <div className="flex flex-col sm:flex-row gap-3 order-2 md:order-1">
+            <Button2
+              onClick={handleBulkInvite}
+              className="flex items-center justify-center md:justify-start gap-2 py-3 px-4 text-primary-base border-2 border-primary-base hover:bg-primary-base hover:text-white transition-colors"
+            >
+              <SvgIcon name="send" fill="currentColor" />
+              Bulk Invite
+            </Button2>
+            {selectedUsersCount > 0 && (
+              <Button2
+                onClick={handleResendInvite}
+                className="flex items-center justify-center md:justify-start gap-2 py-3 px-4 text-primary-base border-2 border-primary-base hover:bg-primary-base hover:text-white transition-colors"
+              >
+                <SvgIcon name="email-send" fill="currentColor" />
+                Resend Invite ({selectedUsersCount})
+              </Button2>
+            )}
+          </div>
+          <div className="flex flex-col sm:flex-row gap-3 md:items-center order-1 md:order-2">
+            <Input
+              type="search"
+              icon="search"
+              placeholder="Search by email or full name"
+              className="w-full sm:min-w-[25rem] md:min-w-[30rem] py-3 rounded-md"
+              value={globalFilter}
+              onChange={(event) => setGlobalFilter(event.target.value)}
+            />
+            <Button2
+              onClick={handleModal}
+              className="flex items-center gap-2 py-3 text-white bg-primary-base justify-center md:justify-start"
+            >
+              <SvgIcon name="email-send" fill="#fff" />
+              Invite Flexologist
+            </Button2>
+          </div>
           {/* <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button2 className="py-[10px] rounded-md flex items-center gap-2 text-primary-base border-2 border-primary-base">
@@ -221,19 +254,13 @@ export function DataTable<TData extends { id: number | string }, TValue>({
           </DropdownMenuContent>
         </DropdownMenu> */}
 
-          <Button2
-            onClick={handleModal}
-            className="flex items-center w-fit md:w-auto ml-auto md:ml-0 gap-2 py-3 text-white bg-primary-base"
-          >
-            <SvgIcon name="email-send" fill="#fff" />
-            Invite Flexologist
-          </Button2>
+
         </div>
       )}
 
       {enableSearch && !note && (
         <div className="flex md:items-center py-1 justify-between md:flex-row flex-col gap-1 md:mb-0 mb-2">
-        
+
           <Input
             type="search"
             icon="search"
@@ -242,12 +269,12 @@ export function DataTable<TData extends { id: number | string }, TValue>({
             value={globalFilter}
             onChange={(event) => setGlobalFilter(event.target.value)}
           />
-            {enableMyTeamDropdown && (
+          {enableMyTeamDropdown && (
             <DateRangeFilter
               label="Duration"
               value={durationOptions.find(opt => opt.value === selectedDuration)?.label || "Yesterday"}
               options={durationOptions}
-              onChange={onDurationChange || (() => {})}
+              onChange={onDurationChange || (() => { })}
               onCustomRangeChange={onCustomRangeChange}
               className="w-full md:w-60 md:mr-2"
               showLabel={false}

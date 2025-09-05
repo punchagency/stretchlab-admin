@@ -10,9 +10,27 @@ export interface PricingPlan {
   buttonText?: string;
   onButtonClick?: () => void;
   buttonVariant?: 'primary' | 'secondary' | 'outline';
+  billingPeriod?: string;
 }
 
 export const pricingPlans: PricingPlan[] = [
+
+  {
+    title: "StretchNote Insights",
+    description: "Your AI-powered quality control system for stretch session documentation.",
+    price: 29,
+    features: [
+      { text: "Auditing session notes" },
+      { text: "Flagging unlogged bookings" },
+      { text: "Identifying coaching opportunities across your team" },
+      { text: "Actionable, drill-down reporting by location and staff member" },
+      { text: "Elevated accountability, session quality, and business performance" }
+    ],
+    buttonText: "Start trial",
+    onButtonClick: () => console.log("Start trial for StretchNote Insights"),
+    buttonVariant: "primary",
+    billingPeriod: "per month / per flexologist"
+  },
   {
     title: "StretchNote Capture",
     description: "Helps Flexologists create high-quality, organized client notes in less time",
@@ -29,19 +47,4 @@ export const pricingPlans: PricingPlan[] = [
     onButtonClick: () => console.log("Subscribe to StretchNote Capture"),
     buttonVariant: "primary"
   },
-  {
-    title: "StretchNote Insights",
-    description: "Your AI-powered quality control system for stretch session documentation.",
-    price: 29,
-    features: [
-      { text: "Auditing session notes" },
-      { text: "Flagging unlogged bookings" },
-      { text: "Identifying coaching opportunities across your team" },
-      { text: "Actionable, drill-down reporting by location and staff member" },
-      { text: "Elevated accountability, session quality, and business performance" }
-    ],
-    buttonText: "Start trial",
-    onButtonClick: () => console.log("Start trial for StretchNote Insights"),
-    buttonVariant: "primary"
-  }
 ];
