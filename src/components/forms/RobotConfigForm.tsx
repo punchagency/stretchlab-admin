@@ -149,7 +149,7 @@ export const RobotConfigForm = ({
         });
       } else {
         let excludeClientNames: string[] = [];
-        if(formData.excludeClientNames && formData.excludeClientNames.length > 0){
+        if (formData.excludeClientNames && formData.excludeClientNames.length > 0) {
           excludeClientNames = formData.excludeClientNames.split(",");
         }
         response = await saveSettings({
@@ -184,17 +184,17 @@ export const RobotConfigForm = ({
     } catch (error) {
       const apiError = error as ApiError;
       if (apiError.response.status === 402) {
-    
+
         if (apiError.response.data.payment_id) {
           setPaymentInfo(true);
           setBillingInfo(apiError.response.data.payment_info as BillingInfo);
         } else {
-          renderErrorToast(apiError.response.data.message  || "Something went wrong, please try again.");
+          renderErrorToast(apiError.response.data.message || "Something went wrong, please try again.");
           setPaymentInfo(true);
         }
       } else {
-        
-        renderErrorToast(apiError.response.data.message  || "Something went wrong, please try again.");
+
+        renderErrorToast(apiError.response.data.message || "Something went wrong, please try again.");
       }
     } finally {
       setSaving(false);

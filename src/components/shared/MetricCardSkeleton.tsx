@@ -5,12 +5,10 @@ export const MetricCardSkeleton = () => {
         <div className="h-4 bg-gray-300 rounded w-20"></div>
         <div className="h-6 w-4 bg-gray-300 rounded"></div>
       </div>
-      
       <div className="mb-3">
         <div className="h-8 bg-gray-300 rounded w-24 mb-1"></div>
         <div className="h-4 bg-gray-300 rounded w-32"></div>
       </div>
-      
       <div className="h-9 bg-gray-300 rounded-md w-28"></div>
     </div>
   );

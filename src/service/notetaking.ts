@@ -21,12 +21,19 @@ export const updateUserAccess = async (email: string, status: number) => {
   return response;
 };
 
-
 export const updateUserStatus = async (email: string, restrict: boolean) => {
   const response = await api.post("/admin/settings/update-permissions", {
     email,
     position: "flexologist",
     status: restrict,
+  });
+  return response;
+};
+
+export const bulkInviteFlexologists = async (emails: string[], resend: boolean = false) => {
+  const response = await api.post("/admin/process/bulk-invite-users", {
+    emails,
+    resend,
   });
   return response;
 };

@@ -9,7 +9,7 @@ const getDescription = (dataSet: string | undefined) => {
             return {
                 valueColumn: "% App Submission",
                 totalColumn: "Total Flexologist Appointment",
-                hoveredValueText: "% of Appointment Submitted with the App",
+                hoveredValueText: "% of Appointment Submitted with the App", 
             }
 
         case "Total Client Visits":
