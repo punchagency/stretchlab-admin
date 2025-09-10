@@ -47,23 +47,35 @@ export const Analytics = () => {
           Appointment Quality Audit
         </h1>
       </div>
-      <div className="flex flex-col sm:flex-row flex-wrap gap-4 p-3 sm:p-5">
-        <DateRangeFilter
-          label="Time Period"
-          value={filterOptions.duration.find(opt => opt.value === selectedFilters.duration)?.label || selectedFilters.duration}
-          options={filterOptions.duration}
-          onChange={(value) => handleFilterChange('duration', value)}
-          onCustomRangeChange={handleCustomRangeChange}
-          className="flex-1"
-        />
-        <FilterDropdown
-          label="Appointment Type"
-          value={filterOptions.filterMetric?.find(opt => opt.value === selectedFilters.filterMetric)?.label || selectedFilters.filterMetric || "all"}
-          options={filterOptions.filterMetric || []}
-          onChange={(value) => handleFilterChange('filterMetric', value)}
-          className="flex-1"
-        />
+
+      <div className='p-3 sm:p-5'>
+        <div className='flex items-center gap-2 mb-4 p-3 rounded-lg border bg-orange-50 border-orange-200'>
+          <Info className="w-5 h-5 text-orange-500" />
+          <p className=" md:text-sm text-xs text-orange-600 font-medium">
+          Currently, return appointment analysis is the only option available.
+          </p>
+
+        </div>
+        <div className="flex flex-col sm:flex-row flex-wrap gap-4">
+
+          <DateRangeFilter
+            label="Time Period"
+            value={filterOptions.duration.find(opt => opt.value === selectedFilters.duration)?.label || selectedFilters.duration}
+            options={filterOptions.duration}
+            onChange={(value) => handleFilterChange('duration', value)}
+            onCustomRangeChange={handleCustomRangeChange}
+            className="flex-1"
+          />
+          <FilterDropdown
+            label="Appointment Type"
+            value={filterOptions.filterMetric?.find(opt => opt.value === selectedFilters.filterMetric)?.label || selectedFilters.filterMetric || "all"}
+            options={filterOptions.filterMetric || []}
+            onChange={(value) => handleFilterChange('filterMetric', value)}
+            className="flex-1"
+          />
+        </div>
       </div>
+
       <div className="p-3 sm:p-5 flex flex-col space-y-10">
         <div className="bg-[#F5F5F5] rounded-lg shadow-sm border border-gray-200 p-3 sm:p-5">
           <div className=''>
@@ -223,17 +235,7 @@ export const Analytics = () => {
                   </Button>
                 </div> :
                   <>
-                    {
-                      selectedFilters.dataset === "% App Submissions" && (
-                        <div className='flex items-center gap-2 mb-4 p-3 rounded-lg border bg-orange-50 border-orange-200'>
-                          <Info className="w-5 h-5 text-orange-500" />
-                          <p className=" md:text-sm text-xs text-orange-600">
-                            Data older than 2 days might be incorrect for App Submissions
-                          </p>
 
-                        </div>)
-
-                    }
 
 
                     <DataTable

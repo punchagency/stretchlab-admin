@@ -29,7 +29,7 @@ export const pricingPlans: PricingPlan[] = [
     buttonText: "Start trial",
     onButtonClick: () => console.log("Start trial for StretchNote Insights"),
     buttonVariant: "primary",
-    billingPeriod: "per month / per flexologist"
+    billingPeriod: "per month / per studio"
   },
   {
     title: "StretchNote Capture",
@@ -45,6 +45,7 @@ export const pricingPlans: PricingPlan[] = [
     ],
     buttonText: "Subscribe",
     onButtonClick: () => console.log("Subscribe to StretchNote Capture"),
-    buttonVariant: "primary"
+    buttonVariant: "primary",
+     billingPeriod: "per month / per flexologist"
   },
 ];

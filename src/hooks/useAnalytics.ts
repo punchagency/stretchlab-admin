@@ -37,7 +37,8 @@ export const useAnalytics = () => {
     flexologist: "All",
     dataset: "",
     customRange: getTodayDateRange(),
-    filterMetric: "all",
+    // filterMetric: "all",
+    filterMetric: "subsequent",
   });
 
   const [selectedOpportunity, setSelectedOpportunity] = useState<string | null>(null);
@@ -208,8 +209,8 @@ export const useAnalytics = () => {
       flexologist: ["All"],
       dataset: [],
       filterMetric: [
-        { value: "all", label: "All Appointments" },
-        { value: "first", label: "First Appointment" },
+        // { value: "all", label: "All Appointments" },
+        // { value: "first", label: "First Appointment" },
         { value: "subsequent", label: "Return Appointment" },
       ],
     };

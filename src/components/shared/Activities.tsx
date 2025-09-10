@@ -158,7 +158,7 @@ const Activities: React.FC<ActivitiesProps> = ({ data, isLoading, error, onRetry
           <h3 className="text-sm font-medium text-gray-900">Notes with App</h3>
         </div>
         <p className="text-2xl font-bold text-gray-800">
-          {(data.notes_submitted_with_app ?? 0).toLocaleString()}
+          {(data.notes_submitted_with_app ?? 0).toLocaleString()} 
         </p>
         <p className="text-xs text-gray-600 mt-1">Submitted via app</p>
       </div>
