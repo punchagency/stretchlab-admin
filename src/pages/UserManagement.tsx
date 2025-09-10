@@ -279,6 +279,7 @@ export const UserManagement = () => {
                     enableSearch={true}
                     searchFields={["full_name", "email"]}
                     searchPlaceholder="Search by name or email"
+                    enableSorting={true}
                 />
             </div>
 

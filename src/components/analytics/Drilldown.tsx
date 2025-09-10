@@ -23,11 +23,11 @@ export const Drilldown: React.FC<DrilldownProps> = ({
   data,
   isLoading,
 }) => {
+  console.log({ data });
   const [locationPage, setLocationPage] = useState(0);
   const [flexologistPage, setFlexologistPage] = useState(0);
   const itemsPerPage = 5;
 
-  // Reset pagination when opportunity selection or data changes
   useEffect(() => {
     setLocationPage(0);
     setFlexologistPage(0);
@@ -46,10 +46,18 @@ export const Drilldown: React.FC<DrilldownProps> = ({
 
   const sortItemsByPercentage = (items: any[]) => {
     return [...items].sort((a, b) => {
-      // Extract numeric value from percentage string (e.g., "45.2%" -> 45.2)
-      const aValue = parseFloat(a.value.replace('%', ''));
-      const bValue = parseFloat(b.value.replace('%', ''));
-      return bValue - aValue; // Sort in descending order (highest to lowest)
+      let aValue: number;
+      let bValue: number;
+
+      if (selected) {
+        aValue = parseFloat(a.percentage_note_quality.replace('%', ''));
+        bValue = parseFloat(b.percentage_note_quality.replace('%', ''));
+      } else {
+        aValue = parseFloat(a.value.replace('%', ''));
+        bValue = parseFloat(b.value.replace('%', ''));
+      }
+
+      return bValue - aValue;
     });
   };
 
@@ -168,7 +176,7 @@ export const Drilldown: React.FC<DrilldownProps> = ({
                 key={idx}
                 className={`flex justify-between items-center p-3 rounded-lg border transition-colors ${colors.item}`}
               >
-                <span className="text-sm font-medium text-gray-700 truncate flex-1 mr-3">
+                <span className="text-sm font-medium text-gray-700 truncate flex-1 mr-3 capitalize">
                   {item.name}
                 </span>
                 {selected ? <div className='flex items-center gap-2 bg-white px-2 py-1 rounded-md border'>
@@ -224,15 +232,15 @@ export const Drilldown: React.FC<DrilldownProps> = ({
 
       <div className="md:p-6 p-3">
 
-        {(data.flexologists.length > 0 || data.locations.length > 0) && !selected  && <div className="flex items-center gap-2 mb-4 p-3 rounded-lg border bg-primary-base/10">
+        {(data.flexologists.length > 0 || data.locations.length > 0) && !selected && <div className="flex items-center gap-2 mb-4 p-3 rounded-lg border bg-primary-base/10">
           <Info className="w-5 h-5 text-primary-base/80" />
-         
-            <p className="md:text-sm text-xs text-primary-base leading-relaxed">
 
-              Each percentage indicates the proportion of high-quality notes
+          <p className="md:text-sm text-xs text-primary-base leading-relaxed">
 
-            </p>
-          
+            Each percentage indicates the proportion of high-quality notes
+
+          </p>
+
 
         </div>}
 

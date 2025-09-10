@@ -142,6 +142,14 @@ export const Dashboard = () => {
               ) : (
                 <>
 
+                  <div className='flex items-center gap-2 mb-4 p-3 rounded-lg border bg-orange-50 border-orange-200'>
+                    <Info className="w-5 h-5 text-orange-500" />
+                    <p className=" md:text-sm text-xs text-orange-600 font-medium">
+                    
+                    Currently, Average Note Quality is available only for return appointments.
+                    </p>
+
+                  </div>
                   <div className="flex flex-wrap gap-3 mb-6 justify-between flex-col sm:flex-row">
                     <FilterDropdown
                       label="Filter By"
@@ -215,17 +223,7 @@ export const Dashboard = () => {
 
                     {!chartError && !isChartLoading && (
                       <>
-                        {
-                          selectedFilters.dataset === "% App Submissions" && (
-                            <div className='flex items-center gap-2 mb-4 p-3 rounded-lg border bg-orange-50 border-orange-200'>
-                              <Info className="w-5 h-5 text-orange-500" />
-                              <p className=" md:text-sm text-xs text-orange-600">
-                                Data older than 2 days might be incorrect for App Submissions
-                              </p>
 
-                            </div>)
-
-                        }
                         <RechartsBarChart
                           data={chartData}
                           title=""

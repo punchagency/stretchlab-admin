@@ -28,7 +28,6 @@ export const FilterDropdown = ({
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
-  // Convert options to a consistent format
   const normalizedOptions: FilterOption[] = options.map(option => {
     if (typeof option === 'string') {
       return { value: option, label: option };
@@ -36,7 +35,6 @@ export const FilterDropdown = ({
     return option;
   });
 
-  // Function to sort options while keeping special options (like "All") at the top
   const sortOptionsWithSpecialFirst = (optionsToSort: FilterOption[]) => {
     const specialOptions = ["All", "all"];
     const special = optionsToSort.filter(option => specialOptions.includes(option.value));
@@ -46,16 +44,14 @@ export const FilterDropdown = ({
     return [...special, ...regular];
   };
 
-  // Filter and sort options based on search term
   const filteredOptions = showSearch && searchTerm
     ? sortOptionsWithSpecialFirst(
-        normalizedOptions.filter(option => 
-          option.label.toLowerCase().includes(searchTerm.toLowerCase())
-        )
+      normalizedOptions.filter(option =>
+        option.label.toLowerCase().includes(searchTerm.toLowerCase())
       )
+    )
     : sortOptionsWithSpecialFirst([...normalizedOptions]);
 
-  // Find the current option to display the label
   const currentOption = normalizedOptions.find(option => option.value === value);
   const displayValue = currentOption ? currentOption.label : value;
 
@@ -75,15 +71,15 @@ export const FilterDropdown = ({
           className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-base focus:border-primary-base transition-colors"
         >
           <span className="truncate pr-2 capitalize">{displayValue}</span>
-          <ChevronDown 
+          <ChevronDown
             className={`h-4 w-4 flex-shrink-0 transition-transform ${isOpen ? 'rotate-180' : ''}`}
           />
         </button>
 
         {isOpen && (
           <>
-            <div 
-              className="fixed inset-0 z-10" 
+            <div
+              className="fixed inset-0 z-10"
               onClick={handleClose}
             />
             <div className="absolute z-20 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto">
@@ -109,11 +105,10 @@ export const FilterDropdown = ({
                         onChange(option.value);
                         handleClose();
                       }}
-                      className={`w-full px-3 py-2 text-left text-sm focus:outline-none transition-colors rounded-sm capitalize ${
-                        option.value === value 
-                          ? 'bg-primary-base text-white' 
+                      className={`w-full px-3 py-2 text-left text-sm focus:outline-none transition-colors rounded-sm capitalize ${option.value === value
+                          ? 'bg-primary-base text-white'
                           : 'text-gray-900 hover:bg-gray-100 focus:bg-gray-100'
-                      }`}
+                        }`}
                     >
                       {option.label}
                     </button>

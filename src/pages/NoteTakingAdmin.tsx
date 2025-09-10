@@ -4,10 +4,12 @@ import {
   inviteFlexologist,
   updateUserAccess,
   updateUserStatus,
+  deleteUser,
 } from "@/service/notetaking";
 import { useState } from "react";
 import {
   Button as Button2,
+  BulkInviteModal,
   ContainLoader,
   Input,
   Modal,
@@ -31,6 +33,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { getUserInfo } from "@/utils/user";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export const NoteTakingAdmin = () => {
   const { data, isPending, error, isFetching, refetch } = useQuery({
@@ -40,25 +43,54 @@ export const NoteTakingAdmin = () => {
   const [email, setEmail] = useState("");
   const [formError, setFormError] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const [showBulkInviteModal, setShowBulkInviteModal] = useState(false);
+  const [showResendModal, setShowResendModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isResending, setIsResending] = useState("");
+  // const [isResending, setIsResending] = useState(""); // Commented out - no longer used
   const [isAccessing, setIsAccessing] = useState("");
   const [paymentInfo, setPaymentInfo] = useState(false);
   const [billingInfo, setBillingInfo] = useState<BillingInfo | null>(null);
   const [update, setUpdate] = useState(false);
   const [proceed, setProceed] = useState(false);
   const [isUpdating, setIsUpdating] = useState("");
+  // Selected users for resend invite
+  const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
   // Confirmation modal states
   const [showAccessConfirmation, setShowAccessConfirmation] = useState(false);
   const [showStatusConfirmation, setShowStatusConfirmation] = useState(false);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [pendingAction, setPendingAction] = useState<{
-    type: "access" | "status";
+    type: "access" | "status" | "delete";
     email: string;
     value: number | boolean;
   } | null>(null);
+  const [isDeleting, setIsDeleting] = useState("");
+  const [isSendingInvite, setIsSendingInvite] = useState("");
 
   const userInfo = getUserInfo();
 
+  // Handle user selection for resend invite
+  const handleUserSelection = (email: string, isSelected: boolean) => {
+    if (isSelected) {
+      setSelectedUsers(prev => [...prev, email]);
+    } else {
+      setSelectedUsers(prev => prev.filter(userEmail => userEmail !== email));
+    }
+  };
+
+  // Handle resend invite for selected users (only status 3 users)
+  const handleResendInvite = () => {
+    if (selectedUsers.length === 0) {
+      renderWarningToast("Please select at least one user to resend invite");
+      return;
+    }
+    setShowResendModal(true);
+  };
+
+  // Clear selected users
+  const clearSelectedUsers = () => {
+    setSelectedUsers([]);
+  };
 
   const getTooltipDescription = (status: number) => {
     switch (status) {
@@ -89,27 +121,28 @@ export const NoteTakingAdmin = () => {
     return <ErrorHandle retry={refetch} />;
   }
 
-  const resendInvite = async (email: string) => {
-    setIsResending(email);
-    try {
-      const response = await inviteFlexologist(email, true);
-      if (response.status === 200) {
-        renderSuccessToast(response.data.message);
-        refetch();
-        setEmail("");
-        setShowModal(false);
-      }
-    } catch (error) {
-      const apiError = error as ApiError;
-      if (apiError.response.status === 409) {
-        renderWarningToast(apiError.response.data.message);
-      } else {
-        renderErrorToast(apiError.response.data.message);
-      }
-    } finally {
-      setIsResending("");
-    }
-  };
+  // Commented out existing resend invite functionality
+  // const resendInvite = async (email: string) => {
+  //   setIsResending(email);
+  //   try {
+  //     const response = await inviteFlexologist(email, true);
+  //     if (response.status === 200) {
+  //       renderSuccessToast(response.data.message);
+  //       // refetch();
+  //       setEmail("");
+  //       setShowModal(false);
+  //     }
+  //   } catch (error) {
+  //     const apiError = error as ApiError;
+  //     if (apiError.response.status === 409) {
+  //       renderWarningToast(apiError.response.data.message);
+  //     } else {
+  //       renderErrorToast(apiError.response.data.message);
+  //     }
+  //   } finally {
+  //     setIsResending("");
+  //   }
+  // };
 
   const handleUpdateUserStatus = async (email: string, restrict: boolean) => {
     setPendingAction({ type: "status", email, value: restrict });
@@ -168,6 +201,51 @@ export const NoteTakingAdmin = () => {
       setPendingAction(null);
     }
   };
+
+  // const handleDeleteUser = async (email: string) => {
+  //   setPendingAction({ type: "delete", email, value: false });
+  //   setShowDeleteConfirmation(true);
+  // };
+
+  const confirmDeleteUser = async () => {
+    if (!pendingAction || pendingAction.type !== "delete") return;
+    const { email } = pendingAction;
+    setIsDeleting(email);
+    try {
+      const response = await deleteUser(email);
+      if (response.status === 200) {
+        renderSuccessToast(response.data.message || "User deleted successfully");
+        refetch();
+      }
+    } catch (error) {
+      const apiError = error as ApiError;
+      renderErrorToast(apiError.response.data.message || "Failed to delete user");
+    } finally {
+      setIsDeleting("");
+      setShowDeleteConfirmation(false);
+      setPendingAction(null);
+    }
+  };
+
+  const handleSingleInvite = async (email: string) => {
+    setIsSendingInvite(email);
+    try {
+      const response = await inviteFlexologist(email, false);
+      if (response.status === 200) {
+        renderSuccessToast(response.data.message);
+        // refetch();
+      }
+    } catch (error) {
+      const apiError = error as ApiError;
+      if (apiError.response.status === 409) {
+        renderWarningToast(apiError.response.data.message);
+      } else {
+        renderErrorToast(apiError.response.data.message);
+      }
+    } finally {
+      setIsSendingInvite("");
+    }
+  };
   const userColumns: ColumnDef<Payment>[] = [
     {
       accessorKey: "full_name",
@@ -212,9 +290,8 @@ export const NoteTakingAdmin = () => {
           <Tooltip>
             <TooltipTrigger>
               <div
-                className={`${
-                  badgeColor[status as keyof typeof badgeColor]
-                } px-2 py-1.5 rounded-2xl w-20 text-center font-medium`}
+                className={`${badgeColor[status as keyof typeof badgeColor]
+                  } px-2 py-1.5 rounded-2xl w-20 text-center font-medium`}
               >
                 {statuses[status]}
               </div>
@@ -274,64 +351,189 @@ export const NoteTakingAdmin = () => {
     },
 
     {
-      accessorKey: "resend_invite",
-      header: "Resend Invite",
+      id: "resend_invite",
+      header: () => {
+        // const selectableUsers = data?.data?.users?.filter((user: any) =>
+        //   user.status === 3
+        // ) || [];
+        // const allSelectableSelected = selectableUsers.length > 0 &&
+        //   selectableUsers.every((user: any) => selectedUsers.includes(user.email));
+        // const someSelectableSelected = selectableUsers.some((user: any) =>
+        //   selectedUsers.includes(user.email)
+        // );
+
+        // const handleSelectAll = (checked: boolean) => {
+        //   if (checked) {
+        //     const selectableEmails = selectableUsers.map((user: any) => user.email);
+        //     setSelectedUsers(selectableEmails);
+        //   } else {
+        //     setSelectedUsers([]);
+        //   }
+        // };
+
+        return (
+          <div className="flex items-center justify-center gap-2">
+            {/* <Tooltip>
+              <TooltipTrigger asChild>
+                <Checkbox
+                  checked={allSelectableSelected}
+                  onCheckedChange={handleSelectAll}
+                  aria-label="Select all eligible users for resend invite"
+                  className={`h-5 w-5 rounded-sm border-2 transition-all duration-200 ${someSelectableSelected && !allSelectableSelected
+                    ? 'border-primary-base bg-gray-100 data-[state=checked]:bg-primary-base data-[state=checked]:border-primary-base'
+                    : 'border-primary-base hover:border-primary-base/80 data-[state=checked]:bg-primary-base data-[state=checked]:border-primary-base'
+                    }`}
+                />
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Select all eligible users for resend invite</p>
+              </TooltipContent>
+            </Tooltip> */}
+            <span className="text-sm font-medium text-gray-700">Invite Actions</span>
+          </div>
+        );
+      },
       cell: ({ row }) => {
         const email = row.getValue("email") as string;
         const status = row.getValue("status") as number;
- 
+
+        // For users with null status (never invited), show Send Invite button
+        if (status === null) {
+          return (
+            <div className="flex items-center justify-center">
+              <Button
+                onClick={() => handleSingleInvite(email)}
+                disabled={isSendingInvite === email}
+                className="cursor-pointer w-32"
+                variant="outline"
+              >
+                <SvgIcon name="email-send" fill="#98A2B3" />
+                {isSendingInvite === email ? "Sending..." : "Send Invite"}
+              </Button>
+            </div>
+          );
+        }
+
+        // For users with status 3 (invited but not accepted), show checkbox for bulk resend
+        if (status === 3) {
+          return (
+            <div className="flex items-center justify-center">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Checkbox
+                    checked={selectedUsers.includes(email)}
+                    onCheckedChange={(value: boolean) => handleUserSelection(email, !!value)}
+                    aria-label={`Select ${email} for resend invite`}
+                    className="h-6 w-6 rounded-sm border-2 transition-all duration-200 border-primary-base hover:border-primary-base/80 hover:bg-primary-base/5 data-[state=checked]:bg-primary-base data-[state=checked]:border-primary-base data-[state=checked]:shadow-md"
+                  />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Select {email} for resend invite</p>
+                </TooltipContent>
+              </Tooltip>
+            </div>
+          );
+        }
+
+        // For all other statuses, show disabled state
         return (
-          <Button
-            disabled={
-              status === 1 ||
-              status === 2 ||
-              status === 5 ||
-              isResending === email
-            }
-            onClick={() => resendInvite(email)}
-            className="cursor-pointer w-32"
-            variant="outline"
-          >
-            <SvgIcon name="email-send" fill="#98A2B3" />
-            {!status ? "Send Invite" : "Resend"}
-          </Button>
+          <div className="flex items-center justify-center">
+            <p className="text-gray-500 text-sm">
+              {status === 1 ? 'Active' : status === 2 ? 'Disabled' : status === 4 ? 'Pending' : status === 5 ? 'Pending' : 'Unknown'}
+            </p>
+          </div>
         );
       },
+      enableSorting: false,
+      enableHiding: false,
     },
+
+    // Commented out existing resend invite column
+    // {
+    //   accessorKey: "resend_invite",
+    //   header: "Resend Invite",
+    //   cell: ({ row }) => {
+    //     const email = row.getValue("email") as string;
+    //     const status = row.getValue("status") as number;
+
+    //     return (
+    //       <Button
+    //         disabled={
+    //           status === 1 ||
+    //           status === 2 ||
+    //           status === 5 ||
+    //           isResending === email
+    //         }
+    //         onClick={() => resendInvite(email)}
+    //         className="cursor-pointer w-32"
+    //         variant="outline"
+    //       >
+    //         <SvgIcon name="email-send" fill="#98A2B3" />
+    //         {!status ? "Send Invite" : "Resend"}
+    //       </Button>
+    //     );
+    //   },
+    // },
     ...(userInfo?.role_id === 1 || userInfo?.role_id === 2
       ? [
-          {
-            accessorKey: "update_status",
-            header: "Give Admin Access",
-            cell: ({ row }: { row: Row<Payment> }) => {
-              const email = row.getValue("email") as string;
-              const role_id = row.original.role_id as number;
-              const status = row.original.status as number;
-              const isRestricting = role_id === 8;
-              return (
-                <Button
-                  onClick={() =>
-                    handleUpdateUserStatus(email, isRestricting ? false : true)
-                  }
-                  className={`cursor-pointer w-32 ${
-                    isRestricting
-                      ? "bg-red-500 text-white hover:bg-red-600 transition-all duration-300 border-red-500 hover:text-white"
-                      : "bg-primary-base text-white hover:bg-primary-base/80 transition-all duration-300 border-primary-base hover:text-white"
+        {
+          accessorKey: "update_status",
+          header: "Give Admin Access",
+          cell: ({ row }: { row: Row<Payment> }) => {
+            const email = row.getValue("email") as string;
+            const role_id = row.original.role_id as number;
+            const status = row.original.status as number;
+            const isRestricting = role_id === 8;
+            return (
+              <Button
+                onClick={() =>
+                  handleUpdateUserStatus(email, isRestricting ? false : true)
+                }
+                className={`cursor-pointer w-32 ${isRestricting
+                  ? "bg-red-500 text-white hover:bg-red-600 transition-all duration-300 border-red-500 hover:text-white"
+                  : "bg-primary-base text-white hover:bg-primary-base/80 transition-all duration-300 border-primary-base hover:text-white"
                   }`}
-                  variant="outline"
-                  disabled={status !== 1}
-                >
-                  {isUpdating === email
-                    ? "Updating..."
-                    : isRestricting
+                variant="outline"
+                disabled={status !== 1}
+              >
+                {isUpdating === email
+                  ? "Updating..."
+                  : isRestricting
                     ? "Restrict"
                     : "Give Access"}
-                </Button>
-              );
-            },
+              </Button>
+            );
           },
-        ]
+        },
+      ]
       : []),
+    // {
+    //   id: "delete_user",
+    //   header: "Delete",
+    //   cell: ({ row }: { row: Row<Payment> }) => {
+    //     const email = row.getValue("email") as string;
+    //     return (
+    //       <Tooltip>
+    //         <TooltipTrigger asChild>
+    //           <Button
+    //             onClick={() => handleDeleteUser(email)}
+    //             disabled={isDeleting === email}
+    //             // className="cursor-pointer w-20 bg-red-500 text-white hover:bg-red-600 transition-all duration-300 border-red-500 hover:text-white"
+    //             variant="outline"
+    //             size="sm"
+    //           >
+    //             <SvgIcon name="trash" fill="#DC2626" />
+    //           </Button>
+    //         </TooltipTrigger>
+    //         <TooltipContent>
+    //           <p>Delete Flexologist</p>
+    //         </TooltipContent>
+    //       </Tooltip>
+    //     );
+    //   },
+    //   enableSorting: false,
+    //   enableHiding: false,
+    // },
   ];
 
   const validateEmail = (email: string) => {
@@ -395,6 +597,9 @@ export const NoteTakingAdmin = () => {
       <div>
         <DataTable
           handleModal={() => setShowModal(true)}
+          handleBulkInvite={() => setShowBulkInviteModal(true)}
+          handleResendInvite={handleResendInvite}
+          selectedUsersCount={selectedUsers.length}
           columns={userColumns}
           data={data.data.users}
           note={true}
@@ -446,6 +651,30 @@ export const NoteTakingAdmin = () => {
           setProceed={setProceed}
         />
       )}
+
+      <BulkInviteModal
+        show={showBulkInviteModal}
+        onClose={() => setShowBulkInviteModal(false)}
+        onSuccess={() => {
+          refetch();
+          setShowBulkInviteModal(false);
+        }}
+      />
+
+      <BulkInviteModal
+        show={showResendModal}
+        onClose={() => {
+          setShowResendModal(false);
+          clearSelectedUsers();
+        }}
+        onSuccess={() => {
+          // refetch();
+          setShowResendModal(false);
+          clearSelectedUsers();
+        }}
+        isResendMode={true}
+        selectedEmails={selectedUsers}
+      />
 
       {/* Access Confirmation Modal */}
 
@@ -500,13 +729,45 @@ export const NoteTakingAdmin = () => {
             <Button2
               onClick={confirmUpdateUserStatus}
               disabled={isUpdating === pendingAction?.email}
-              className={`px-6 py-2 rounded-lg text-white ${
-                pendingAction?.value 
-                  ? "bg-primary-base hover:bg-primary-base/80" 
-                  : "bg-red-500 hover:bg-red-600"
-              }`}
+              className={`px-6 py-2 rounded-lg text-white ${pendingAction?.value
+                ? "bg-primary-base hover:bg-primary-base/80"
+                : "bg-red-500 hover:bg-red-600"
+                }`}
             >
               {isUpdating === pendingAction?.email ? "Updating..." : pendingAction?.value ? "Give Access" : "Restrict"}
+            </Button2>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Delete Confirmation Modal */}
+      <Modal show={showDeleteConfirmation} onClose={() => setShowDeleteConfirmation(false)} size="sm">
+        <div className="flex flex-col gap-4 py-4 px-2 md:px-6">
+          <div className="flex items-center justify-center mb-2">
+            <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+              <SvgIcon name="trash" fill="#DC2626" />
+            </div>
+          </div>
+          <h1 className="text-lg md:text-xl font-semibold text-center mb-2">
+            Delete Flexologist
+          </h1>
+          <p className="text-gray-600 text-center mb-4">
+            Are you sure you want to delete{" "}
+            <span className="font-semibold">{pendingAction?.email}</span>? This action cannot be undone.
+          </p>
+          <div className="flex gap-3 justify-center">
+            <Button2
+              onClick={() => setShowDeleteConfirmation(false)}
+              className="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-lg"
+            >
+              Cancel
+            </Button2>
+            <Button2
+              onClick={confirmDeleteUser}
+              disabled={isDeleting === pendingAction?.email}
+              className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg"
+            >
+              {isDeleting === pendingAction?.email ? "Deleting..." : "Delete"}
             </Button2>
           </div>
         </div>

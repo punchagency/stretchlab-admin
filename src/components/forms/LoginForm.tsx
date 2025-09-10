@@ -37,6 +37,7 @@ export const LoginForm = () => {
       const response = await login(formData.email, formData.password);
       if (response.status === 200) {
         const loginData = response.data as LoginResponse;
+        console.log({ loginData });
         if (loginData.requires_2fa) {
           navigate(`/2fa-login?email=${encodeURIComponent(formData.email)}`);
           return;
@@ -47,6 +48,7 @@ export const LoginForm = () => {
             loginData.user.is_verified &&
             loginData.user.is_clubready_verified
           ) {
+            console.log("is_verified and is_clubready_verified");
             setUserCookie(loginData.token);
             renderSuccessToast(loginData.message);
             navigate("/dashboard");
@@ -54,6 +56,7 @@ export const LoginForm = () => {
             loginData.user.is_verified &&
             !loginData.user.is_clubready_verified
           ) {
+            console.log("is_verified and !is_clubready_verified");
             setTempUserCookie(loginData.token);
             navigate("/robot-setup");
           } else {

@@ -102,7 +102,7 @@ export const InvoiceHistory = ({
               </div>}
             </div>
           )}
-
+ 
           {flexologistStatus === "canceled" ? (
             <Button
               onClick={() => handleRestartSubscription("note_taking")}
