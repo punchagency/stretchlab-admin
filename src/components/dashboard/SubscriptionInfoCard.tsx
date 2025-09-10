@@ -53,14 +53,7 @@ export const SubscriptionInfoCard = ({
                         </TooltipContent>
                     </Tooltip>
                 </div>
-
-
-
-
-
-
             </div>
-
 
         </div>
     );

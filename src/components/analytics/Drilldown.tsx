@@ -48,7 +48,7 @@ export const Drilldown: React.FC<DrilldownProps> = ({
     return [...items].sort((a, b) => {
       let aValue: number;
       let bValue: number;
-      
+
       if (selected) {
         aValue = parseFloat(a.percentage_note_quality.replace('%', ''));
         bValue = parseFloat(b.percentage_note_quality.replace('%', ''));
@@ -56,7 +56,7 @@ export const Drilldown: React.FC<DrilldownProps> = ({
         aValue = parseFloat(a.value.replace('%', ''));
         bValue = parseFloat(b.value.replace('%', ''));
       }
-      
+
       return bValue - aValue;
     });
   };
@@ -232,15 +232,15 @@ export const Drilldown: React.FC<DrilldownProps> = ({
 
       <div className="md:p-6 p-3">
 
-        {(data.flexologists.length > 0 || data.locations.length > 0) && !selected  && <div className="flex items-center gap-2 mb-4 p-3 rounded-lg border bg-primary-base/10">
+        {(data.flexologists.length > 0 || data.locations.length > 0) && !selected && <div className="flex items-center gap-2 mb-4 p-3 rounded-lg border bg-primary-base/10">
           <Info className="w-5 h-5 text-primary-base/80" />
-         
-            <p className="md:text-sm text-xs text-primary-base leading-relaxed">
 
-              Each percentage indicates the proportion of high-quality notes
+          <p className="md:text-sm text-xs text-primary-base leading-relaxed">
 
-            </p>
-          
+            Each percentage indicates the proportion of high-quality notes
+
+          </p>
+
 
         </div>}
 
