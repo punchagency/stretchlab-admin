@@ -49,10 +49,12 @@ export const LoginForm = () => {
         
         if (loginData.token) {
           if (loginData.user.is_verified && loginData.user.is_clubready_verified) {
+            console.log("is_verified and is_clubready_verified");
             setUserCookie(loginData.token);
             renderSuccessToast(loginData.message);
             navigate("/dashboard");
           } else if (loginData.user.is_verified && !loginData.user.is_clubready_verified) {
+            console.log("is_verified and !is_clubready_verified");
             setTempUserCookie(loginData.token);
             navigate("/robot-setup");
           } else {
