@@ -14,12 +14,12 @@ interface BulkInviteModalProps {
   selectedEmails?: string[];
 }
 
-export const BulkInviteModal = ({ 
-  show, 
-  onClose, 
-  onSuccess, 
-  isResendMode = false, 
-  selectedEmails = [] 
+export const BulkInviteModal = ({
+  show,
+  onClose,
+  onSuccess,
+  isResendMode = false,
+  selectedEmails = []
 }: BulkInviteModalProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [uploadedEmails, setUploadedEmails] = useState<string[]>([]);
@@ -65,14 +65,14 @@ export const BulkInviteModal = ({
 
     try {
       const response = await bulkInviteFlexologists(uploadedEmails, isResendMode);
-        const successMessage = isResendMode 
-          ? response.data.message || "Resend invites sent successfully"
-          : response.data.message || "Bulk invites sent successfully";
-        renderSuccessToast(successMessage);
-        onSuccess();
-        onClose();
-        setUploadedEmails([]);
-      
+      const successMessage = isResendMode
+        ? response.data.message || "Resend invites sent successfully"
+        : response.data.message || "Bulk invites sent successfully";
+      renderSuccessToast(successMessage);
+      onSuccess();
+      onClose();
+      setUploadedEmails([]);
+
     } catch (err) {
       const apiError = err as ApiError;
       const errorMessage = isResendMode
@@ -135,15 +135,6 @@ export const BulkInviteModal = ({
             </>
           )}
 
-          {isResendMode && (
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <h3 className="font-semibold text-blue-800 mb-2">Resend Invites</h3>
-              <p className="text-sm text-blue-700">
-                You are about to resend invites to the selected users. This will send new invitation emails to the following users:
-              </p>
-            </div>
-          )}
-
           {error && (
             <div className="bg-red-100 border border-red-200 rounded-lg px-4 py-3">
               <p className="text-red-600 text-sm">{error}</p>
@@ -151,13 +142,16 @@ export const BulkInviteModal = ({
           )}
 
           {uploadedEmails.length > 0 && (
-            <div className={`border rounded-lg p-4 ${isResendMode ? 'bg-blue-50 border-blue-200' : 'bg-green-50 border-green-200'}`}>
-              <h4 className={`font-semibold mb-2 ${isResendMode ? 'text-blue-800' : 'text-green-800'}`}>
+            <div className={`border rounded-lg p-4 bg-green-50 border-green-200`}>
+              <h4 className={`font-semibold mb-2  text-green-800`}>
                 {isResendMode ? 'Users to Resend Invites' : 'Emails Ready to Invite'} ({uploadedEmails.length})
               </h4>
+              {isResendMode && <p className="text-sm text-green-800">
+                You are about to resend invites to the selected users. This will send new invitation emails to the following users:
+              </p>}
               <div className="max-h-32 overflow-y-auto">
                 {uploadedEmails.map((email, index) => (
-                  <div key={index} className={`text-sm py-1 ${isResendMode ? 'text-blue-700' : 'text-green-700'}`}>
+                  <div key={index} className={`text-sm py-1 text-green-700 font-bold`}>
                     {email}
                   </div>
                 ))}
@@ -180,8 +174,8 @@ export const BulkInviteModal = ({
             `}
           >
             <SvgIcon name="email-send" fill="#fff" />
-            {isLoading 
-              ? (isResendMode ? "Resending..." : "Sending...") 
+            {isLoading
+              ? (isResendMode ? "Resending..." : "Sending...")
               : (isResendMode ? "Resend Invites" : "Send Bulk Invites")
             }
           </Button2>

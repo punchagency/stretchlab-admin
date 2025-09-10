@@ -41,10 +41,12 @@ export const LoginForm = () => {
       const response = await login(formData.email, formData.password);
       if (response.status === 200) {
         const loginData = response.data as LoginResponse;
+        console.log({ loginData });
         if (loginData.requires_2fa) {
           navigate(`/2fa-login?email=${encodeURIComponent(formData.email)}`);
           return;
         }
+        
         if (loginData.token) {
           if (loginData.user.is_verified && loginData.user.is_clubready_verified) {
             setUserCookie(loginData.token);

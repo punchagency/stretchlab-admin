@@ -23,7 +23,8 @@ export const useDashboard = () => {
     location: "All",
     flexologist: "All",
     dataset: "",
-    filterMetric: "aggregate_note_quality_percentage",
+    // filterMetric: "aggregate_note_quality_percentage",
+    filterMetric: "subsequent_visit_quality_percentage",
   });
 
   const [myTeamDuration, setMyTeamDuration] = useState("yesterday");
@@ -110,8 +111,8 @@ export const useDashboard = () => {
       flexologist: ["All"],
       dataset: [],
       filterMetric: [
-        { value: "aggregate_note_quality_percentage", label: "All Appointments" },
-        { value: "1st_visit_quality_percentage", label: "First Appointment" },
+        // { value: "aggregate_note_quality_percentage", label: "All Appointments" },
+        // { value: "1st_visit_quality_percentage", label: "First Appointment" },
         { value: "subsequent_visit_quality_percentage", label: "Return Appointment" },
       ],
     };
