@@ -20,13 +20,12 @@ const cookieDomain = import.meta.env.VITE_COOKIE_DOMAIN;
 export const setUserCookie = (token: string): void => {
   const expireAt = new Date();
   expireAt.setHours(23, 59, 59, 999);
-
   Cookies.set("token", token, {
     expires: expireAt,
-    domain: cookieDomain,
-    secure: true,
-    sameSite: "strict",
-    path: "/",
+    // domain: cookieDomain,
+    // // secure: true,
+    // sameSite: "strict",
+    // path: "/",
   });
 };
 
@@ -36,7 +35,7 @@ export const setTempUserCookie = (token: string): void => {
   Cookies.set("temp_token", token, {
     expires: expireAt,
     domain: cookieDomain,
-    secure: true,
+    // secure: true,
     sameSite: "strict",
     path: "/",
   });

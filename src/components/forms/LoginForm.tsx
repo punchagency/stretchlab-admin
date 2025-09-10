@@ -4,11 +4,7 @@ import { login } from "@/service/auth";
 import type { ApiError, LoginResponse } from "@/types";
 import { setTempUserCookie, setUserCookie } from "@/utils";
 import { Link, useNavigate } from "react-router";
-import {
-  renderSuccessToast,
-  renderErrorToast,
-} from "../utils";
-
+import { renderSuccessToast, renderErrorToast } from "../utils";
 
 const redirectUrl = import.meta.env.VITE_REDIRECT_URL;
 
@@ -46,14 +42,20 @@ export const LoginForm = () => {
           navigate(`/2fa-login?email=${encodeURIComponent(formData.email)}`);
           return;
         }
-        
+
         if (loginData.token) {
-          if (loginData.user.is_verified && loginData.user.is_clubready_verified) {
+          if (
+            loginData.user.is_verified &&
+            loginData.user.is_clubready_verified
+          ) {
             console.log("is_verified and is_clubready_verified");
             setUserCookie(loginData.token);
             renderSuccessToast(loginData.message);
             navigate("/dashboard");
-          } else if (loginData.user.is_verified && !loginData.user.is_clubready_verified) {
+          } else if (
+            loginData.user.is_verified &&
+            !loginData.user.is_clubready_verified
+          ) {
             console.log("is_verified and !is_clubready_verified");
             setTempUserCookie(loginData.token);
             navigate("/robot-setup");
