@@ -2,6 +2,8 @@ import Cookies from "js-cookie";
 import type { JwtPayload } from "jwt-decode";
 import { jwtDecode } from "jwt-decode";
 
+const cookieDomain = import.meta.env.VITE_COOKIE_DOMAIN;
+
 interface CustomJwtPayload extends JwtPayload {
   email: string;
   name: string;
@@ -19,13 +21,23 @@ export const setUserCookie = (token: string): void => {
   const expireAt = new Date();
   expireAt.setHours(23, 59, 59, 999);
 
-  Cookies.set("token", token, { expires: expireAt });
+  Cookies.set("token", token, {
+    expires: expireAt,
+    domain: cookieDomain,
+    secure: true,
+    sameSite: "None"
+  });
 };
 
 export const setTempUserCookie = (token: string): void => {
   const expireAt = new Date();
   expireAt.setHours(23, 59, 59, 999);
-  Cookies.set("temp_token", token, { expires: expireAt });
+  Cookies.set("temp_token", token, {
+    expires: expireAt,
+    domain: cookieDomain,
+    secure: true,
+    sameSite: "None"
+  });
 };
 
 export const getTempUserCookie = (): string | null => {
@@ -56,6 +68,6 @@ export const getTempUserInfo = (): CustomJwtPayload | null => {
 };
 
 export const deleteUserCookie = (): void => {
-  Cookies.remove("token");
-  Cookies.remove("temp_token");
+  Cookies.remove("token", { domain: cookieDomain });
+  Cookies.remove("temp_token", { domain: cookieDomain });
 };

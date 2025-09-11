@@ -385,6 +385,8 @@ export const RobotConfigForm = ({
             robot={true}
             update={false}
             setUpdate={() => { }}
+            // update={update}
+            // setUpdate={setUpdate}
             setProceed={setProceed}
           />
         )}
