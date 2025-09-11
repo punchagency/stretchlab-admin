@@ -1,4 +1,4 @@
-import { Modal, Input } from "../shared";
+import { Modal } from "../shared";
 import { loadStripe } from "@stripe/stripe-js";
 import {
   Elements,
