@@ -19,30 +19,13 @@ export const setUserCookie = (token: string): void => {
   const expireAt = new Date();
   expireAt.setHours(23, 59, 59, 999);
 
-  // Clear any existing temp_token when setting main token
-  Cookies.remove("temp_token", { path: "/" });
-  
-  Cookies.set("token", token, { 
-    expires: expireAt,
-    path: "/",
-    secure: window.location.protocol === "https:",
-    sameSite: "lax"
-  });
+  Cookies.set("token", token, { expires: expireAt });
 };
 
 export const setTempUserCookie = (token: string): void => {
   const expireAt = new Date();
   expireAt.setHours(23, 59, 59, 999);
-  
-  // Clear any existing main token when setting temp token
-  Cookies.remove("token", { path: "/" });
-  
-  Cookies.set("temp_token", token, { 
-    expires: expireAt,
-    path: "/",
-    secure: window.location.protocol === "https:",
-    sameSite: "lax"
-  });
+  Cookies.set("temp_token", token, { expires: expireAt });
 };
 
 export const getTempUserCookie = (): string | null => {
@@ -73,27 +56,6 @@ export const getTempUserInfo = (): CustomJwtPayload | null => {
 };
 
 export const deleteUserCookie = (): void => {
-  const isSecure = window.location.protocol === "https:";
-
-  // Remove cookies with explicit path and secure options to match how they were set
-  Cookies.remove("token", {
-    path: "/",
-    secure: isSecure,
-    sameSite: "lax"
-  });
-  Cookies.remove("temp_token", {
-    path: "/",
-    secure: isSecure,
-    sameSite: "lax"
-  });
-
-  // Also try removing without path in case they were set without explicit path
-  Cookies.remove("token", { secure: isSecure, sameSite: "lax" });
-  Cookies.remove("temp_token", { secure: isSecure, sameSite: "lax" });
+  Cookies.remove("token");
+  Cookies.remove("temp_token");
 };
-
-export const clearAllAuthCookies = (): void => {
-  // Clear all authentication cookies before setting new ones
-  deleteUserCookie();
-};
-
