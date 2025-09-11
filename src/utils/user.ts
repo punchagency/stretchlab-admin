@@ -73,14 +73,23 @@ export const getTempUserInfo = (): CustomJwtPayload | null => {
 };
 
 export const deleteUserCookie = (): void => {
-  // Remove cookies with explicit path and domain options to ensure they're deleted
-  // even if they were set with different options
-  Cookies.remove("token", { path: "/" });
-  Cookies.remove("temp_token", { path: "/" });
-  
+  const isSecure = window.location.protocol === "https:";
+
+  // Remove cookies with explicit path and secure options to match how they were set
+  Cookies.remove("token", {
+    path: "/",
+    secure: isSecure,
+    sameSite: "lax"
+  });
+  Cookies.remove("temp_token", {
+    path: "/",
+    secure: isSecure,
+    sameSite: "lax"
+  });
+
   // Also try removing without path in case they were set without explicit path
-  Cookies.remove("token");
-  Cookies.remove("temp_token");
+  Cookies.remove("token", { secure: isSecure, sameSite: "lax" });
+  Cookies.remove("temp_token", { secure: isSecure, sameSite: "lax" });
 };
 
 export const clearAllAuthCookies = (): void => {
