@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Input, Button, Spinner } from "../shared";
 import { login } from "@/service/auth";
 import type { ApiError, LoginResponse } from "@/types";
-import { setTempUserCookie, setUserCookie } from "@/utils";
+import { setTempUserCookie, setUserCookie, clearAllAuthCookies } from "@/utils";
 import { Link, useNavigate } from "react-router";
 import { renderSuccessToast, renderErrorToast } from "../utils";
 
@@ -35,7 +35,7 @@ export const LoginForm = () => {
     try {
       setIsLoading(true);
       // Clear any existing auth cookies before login
-      // clearAllAuthCookies();
+      clearAllAuthCookies();
       const response = await login(formData.email, formData.password);
       if (response.status === 200) {
         const loginData = response.data as LoginResponse;
