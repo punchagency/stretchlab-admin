@@ -1,9 +1,9 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { getUserInfo } from "@/utils";
-import { getTwoFactorStatus, enableTwoFactor, disableTwoFactor, changePassword, changeEmailInitiate, uploadProfilePicture } from "@/service/settings";
+import { getTwoFactorStatus, enableTwoFactor, disableTwoFactor, changePassword, changeEmailInitiate, uploadProfilePicture, getCoupons, addCoupon } from "@/service/settings";
 import { renderErrorToast, renderSuccessToast } from "@/components/utils";
 import type { ApiError } from "@/types";
-import type { ProfileFormData, PasswordFormData, TwoFactorSettings, TwoFactorModalState } from "@/types/settings";
+import type { ProfileFormData, PasswordFormData, TwoFactorSettings, TwoFactorModalState, Coupon, CouponFormData } from "@/types/settings";
 import { useProfilePictureContext } from "@/contexts/ProfilePictureContext";
 
 export const useSettings = () => {
@@ -40,6 +40,18 @@ export const useSettings = () => {
   const [isLoadingProfilePicture, setIsLoadingProfilePicture] = useState(false);
   const [isLoadingProfilePictureDelete, setIsLoadingProfilePictureDelete] = useState(false);
   const [hasLoadedTwoFactor, setHasLoadedTwoFactor] = useState(false);
+
+  // Coupon state
+  const [coupons, setCoupons] = useState<Coupon[]>([]);
+  const [couponFormData, setCouponFormData] = useState<CouponFormData>({
+    coupon_code: "",
+    coupon_type: "all",
+    coupon_name: "",
+    coupon_id: "",
+  });
+  const [isLoadingCoupons, setIsLoadingCoupons] = useState(false);
+  const [isLoadingAddCoupon, setIsLoadingAddCoupon] = useState(false);
+  const [hasLoadedCoupons, setHasLoadedCoupons] = useState(false);
 
   // Email change modal state
   const [emailChangeModal, setEmailChangeModal] = useState({
@@ -84,6 +96,44 @@ export const useSettings = () => {
       loadTwoFactorStatus();
     }
   }, [user, hasLoadedTwoFactor, loadTwoFactorStatus]);
+
+  const loadCoupons = useCallback(async () => {
+    try {
+      setIsLoadingCoupons(true);
+      const response = await getCoupons();
+      if (response.status === 200) {
+        // Handle different possible response structures
+        let couponsData = [];
+        if (response.data) {
+          if (Array.isArray(response.data)) {
+            // If response.data is directly an array
+            couponsData = response.data;
+          } else if (response.data.coupons && Array.isArray(response.data.coupons)) {
+            // If response.data.coupons is an array
+            couponsData = response.data.coupons;
+          } else if (response.data.data && Array.isArray(response.data.data)) {
+            // If response.data.data is an array
+            couponsData = response.data.data;
+          }
+        }
+        
+        setCoupons(couponsData);
+        setHasLoadedCoupons(true);
+      }
+    } catch (error) {
+      console.error('Error loading coupons:', error);
+      setCoupons([]);
+      setHasLoadedCoupons(true);
+    } finally {
+      setIsLoadingCoupons(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (activeSection === "coupon" && !hasLoadedCoupons) {
+      loadCoupons();
+    }
+  }, [activeSection, hasLoadedCoupons, loadCoupons]);
 
 
 
@@ -318,6 +368,45 @@ export const useSettings = () => {
     }));
   };
 
+  const handleCouponInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setCouponFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleAddCoupon = async () => {
+    if (!couponFormData.coupon_code || !couponFormData.coupon_name || !couponFormData.coupon_id) {
+      renderErrorToast("Please fill in all coupon fields");
+      return;
+    }
+
+    try {
+      setIsLoadingAddCoupon(true);
+      const response = await addCoupon(couponFormData);
+
+      if (response.status === 200) {
+        renderSuccessToast(response.data.message || "Coupon added successfully");
+        setCouponFormData({
+          coupon_code: "",
+          coupon_type: "all",
+          coupon_name: "",
+          coupon_id: "",
+        });
+        // Reload coupons
+        await loadCoupons();
+      } else {
+        renderErrorToast(response.data.message || "Failed to add coupon");
+      }
+    } catch (error) {
+      const apiError = error as ApiError;
+      renderErrorToast(apiError.response?.data.message || "Failed to add coupon");
+    } finally {
+      setIsLoadingAddCoupon(false);
+    }
+  };
+
   return {
     user,
     activeSection,
@@ -328,6 +417,10 @@ export const useSettings = () => {
     twoFactorSettings,
     twoFactorModal,
     emailChangeModal,
+    coupons,
+    couponFormData,
+    isLoadingCoupons,
+    isLoadingAddCoupon,
     isLoadingTwoFactor,
     isLoadingPassword,
     isLoadingEmailChange,
@@ -338,11 +431,13 @@ export const useSettings = () => {
     setPasswordTab,
     handleProfileInputChange,
     handlePasswordInputChange,
+    handleCouponInputChange,
     handleTwoFactorToggle,
     handleImageUpload,
     handleImageDelete,
     handleSaveProfile,
     handleUpdatePassword,
+    handleAddCoupon,
     handleTwoFactorModalClose,
     handleTwoFactorSuccess,
     handleEmailChangeModalClose,

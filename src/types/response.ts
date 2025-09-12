@@ -48,6 +48,7 @@ export interface RobotConfig {
   status: string;
   selected_locations: string[];
   locations: string[];
+  excluded_names: string[];
   users: {
     clubready_username: string;
     clubready_password: string;

@@ -73,4 +73,19 @@ export const getProfilePicture = async () => {
 export const deleteProfilePicture = async () => {
   const response = await api.delete("/admin/settings/delete-profile-picture");
   return response;
+};
+
+export const getCoupons = async () => {
+  const response = await api.get("/admin/settings/get-coupon");
+  return response;
+};
+
+export const addCoupon = async (couponData: {
+  coupon_code: string;
+  coupon_type: "all" | "robot" | "note_taking";
+  coupon_name: string;
+  coupon_id: string;
+}) => {
+  const response = await api.post("/admin/settings/add-coupon", couponData);
+  return response;
 }; 
