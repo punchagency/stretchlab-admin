@@ -39,6 +39,7 @@ interface RankingBarChartProps {
   dataSet?: string;
   onBarClick: (name: string) => void;
   selectedLocation?: string | null;
+  selectedDataset?: string;
 }
 
 export const RankingBarChart: React.FC<RankingBarChartProps> = ({
@@ -46,10 +47,11 @@ export const RankingBarChart: React.FC<RankingBarChartProps> = ({
   isLoading,
   dataSet,
   onBarClick,
-  selectedLocation
+  selectedLocation,
+  selectedDataset
 }) => {
   const isMobile = useIsMobile();
-
+  
   if (isLoading) {
     return <ChartSkeleton />;
   }
@@ -90,7 +92,7 @@ export const RankingBarChart: React.FC<RankingBarChartProps> = ({
         }}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis type="number" fontSize={fontSize} fontWeight={500}  tickFormatter={(value) => `${value}%`} />
+        <XAxis type="number" fontSize={fontSize} fontWeight={500}  tickFormatter={(value) => selectedDataset === "Total Client Visits" ? `${value}` : `${value}%`} />
         <YAxis 
           dataKey="displayName" 
           type="category" 
@@ -108,7 +110,7 @@ export const RankingBarChart: React.FC<RankingBarChartProps> = ({
           }}
         />
         <Bar dataKey="value">
-          <LabelList dataKey="value" position="right"  formatter={(value: any) => `${value}%`}/>
+          <LabelList dataKey="value" position="right"  formatter={(value: any) => selectedDataset === "Total Client Visits" ? `${value}` : `${value}%`}/>
           {processedData.map((_, index) => (
             <Cell
               key={`cell-${index}`}
