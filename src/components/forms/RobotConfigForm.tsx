@@ -10,7 +10,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import type { ApiError, RobotConfig } from "@/types/response";
 import { Config, PaymentCollection } from "../app";
 import type { BillingInfo } from "@/types";
-import { getUserInfo, getTempUserCookie, setUserCookie } from "@/utils";
+import { setUserCookie } from "@/utils";
 import { useNavigate } from "react-router";
 
 export const RobotConfigForm = ({
@@ -52,6 +52,20 @@ export const RobotConfigForm = ({
     return [];
   };
 
+  const parseExcludedNames = (excludedData: any): string[] => {
+    if (Array.isArray(excludedData)) return excludedData;
+    if (typeof excludedData === 'string') {
+      try {
+        const parsed = JSON.parse(excludedData);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (e) {
+        console.error('Error parsing excluded names:', e);
+        return [];
+      }
+    }
+    return [];
+  };
+
   const [locations, setLocations] = useState<string[]>(parseLocations(data?.locations));
   const [selectedLocations, setSelectedLocations] = useState<string[]>(parseLocations(data?.selected_locations));
 
@@ -59,7 +73,7 @@ export const RobotConfigForm = ({
     clubReadyUsername: data?.users?.clubready_username || "",
     clubReadyPassword: data?.users?.clubready_password || "",
     numberOfStudioLocations: data?.number_of_locations?.toString() || parseLocations(data?.selected_locations).length.toString(),
-    excludeClientNames: "",
+    excludeClientNames: parseExcludedNames((data as any)?.excluded_names).join(", "),
     // unloggedBookings: data?.unlogged_booking ? data.unlogged_booking : false,
     // dailyRunTime: data?.run_time ? data.run_time : "09:00",
   });
@@ -74,6 +88,11 @@ export const RobotConfigForm = ({
 
   const handleLocationSelect = (location: string) => {
     setSelectedLocations(prev => {
+      // Prevent deselection if it would result in 0 selected locations
+      if (prev.includes(location) && prev.length === 1) {
+        return prev;
+      }
+
       const newSelected = prev.includes(location)
         ? prev.filter(loc => loc !== location)
         : [...prev, location];
@@ -129,7 +148,7 @@ export const RobotConfigForm = ({
       setFormError("Please select at least one location");
       return;
     }
-    if (selectedLocations.length === 0 && !isEditing) {
+    if (selectedLocations.length === 0) {
       setFormError("Please select at least one location");
       return;
     }
@@ -137,6 +156,10 @@ export const RobotConfigForm = ({
       setSaving(true);
       let response;
       if (isEditing) {
+        let excludeClientNames: string[] = [];
+        if (formData.excludeClientNames && formData.excludeClientNames.length > 0) {
+          excludeClientNames = formData.excludeClientNames.split(",");
+        }
         response = await updateSettings({
           // ...formData,
           clubReadyUsername: formData.clubReadyUsername,
@@ -147,6 +170,7 @@ export const RobotConfigForm = ({
           ),
           selectedStudioLocations: selectedLocations,
           studioLocations: locations,
+          excludedNames: excludeClientNames.filter((name: string) => name.trim().length > 0),
         });
       } else {
         let excludeClientNames: string[] = [];
@@ -168,13 +192,7 @@ export const RobotConfigForm = ({
       if (response.status === 200) {
         renderSuccessToast("Settings saved successfully");
         if (isSignupFlow) {
-          const user = getUserInfo();
-          if (!user) {
-            const tempToken = getTempUserCookie();
-            if (tempToken) {
-              setUserCookie(tempToken);
-            }
-          }
+          setUserCookie(response.data.token);
           navigate("/dashboard");
           return;
         }
@@ -384,10 +402,10 @@ export const RobotConfigForm = ({
             onClose={() => setPaymentInfo(false)}
             billingInfo={billingInfo}
             robot={true}
-            update={false}
-            setUpdate={() => { }}
-            // update={update}
-            // setUpdate={setUpdate}
+            // update={false}
+            // setUpdate={() => { }}
+            update={update}
+            setUpdate={setUpdate}
             setProceed={setProceed}
           />
         )}
@@ -491,6 +509,18 @@ export const RobotConfigForm = ({
                         />
                       </div>
 
+                      <div>
+                        <Input
+                          label="Enter Client Name To Exclude"
+                          type="text"
+                          name="excludeClientNames"
+                          placeholder="Enter client name to exclude"
+                          value={formData.excludeClientNames}
+                          onChange={handleChange}
+                          helperText="Enter client name to exclude from robot automation"
+                        />
+                      </div>
+
                       {/* Location Selection */}
                       {locations.length > 0 && (
                         <div className="space-y-3 mt-4">
@@ -581,7 +611,7 @@ export const RobotConfigForm = ({
                         )}
                         <Button
                           type="submit"
-                          disabled={!verified || saving}
+                          disabled={!verified || saving || selectedLocations.length === 0}
                           className="mt-5 bg-primary-base flex items-center justify-center gap-2 w-full text-white py-3 md:py-4 text-xs md:text-base"
                         >
                           {saving ? (
