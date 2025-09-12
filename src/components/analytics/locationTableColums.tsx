@@ -7,7 +7,7 @@ const getDescription = (dataSet: string | undefined) => {
     switch (dataSet) {
         case "% App Submissions":
             return {
-                valueColumn: "% App Submission",
+                valueColumn: "Average Note Quality %",
                 totalColumn: "Total Flexologist Appointment",
                 hoveredValueText: "% of Appointment Submitted with the App",
             }

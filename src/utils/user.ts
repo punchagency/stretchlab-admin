@@ -70,4 +70,5 @@ export const getTempUserInfo = (): CustomJwtPayload | null => {
 export const deleteUserCookie = (): void => {
   Cookies.remove("token", { domain: cookieDomain });
   Cookies.remove("temp_token", { domain: cookieDomain });
+  console.log("deleted user cookie");
 };

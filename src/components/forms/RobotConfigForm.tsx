@@ -23,7 +23,8 @@ export const RobotConfigForm = ({
   isSignupFlow?: boolean;
 }) => {
   const navigate = useNavigate();
-  const [verified, setVerified] = useState(data ? true : false);
+  // const [verified, setVerified] = useState(data ? true : false);
+  const [verified, setVerified] = useState(false)
   const [verifying, setVerifying] = useState(false);
   const [isConfig, setIsConfig] = useState(data ? true : false);
   // const [editLocation, setEditLocation] = useState(data ? false : true);
