@@ -37,7 +37,7 @@ const CheckoutForm = ({
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [paymentElementReady, setPaymentElementReady] = useState(false);
-  const [coupon, setCoupon] = useState("");
+  // const [coupon, setCoupon] = useState("");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -80,7 +80,7 @@ const CheckoutForm = ({
 
           const response = await createPaymentMethod(
             confirmedSetupIntent.payment_method as string,
-            coupon
+            // coupon
           );
           if (response.status === 200) {
             renderSuccessToast(
@@ -95,7 +95,7 @@ const CheckoutForm = ({
         } else if (setupIntent.status === "succeeded") {
           const response = await createPaymentMethod(
             setupIntent.payment_method as string,
-            coupon
+            // coupon
           );
           if (response.status === 200) {
             renderSuccessToast(
@@ -128,7 +128,7 @@ const CheckoutForm = ({
           } per month.`}
       </p>
       <PaymentElement onReady={() => setPaymentElementReady(true)} />
-      <div className="mt-4">
+      {/* <div className="mt-4">
         <label htmlFor="coupon" className="block text-sm font-medium text-gray-500 mb-2">
           Coupon Code
         </label>
@@ -140,7 +140,7 @@ const CheckoutForm = ({
           placeholder="Enter coupon code"
           className="w-full px-3 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-base focus:border-transparent"
         />
-      </div>
+      </div> */}
       {errorMessage && <p className="text-red-500 mt-3">{errorMessage}</p>}
       <div className="flex items-center mt-4 gap-2">
         {update && (

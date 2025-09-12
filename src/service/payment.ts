@@ -7,10 +7,10 @@ export const initialize = async (role: string) => {
   return response;
 };
 
-export const createPaymentMethod = async (payment_id: string, coupon: string) => {
+export const createPaymentMethod = async (payment_id: string) => {
   const response = await api.post("/admin/payment/update-payment-method", {
     payment_id,
-    coupon,
+    // coupon,
   });
   return response;
 };
