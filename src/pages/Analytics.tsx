@@ -221,6 +221,7 @@ export const Analytics = () => {
               dataSet={selectedFilters.dataset}
               onBarClick={handleLocationSelect}
               selectedLocation={selectedLocation}
+              selectedDataset={selectedFilters.dataset}
             />
             <div className='mt-6'>
               {isRankingLoading || isLocationLoading ?
