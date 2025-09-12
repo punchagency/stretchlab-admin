@@ -1,16 +1,22 @@
-import { Lock, User } from "lucide-react";
+import { Lock, User, NotebookTabs } from "lucide-react";
 import { useSettings } from "@/hooks/useSettings";
-import { ProfileSection, PasswordSection } from "@/components/settings";
+import { ProfileSection, PasswordSection, CouponSection } from "@/components/settings";
+import { getUserInfo } from "@/utils";
 
 const SETTINGS_NAV_ITEMS = [
   { id: "profile", label: "Profile", icon: User },
   { id: "password", label: "Password & Security", icon: Lock },
-  // { id: "edit client names", label: "Update Client Names", icon: User }
+  { id: "coupon", label: "Coupon", icon: NotebookTabs }
 ] as const;
 
 export const Settings = () => {
+  const person = getUserInfo();
   const settingsData = useSettings();
   const { user, activeSection, setActiveSection } = settingsData;
+
+  const visibleNavItems = SETTINGS_NAV_ITEMS.filter(
+    (item) => item.id !== "coupon" || person?.role_id === 1
+  );
 
   const renderContent = () => {
     if (!user) {
@@ -25,8 +31,14 @@ export const Settings = () => {
         return <ProfileSection settingsData={settingsData} />;
       case "password":
         return <PasswordSection settingsData={settingsData} />;
-      // case 'edit client names':
-      //   return <UpdateClientName />;
+      case "coupon":
+        return person?.role_id === 1 ? (
+          <CouponSection settingsData={settingsData} />
+        ) : (
+          <div className="text-center py-12">
+            <p className="text-gray-500">You do not have permission to view this section.</p>
+          </div>
+        );
       default:
         return <ProfileSection settingsData={settingsData} />;
     }
@@ -47,7 +59,7 @@ export const Settings = () => {
             {/* Desktop Sidebar */}
             <div className="hidden lg:block w-64 flex-shrink-0 p-4">
               <nav className="space-y-1">
-                {SETTINGS_NAV_ITEMS.map((item) => (
+                {visibleNavItems.map((item) => (
                   <button
                     key={item.id}
                     onClick={() => setActiveSection(item.id)}
@@ -69,7 +81,7 @@ export const Settings = () => {
             {/* Mobile/Tablet Tab Navigation */}
             <div className="lg:hidden border-b border-gray-200 p-4">
               <div className="flex space-x-1 bg-gray-100 rounded-lg p-1">
-                {SETTINGS_NAV_ITEMS.map((item) => (
+                {visibleNavItems.map((item) => (
                   <button
                     key={item.id}
                     onClick={() => setActiveSection(item.id)}
