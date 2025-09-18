@@ -91,7 +91,7 @@ export const Settings = () => {
                         ? 'bg-white text-primary-base font-medium shadow-sm'
                         : 'text-gray-600 hover:text-gray-900'
                       }
-                    `}
+                    `} 
                   >
                     <item.icon className="w-4 h-4 mr-2" />
                     <span className="hidden sm:inline">{item.label}</span>

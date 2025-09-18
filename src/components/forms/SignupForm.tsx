@@ -144,7 +144,7 @@ export const SignupForm = () => {
         type="password"
         name="password"
         placeholder="Enter password"
-        value={formData.password}
+        value={formData.password} 
         onChange={handleChange}
       />
       <Input

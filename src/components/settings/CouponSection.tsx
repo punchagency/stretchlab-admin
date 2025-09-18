@@ -120,7 +120,7 @@ export const CouponSection = ({ settingsData }: CouponSectionProps) => {
           <div className="text-center py-8">
             <p className="text-sm text-muted-foreground">No coupons found.</p>
           </div>
-        ) : (
+        ) : ( 
           <div className="grid gap-6 lg:grid-cols-2">
             {coupons.map((coupon: Coupon) => (
               <div

@@ -20,7 +20,7 @@ export const Billing = () => {
     refetch,
     flexologistStatus,
     rpaStatus,
-  } = useBilling();
+  } = useBilling(); 
 
   if (isLoading) {
     return (
