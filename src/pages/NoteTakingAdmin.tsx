@@ -595,7 +595,7 @@ export const NoteTakingAdmin = () => {
         </AnimatePresence>
       )}
       <div>
-        <DataTable
+        <DataTable 
           handleModal={() => setShowModal(true)}
           handleBulkInvite={() => setShowBulkInviteModal(true)}
           handleResendInvite={handleResendInvite}

@@ -2,7 +2,7 @@ import { Button, Input, Spinner, FilterDropdown } from "@/components/shared";
 import type { Coupon } from "@/types/settings";
 
 interface CouponSectionProps {
-  settingsData: any; // You can type this properly based on your useSettings return type
+  settingsData: any; 
 }
 
 export const CouponSection = ({ settingsData }: CouponSectionProps) => {
@@ -12,14 +12,14 @@ export const CouponSection = ({ settingsData }: CouponSectionProps) => {
     isLoadingCoupons,
     isLoadingAddCoupon,
     handleCouponInputChange,
+    handleCouponInputBlur,
     handleAddCoupon,
   } = settingsData;
 
-  console.log('CouponSection - coupons:', coupons);
   const handleCouponTypeChange = (value: string) => {
     handleCouponInputChange({
       target: { name: 'coupon_type', value }
-    } as React.ChangeEvent<HTMLSelectElement>);
+    } as React.ChangeEvent<HTMLSelectElement>); 
   };
 
   return (
@@ -49,6 +49,7 @@ export const CouponSection = ({ settingsData }: CouponSectionProps) => {
               className="py-3 rounded-md text-sm"
               labelStyle="text-sm font-medium"
               helperText="Promotion code from stripe"
+              onBlur={handleCouponInputBlur}
             />
 
             <FilterDropdown
@@ -73,6 +74,7 @@ export const CouponSection = ({ settingsData }: CouponSectionProps) => {
               className="py-3 rounded-md text-sm"
               labelStyle="text-sm font-medium"
               helperText="Coupon name from stripe"
+              onBlur={handleCouponInputBlur}
             />
 
             <Input
@@ -85,6 +87,7 @@ export const CouponSection = ({ settingsData }: CouponSectionProps) => {
               className="py-3 rounded-md text-sm"
               labelStyle="text-sm font-medium"
               helperText="App ID under promotion code in stripe"
+              onBlur={handleCouponInputBlur}
             />
           </div>
 
@@ -120,7 +123,7 @@ export const CouponSection = ({ settingsData }: CouponSectionProps) => {
           <div className="text-center py-8">
             <p className="text-sm text-muted-foreground">No coupons found.</p>
           </div>
-        ) : (
+        ) : ( 
           <div className="grid gap-6 lg:grid-cols-2">
             {coupons.map((coupon: Coupon) => (
               <div

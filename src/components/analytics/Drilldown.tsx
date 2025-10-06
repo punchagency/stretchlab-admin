@@ -23,7 +23,7 @@ export const Drilldown: React.FC<DrilldownProps> = ({
   data,
   isLoading,
 }) => {
-  console.log({ data });
+
   const [locationPage, setLocationPage] = useState(0);
   const [flexologistPage, setFlexologistPage] = useState(0);
   const itemsPerPage = 5;

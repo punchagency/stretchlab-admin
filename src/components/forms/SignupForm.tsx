@@ -20,6 +20,11 @@ export const SignupForm = () => {
   const [checkingUsername, setCheckingUsername] = useState(false);
   const [usernameSuccess, setUsernameSuccess] = useState("");
 
+  const isValidPassword = (password: string) => {
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+    return passwordRegex.test(password);
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setError("");
     const { name, value } = e.target;
@@ -81,6 +86,14 @@ export const SignupForm = () => {
       setError("Please fill in all fields");
       return;
     }
+
+    if (!isValidPassword(formData.password)) {
+      setError(
+        "Password must be at least 8 characters long, include letters, numbers, and at least one special character."
+      );
+      return;
+    }
+
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match");
       return;
@@ -144,7 +157,7 @@ export const SignupForm = () => {
         type="password"
         name="password"
         placeholder="Enter password"
-        value={formData.password}
+        value={formData.password} 
         onChange={handleChange}
       />
       <Input

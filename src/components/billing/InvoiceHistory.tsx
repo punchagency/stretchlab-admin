@@ -174,7 +174,7 @@ export const InvoiceHistory = ({
         onClose={handleModalClose}
         onConfirm={confirmSubscriptionAction}
         title={actionType === "cancel" ? "Cancel Subscription" : "Restart Subscription"}
-        message={`Are you sure you want to ${actionType} your ${subscriptionToModify === "note_taking" ? "Note Taking" : "RPA Automation"} subscription?${actionType === "cancel" ? " This action cannot be undone." : ""}`}
+        message={`Are you sure you want to ${actionType} your ${subscriptionToModify === "note_taking" ? "Note Taking" : "RPA Automation"} subscription?${actionType === "cancel" ? " This action cannot be undone." : "Billing will resume immediately when you restart your subscription."}`}
         loading={isLoading}
         error={false}
       />

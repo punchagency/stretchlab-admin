@@ -139,9 +139,6 @@ export const TwoFactorLoginForm: React.FC<TwoFactorLoginFormProps> = ({
                 </p>
               </div>
             </div>
-
-
-
             <Button
               disabled={isLoading || code.length !== 6}
               type="submit"
