@@ -35,7 +35,6 @@ export const Home = () => {
   const userInfo = getUserInfo();
   useEffect(() => {
     const userCookie = getUserCookie();
-    console.log({ userInfo });
     if (!userCookie) {
       navigate("/login");
     }

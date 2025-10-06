@@ -94,7 +94,7 @@ export const businessTableColumns = (onViewDetails: (businessId: number) => void
   },
   {
     id: "actions",
-    header: "Actions",
+    header: "Actions", 
     cell: ({ row }) => {
       const business = row.original;
 

@@ -60,7 +60,7 @@ export const OpportunityBarChart: React.FC<OpportunityBarChartProps> = ({
   }
 
   const truncateLength = isMobile ? 19 : 25;
-  const yAxisWidth = isMobile ? 150 : 250;
+  const yAxisWidth = isMobile ? 100 : 250;
   const fontSize = isMobile ? 11 : 12;
   const barSize = isMobile ? 25 : 35;
 

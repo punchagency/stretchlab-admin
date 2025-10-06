@@ -72,7 +72,6 @@ export const UserManagement = () => {
     };
 
     const handleAccess = async (user_id: number, enable: boolean) => {
-        console.log({ user_id, enable });
         setIsAccessing(user_id);
         try {
             const response = await updateManagerAccess(user_id, enable);

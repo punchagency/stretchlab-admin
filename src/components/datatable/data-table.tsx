@@ -76,7 +76,7 @@ export function DataTable<TData extends { id: number | string }, TValue>({
   enableSorting = false,
   enableSearch = false,
   searchFields = [],
-  searchPlaceholder = "Search...",
+  searchPlaceholder = "Search...", 
   tableCellClassName,
   enableMyTeamDropdown = false,
   selectedDuration,
