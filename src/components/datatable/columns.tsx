@@ -11,6 +11,7 @@ export type Payment = {
   invited_at: string;
   resend_invite: boolean;
   role_id: number;
+  permissions?: any
 };
 
 const resendInvite = (email: string) => {
