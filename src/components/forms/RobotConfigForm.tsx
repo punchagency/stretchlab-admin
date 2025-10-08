@@ -13,7 +13,7 @@ import type { BillingInfo } from "@/types";
 import { setUserCookie } from "@/utils";
 import { useNavigate } from "react-router";
 
-export const RobotConfigForm = ({
+export const RobotConfigForm = ({ 
   data,
   refetch,
   isSignupFlow = false,

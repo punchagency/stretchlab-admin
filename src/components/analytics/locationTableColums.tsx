@@ -44,7 +44,8 @@ interface LocationTableColumnsProps {
 export const getLocationTableColumns = (props?: LocationTableColumnsProps): ColumnDef<LocationAnalyticsItem>[] => {
     const { metric, selectedLocation } = props || {};
     const { valueColumn, totalColumn, hoveredValueText } = getDescription(metric);
-    return [
+    
+    const columns: ColumnDef<LocationAnalyticsItem>[] = [
         {
             accessorKey: "name",
             header: "Flexologist Name",
@@ -77,7 +78,11 @@ export const getLocationTableColumns = (props?: LocationTableColumnsProps): Colu
                 );
             },
         },
-        {
+    ];
+
+    // Only add the total column if the metric is not "Total Client Visits"
+    if (metric !== "Total Client Visits") {
+        columns.push({
             accessorKey: "total",
             header: totalColumn,
             cell: ({ row }) => {
@@ -89,8 +94,10 @@ export const getLocationTableColumns = (props?: LocationTableColumnsProps): Colu
                     </span>
                 );
             },
-        },
-    ];
+        });
+    }
+
+    return columns;
 };
 
 export const locationTableColumns: ColumnDef<LocationAnalyticsItem>[] = getLocationTableColumns(); 

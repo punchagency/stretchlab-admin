@@ -40,7 +40,7 @@ export const RobotAutomation = () => {
         <RobotConfigForm
           refetch={refetch}
           data={data?.data.config ? data.data.robot_config : undefined}
-        />
+        /> 
       )}
 
       <div className='flex items-center gap-2 mb-4 p-3 rounded-lg border bg-orange-50 border-orange-200 my-4'>

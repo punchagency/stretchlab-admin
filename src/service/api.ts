@@ -10,7 +10,7 @@ api.interceptors.request.use((config) => {
   const check_temp = getTempUserCookie();
   const token = getUserCookie();
   if (check_temp) {
-    config.headers.Authorization = `Bearer ${check_temp}`;
+    config.headers.Authorization = `Bearer ${check_temp}`; 
   } else if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }

@@ -376,6 +376,16 @@ export const useSettings = () => {
     }));
   };
 
+  const handleCouponInputBlur = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setCouponFormData(prev => ({
+      ...prev,
+      [name]: value.trim()
+    }));
+  };
+
   const handleAddCoupon = async () => {
     if (!couponFormData.coupon_code || !couponFormData.coupon_name || !couponFormData.coupon_id) {
       renderErrorToast("Please fill in all coupon fields");
@@ -441,5 +451,6 @@ export const useSettings = () => {
     handleTwoFactorModalClose,
     handleTwoFactorSuccess,
     handleEmailChangeModalClose,
+    handleCouponInputBlur
   };
 }; 

@@ -101,7 +101,7 @@ export const TwoFactorModal = ({ isOpen, onClose, mode, onSuccess }: TwoFactorMo
           }
         </p>
       </div>
-
+ 
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <OTPInputComponent

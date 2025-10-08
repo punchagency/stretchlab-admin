@@ -3,6 +3,7 @@ import {
     fetchManagers,
     inviteManager,
     updateManagerAccess,
+    grantOrRevokePermission,
 } from "@/service/user";
 import { useState } from "react";
 import {
@@ -24,19 +25,26 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { AnimatePresence, motion } from "framer-motion";
 import { ErrorHandle } from "@/components/app";
-
+import {
+    Popover,
+    PopoverTrigger,
+    PopoverContent,
+} from "@/components/ui/popover";
+import { MoreHorizontal } from "lucide-react";
 
 export const UserManagement = () => {
     const { data, isPending, error, isFetching, refetch } = useQuery({
         queryKey: ["managers"],
         queryFn: fetchManagers,
     });
+
     const [email, setEmail] = useState("");
     const [formError, setFormError] = useState("");
     const [showModal, setShowModal] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [isResending, setIsResending] = useState("");
     const [isAccessing, setIsAccessing] = useState<number | null>(null);
+    const [isPermissionLoading, setIsPermissionLoading] = useState<string | null>(null);
 
     if (isPending) {
         return (
@@ -45,6 +53,7 @@ export const UserManagement = () => {
             </div>
         );
     }
+
     if (error) {
         return <ErrorHandle retry={refetch} />;
     }
@@ -61,7 +70,7 @@ export const UserManagement = () => {
             }
         } catch (error) {
             const apiError = error as ApiError;
-            if (apiError.response.status === 409) {
+            if (apiError.response?.status === 409) {
                 renderWarningToast(apiError.response.data.message);
             } else {
                 renderErrorToast(apiError.response.data.message);
@@ -72,7 +81,6 @@ export const UserManagement = () => {
     };
 
     const handleAccess = async (user_id: number, enable: boolean) => {
-        console.log({ user_id, enable });
         setIsAccessing(user_id);
         try {
             const response = await updateManagerAccess(user_id, enable);
@@ -87,10 +95,38 @@ export const UserManagement = () => {
             }
         } catch (error) {
             const apiError = error as ApiError;
-            renderErrorToast(apiError.response.data.message);
+            renderErrorToast(apiError.response?.data?.message || "Error updating access");
             setIsAccessing(null);
         }
     };
+
+    const handlePermissionChange = async (
+        user_id: number,
+        permission_tag: string,
+        add_permission: boolean
+    ) => {
+        const key = `${user_id}-${permission_tag}`;
+        setIsPermissionLoading(key);
+        try {
+            const response = await grantOrRevokePermission({
+                user_id,
+                permission_tag,
+                add_permission,
+            });
+            if (response.status >= 200) {
+                renderSuccessToast(response.data.message);
+                refetch();
+            } else {
+                renderErrorToast(response.data.message);
+            }
+        } catch (error) {
+            const apiError = error as ApiError;
+            renderErrorToast(apiError.response?.data?.message || "Error updating permission");
+        } finally {
+            setIsPermissionLoading(null);
+        }
+    };
+
     const userColumns: ColumnDef<Payment>[] = [
         {
             accessorKey: "full_name",
@@ -98,21 +134,18 @@ export const UserManagement = () => {
         },
         {
             accessorKey: "email",
-            header: ({ column }) => {
-                return (
-                    <Button
-                        variant="ghost"
-                        className="-ml-3"
-                        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                    >
-                        Email
-                    </Button>
-                );
-            },
+            header: ({ column }) => (
+                <Button
+                    variant="ghost"
+                    className="-ml-3"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Email
+                </Button>
+            ),
         },
         {
             accessorKey: "status",
-            // id: "status",
             header: "Status",
             cell: ({ row }) => {
                 const status = row.getValue("status") as number;
@@ -131,36 +164,30 @@ export const UserManagement = () => {
                     5: "bg-[#FEF6E7] text-[#865503]",
                 } as const;
 
-                return status ? (
+                return (
                     <div
-                        className={`${badgeColor[status as keyof typeof badgeColor]
-                            } px-2 py-1.5 rounded-2xl w-20 text-center font-medium`}
+                        className={`${badgeColor[status as keyof typeof badgeColor]} px-2 py-1.5 rounded-2xl w-20 text-center font-medium`}
                     >
                         {statuses[status]}
                     </div>
-                ) : (
-                    <p className="text-gray-500">Not Invited</p>
                 );
             },
         },
         {
             accessorKey: "invited_at",
-            header: ({ column }) => {
-                return (
-                    <Button
-                        variant="ghost"
-                        className="-ml-3"
-                        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                    >
-                        Date Invited
-                    </Button>
-                );
-            },
+            header: ({ column }) => (
+                <Button
+                    variant="ghost"
+                    className="-ml-3"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Date Invited
+                </Button>
+            ),
             cell: ({ row }) => {
                 const dateInvited = row.getValue("invited_at") as string;
-
                 return dateInvited ? (
-                    <div className=" font-medium">
+                    <div className="font-medium">
                         {new Date(dateInvited).toLocaleDateString()}
                     </div>
                 ) : (
@@ -168,7 +195,6 @@ export const UserManagement = () => {
                 );
             },
         },
-
         {
             accessorKey: "status",
             header: "Access",
@@ -193,7 +219,6 @@ export const UserManagement = () => {
             cell: ({ row }) => {
                 const email = row.getValue("email") as string;
                 const status = row.getValue("status") as number;
-
                 return (
                     <Button
                         disabled={status === 1 || status === 2 || isResending === email}
@@ -207,12 +232,73 @@ export const UserManagement = () => {
                 );
             },
         },
+        {
+            id: "permissions",
+            header: "Permissions",
+            cell: ({ row }) => {
+                const user = row.original;
+                const allPermissions = data?.data?.data.permissions || [];
+
+                return (
+                    <Popover >
+                        <PopoverTrigger asChild>
+                            <Button variant="outline" className="">
+                                <MoreHorizontal className="h-5 w-5 text-gray-600" />
+                            </Button>
+                        </PopoverTrigger>
+                        <PopoverContent side="left"
+                            align="start"
+                            sideOffset={8}
+                            className="w-60 md:w-70 space-y-2 md:translate-x-[-10px]"
+                        >
+                            <h4 className="font-semibold text-sm mb-2">Manage Permissions</h4>
+                            {allPermissions.length === 0 && (
+                                <p className="text-gray-500 text-sm text-center">
+                                    No permissions available
+                                </p>
+                            )}
+                            {allPermissions.map((perm: any) => {
+                                const hasPermission = user.permissions?.some(
+                                    (p: any) => p.permission_tag === perm.permission_tag
+                                );
+                                const key = `${user.id}-${perm.permission_tag}`;
+                                return (
+                                    <div
+                                        key={perm.permission_tag}
+                                        className="flex justify-between items-center border-b pb-2"
+                                    >
+                                        <span className="text-sm font-medium">
+                                            {perm.permission_name}
+                                        </span>
+                                        <Button
+                                            size="sm"
+                                            variant={hasPermission ? "destructive" : "outline"}
+                                            disabled={isPermissionLoading === key}
+                                            onClick={() =>
+                                                handlePermissionChange(
+                                                    user.id,
+                                                    perm.permission_tag,
+                                                    !hasPermission
+                                                )
+                                            }
+                                        >
+                                            {isPermissionLoading === key
+                                                ? "Updating..."
+                                                : hasPermission
+                                                    ? "Revoke"
+                                                    : "Grant"}
+                                        </Button>
+                                    </div>
+                                );
+                            })}
+                        </PopoverContent>
+                    </Popover>
+                );
+            },
+        },
     ];
 
-    const validateEmail = (email: string) => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
-    };
+    const validateEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -232,7 +318,7 @@ export const UserManagement = () => {
             }
         } catch (error) {
             const apiError = error as ApiError;
-            if (apiError.response.status === 409) {
+            if (apiError.response?.status === 409) {
                 renderWarningToast(apiError.response.data.message);
             } else {
                 renderErrorToast(apiError.response.data.message);
@@ -270,11 +356,12 @@ export const UserManagement = () => {
                     </motion.div>
                 </AnimatePresence>
             )}
+
             <div>
                 <DataTable
                     handleModal={() => setShowModal(true)}
                     columns={userColumns}
-                    data={data?.data?.data}
+                    data={data?.data?.data.managers}
                     emptyText="No users invited yet."
                     enableSearch={true}
                     searchFields={["full_name", "email"]}
@@ -316,7 +403,6 @@ export const UserManagement = () => {
                     </Button2>
                 </form>
             </Modal>
-
         </div>
     );
 };

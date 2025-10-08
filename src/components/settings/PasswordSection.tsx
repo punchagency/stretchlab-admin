@@ -21,7 +21,7 @@ export const PasswordSection = ({ settingsData }: PasswordSectionProps) => {
     handleTwoFactorToggle,
     handleUpdatePassword,
     handleTwoFactorModalClose,
-    handleTwoFactorSuccess,
+    handleTwoFactorSuccess, 
   } = settingsData;
 
   return (

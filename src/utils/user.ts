@@ -15,6 +15,7 @@ interface CustomJwtPayload extends JwtPayload {
   note_verified?: boolean | null;
   requires_2fa?: boolean | null;
   is_verified?: boolean | null;
+  permissions?: any
 }
 
 export const setUserCookie = (token: string): void => {
@@ -70,5 +71,4 @@ export const getTempUserInfo = (): CustomJwtPayload | null => {
 export const deleteUserCookie = (): void => {
   Cookies.remove("token", { domain: cookieDomain });
   Cookies.remove("temp_token", { domain: cookieDomain });
-  console.log("deleted user cookie");
 };

@@ -32,3 +32,12 @@ export const addPassword = async (
   });
   return response;
 };
+
+export const grantOrRevokePermission = async (payload: {
+  user_id: number;
+  permission_tag: string;
+  add_permission: boolean;
+}) => {
+  const response = await api.post("/admin/user-management/grant-permission", payload);
+  return response;
+};

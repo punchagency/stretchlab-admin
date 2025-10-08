@@ -8,9 +8,10 @@ export const initialize = async (role: string) => {
 };
 
 export const createPaymentMethod = async (payment_id: string, coupon: string) => {
+  const normalizedCoupon = coupon?.trim().toUpperCase() || "";
   const response = await api.post("/admin/payment/update-payment-method", {
     payment_id,
-    coupon,
+    coupon : normalizedCoupon,
   });
   return response;
 };
