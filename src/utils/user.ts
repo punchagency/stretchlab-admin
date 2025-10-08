@@ -15,6 +15,7 @@ interface CustomJwtPayload extends JwtPayload {
   note_verified?: boolean | null;
   requires_2fa?: boolean | null;
   is_verified?: boolean | null;
+  permissions?: any
 }
 
 export const setUserCookie = (token: string): void => {

@@ -34,6 +34,7 @@ import {
 // } from "@radix-ui/react-dropdown-menu";
 import { SvgIcon } from "../shared";
 import { ChevronUp, ChevronDown, ChevronsUpDown } from "lucide-react";
+import { getUserInfo } from "@/utils";
 
 interface DataTableProps<TData extends { id: number | string }, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -76,7 +77,7 @@ export function DataTable<TData extends { id: number | string }, TValue>({
   enableSorting = false,
   enableSearch = false,
   searchFields = [],
-  searchPlaceholder = "Search...", 
+  searchPlaceholder = "Search...",
   tableCellClassName,
   enableMyTeamDropdown = false,
   selectedDuration,
@@ -88,7 +89,7 @@ export function DataTable<TData extends { id: number | string }, TValue>({
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [globalFilter, setGlobalFilter] = useState("");
-
+  const userInfo = getUserInfo();
   const customGlobalFilterFn = (row: any, _columnId: string, filterValue: string) => {
     if (!filterValue) return true;
 
@@ -143,24 +144,27 @@ export function DataTable<TData extends { id: number | string }, TValue>({
     <div className={`w-full max-w-full overflow-hidden px-2 sm:px-0 ${className || ""}`}>
       {note && (
         <div className="flex flex-col md:flex-row md:items-center gap-4 justify-between py-3 md:py-4 mb-3 md:mb-0">
-          <div className="flex flex-col sm:flex-row gap-3 order-2 md:order-1">
-            <Button2
-              onClick={handleBulkInvite}
-              className="flex items-center justify-center md:justify-start gap-2 py-3 px-4 text-primary-base border-2 border-primary-base hover:bg-primary-base hover:text-white transition-colors"
-            >
-              <SvgIcon name="send" fill="currentColor" />
-              Bulk Invite
-            </Button2>
-            {selectedUsersCount > 0 && (
+          {(userInfo?.role_id === 1 || userInfo?.role_id === 2 || userInfo?.permissions?.some(
+            (perm: any) => perm.permission_tag === "invite_flex"
+          )
+          ) && <div className="flex flex-col sm:flex-row gap-3 order-2 md:order-1">
               <Button2
-                onClick={handleResendInvite}
+                onClick={handleBulkInvite}
                 className="flex items-center justify-center md:justify-start gap-2 py-3 px-4 text-primary-base border-2 border-primary-base hover:bg-primary-base hover:text-white transition-colors"
               >
-                <SvgIcon name="email-send" fill="currentColor" />
-                Resend Invite ({selectedUsersCount})
+                <SvgIcon name="send" fill="currentColor" />
+                Bulk Invite
               </Button2>
-            )}
-          </div>
+              {selectedUsersCount > 0 && (
+                <Button2
+                  onClick={handleResendInvite}
+                  className="flex items-center justify-center md:justify-start gap-2 py-3 px-4 text-primary-base border-2 border-primary-base hover:bg-primary-base hover:text-white transition-colors"
+                >
+                  <SvgIcon name="email-send" fill="currentColor" />
+                  Resend Invite ({selectedUsersCount})
+                </Button2>
+              )}
+            </div>}
           <div className="flex flex-col sm:flex-row gap-3 md:items-center order-1 md:order-2">
             <Input
               type="search"
@@ -170,13 +174,15 @@ export function DataTable<TData extends { id: number | string }, TValue>({
               value={globalFilter}
               onChange={(event) => setGlobalFilter(event.target.value)}
             />
-            <Button2
+            {(userInfo?.role_id === 1 || userInfo?.role_id === 2 || userInfo?.permissions?.some(
+            (perm: any) => perm.permission_tag === "invite_flex"
+          )) && <Button2
               onClick={handleModal}
               className="flex items-center gap-2 py-3 text-white bg-primary-base justify-center md:justify-start"
             >
               <SvgIcon name="email-send" fill="#fff" />
               Invite Flexologist
-            </Button2>
+            </Button2>}
           </div>
           {/* <DropdownMenu>
           <DropdownMenuTrigger asChild>

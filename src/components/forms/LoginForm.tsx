@@ -42,13 +42,11 @@ export const LoginForm = () => {
           navigate(`/2fa-login?email=${encodeURIComponent(formData.email)}`);
           return;
         }
-        console.log({loginData})
         if (loginData.token) {
           if (
             loginData.user.is_verified &&
             loginData.user.is_clubready_verified
           ) {
-            console.log("is_verified and is_clubready_verified");
             setUserCookie(loginData.token);
             renderSuccessToast(loginData.message);
             navigate("/dashboard");

@@ -119,7 +119,7 @@ export const Dashboard = () => {
               onRetry={retryActivities}
             />
           </div>}
-
+   
 
           <div className="bg-[#F5F5F5] rounded-lg shadow-md py-4 px-3 sm:px-4">
             <h2 className="text-base font-semibold text-gray-900 mb-4">Company Metrics</h2>
