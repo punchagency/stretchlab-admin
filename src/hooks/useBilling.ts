@@ -1,4 +1,4 @@
-import { useBillingDetails } from "@/service/billing";
+import { useBillingDetails} from "@/service/billing";
 import {
   DEFAULT_BILLING_DATA,
   formatBillingDate,
@@ -21,6 +21,8 @@ export interface ProcessedBillingData {
   hasSubscriptionData: boolean;
   flexologistStatus: string | undefined;
   rpaStatus: string | undefined;
+  noteTakingData: any;
+  rpaData : any;
 }
 
 export const useBilling = () => {
@@ -52,6 +54,12 @@ export const useBilling = () => {
     const flexologistStatus = noteTakingData?.status;
     const rpaStatus = rpaData?.status;
 
+    // const rpaDiscount = rpaData?.discount
+    // const flexologistDiscount = noteTakingData?.discount
+
+    // const rpaDiscountInfo = rpaData?.discount_info
+    // const flexologistDiscountInfo = noteTakingData?.discount_info
+
     return {
       flexologistQuantity,
       flexologistPrice,
@@ -65,6 +73,8 @@ export const useBilling = () => {
       hasSubscriptionData,
       flexologistStatus,
       rpaStatus,
+      noteTakingData,
+      rpaData
     };
   })();
 

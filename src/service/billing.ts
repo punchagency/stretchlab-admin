@@ -22,6 +22,12 @@ export interface SubscriptionDetails {
     quantity: number;
     start_date: number;
     status: string;
+    discount: boolean;
+    discount_info: {
+      amount_off: any;
+      end_date : number;
+      percent_off: number
+    }
   };
   robot_process_automation?: {
     currency: string;
@@ -31,6 +37,12 @@ export interface SubscriptionDetails {
     quantity: number;
     start_date: number;
     status: string;
+    discount: boolean;
+    discount_info: {
+      amount_off: any;
+      end_date : number;
+      percent_off: number
+    }
   };
 }
 

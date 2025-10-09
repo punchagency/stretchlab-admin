@@ -15,6 +15,8 @@ export const DEFAULT_BILLING_DATA = {
   hasSubscriptionData: false,
   flexologistStatus: undefined,
   rpaStatus: undefined,
+  noteTakingData: undefined,
+  rpaData : undefined
 } as const;
 
 // Utility functions

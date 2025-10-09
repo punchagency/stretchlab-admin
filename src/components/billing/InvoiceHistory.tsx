@@ -4,6 +4,7 @@ import { cancelSubscription, restartSubscription } from "@/service/payment";
 import { renderErrorToast, renderSuccessToast } from "../utils";
 import type { ApiError } from "@/types/response";
 import { CheckCircle } from "lucide-react";
+import { formatBillingDate } from "@/utils";
 
 interface InvoiceHistoryProps {
   flexologistQuantity: number;
@@ -15,6 +16,8 @@ interface InvoiceHistoryProps {
   rpaStatus: string | undefined;
   rpaQuantity: number;
   onRefresh?: () => void;
+  rpaData: any;
+  noteTakingData: any
 }
 
 export const InvoiceHistory = ({
@@ -26,7 +29,9 @@ export const InvoiceHistory = ({
   flexologistStatus,
   rpaStatus,
   rpaQuantity,
-  onRefresh
+  onRefresh,
+  rpaData,
+  noteTakingData
 }: InvoiceHistoryProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -84,7 +89,7 @@ export const InvoiceHistory = ({
           <div className="font-medium text-gray-900 text-base">{flexologistQuantity}</div>
         </div>}
 
-        {flexologistQuantity > 0 && <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+        {flexologistQuantity > 0 && <> <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
           <div>
             <div className="text-gray-600 mb-2 text-sm">Subscription Tier:</div>
             <div className="font-medium text-gray-900 text-base">
@@ -98,11 +103,11 @@ export const InvoiceHistory = ({
                 {flexologistStatus === "trialing" ? "Trial Ends:" : flexologistStatus === "canceled" ? "Cancelled" : "Next Billing Date:"}
               </div>
               {flexologistStatus !== "canceled" && <div className="font-medium text-gray-900 text-base">
-                {noteTakingBillingDate}
+                { noteTakingData.discount ? formatBillingDate(noteTakingData?.discount_info?.end_date)  :noteTakingBillingDate}
               </div>}
             </div>
           )}
- 
+
           {flexologistStatus === "canceled" ? (
             <Button
               onClick={() => handleRestartSubscription("note_taking")}
@@ -122,10 +127,17 @@ export const InvoiceHistory = ({
               {isLoading && subscriptionToModify === "note_taking" && actionType === "cancel" ? "Cancelling..." : "Cancel"}
             </Button>
           )}
-        </div>}
+        </div>
+          {noteTakingData.discount && <div className="bg-orange-50 border border-orange-200 rounded-md p-3 mb-3">
+            <div className="text-orange-900 text-xs font-medium">
+              The Note Taking plan currently has a {noteTakingData?.discount_info?.percent_off}% discount applied,
+              valid until {formatBillingDate(noteTakingData?.discount_info?.end_date)}.
+            </div>
+          </div>}
+        </>}
 
 
-        {rpaQuantity > 0 && <div className="pt-3 sm:pt-4">
+        {rpaQuantity > 0 && <> <div className="pt-3 sm:pt-4">
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
             <div>
               <div className="text-gray-600 mb-2 text-sm">RPA Automation Add-on:</div>
@@ -140,7 +152,8 @@ export const InvoiceHistory = ({
                   {rpaStatus === "trialing" ? "Trial Ends:" : rpaStatus === "canceled" ? "Cancelled" : "Next Billing Date:"}
                 </div>
                 {rpaStatus !== "canceled" && <div className="font-medium text-gray-900 text-base">
-                  {rpaBillingDate}
+                  {rpaData.discount ? formatBillingDate(rpaData?.discount_info?.end_date) : rpaBillingDate}
+                  
                 </div>}
               </div>
             )}
@@ -166,7 +179,12 @@ export const InvoiceHistory = ({
             )}
           </div>
 
-        </div>}
+        </div> {rpaData.discount && <div className="bg-orange-50 border border-orange-200 rounded-md p-3 mb-3">
+          <div className="text-orange-900 text-xs font-medium">
+            The RPA plan currently has a {rpaData?.discount_info?.percent_off}% discount applied,
+            valid until {formatBillingDate(rpaData?.discount_info?.end_date)}.
+          </div>
+        </div>}</>}
       </div>
 
       <ConfirmModal
