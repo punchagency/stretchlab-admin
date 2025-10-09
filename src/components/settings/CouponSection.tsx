@@ -206,7 +206,7 @@ export const CouponSection = ({ settingsData }: CouponSectionProps) => {
                     </div>
                   )}
 
-                  {coupon.expires_at && (
+                  {/* {coupon.expires_at && (
                     <div className="flex items-center justify-between text-sm">
                       <span className={coupon.available ? 'text-gray-600' : 'text-gray-500'}>Expires:</span>
                       <span className={`font-medium ${
@@ -219,7 +219,7 @@ export const CouponSection = ({ settingsData }: CouponSectionProps) => {
                         })}
                       </span>
                     </div>
-                  )}
+                  )} */}
                 </div>
 
                 {/* Unavailable Message */}

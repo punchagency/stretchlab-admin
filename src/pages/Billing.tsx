@@ -20,6 +20,8 @@ export const Billing = () => {
     refetch,
     flexologistStatus,
     rpaStatus,
+    noteTakingData,
+    rpaData
   } = useBilling(); 
 
   if (isLoading) {
@@ -61,6 +63,8 @@ export const Billing = () => {
                   rpaStatus={rpaStatus}
                   rpaQuantity={rpaQuantity}
                   onRefresh={refetch}
+                  noteTakingData={noteTakingData}
+                  rpaData={rpaData}
                 />
 
                 <MonthlyCharges
