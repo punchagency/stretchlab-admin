@@ -29,3 +29,11 @@ export const restartSubscription = async (type: "note_taking" | "robot_process_a
   });
   return response;
 };
+
+export const checkCoupon = async (coupon: string) => {
+  const normalizedCoupon = coupon?.trim().toUpperCase() || "";
+  const response = await api.post("/admin/payment/check-coupon", {
+    coupon: normalizedCoupon,
+  });
+  return response;
+};
