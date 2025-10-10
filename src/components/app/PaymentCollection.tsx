@@ -7,7 +7,7 @@ import {
   useElements,
 } from "@stripe/react-stripe-js";
 import { useEffect, useState } from "react";
-import { createPaymentMethod, initialize } from "@/service/payment";
+import { createPaymentMethod, initialize, checkCoupon } from "@/service/payment";
 import { renderSuccessToast, renderWarningToast } from "../utils";
 import type { ApiError } from "@/types/response";
 import { Loader2 } from "lucide-react";
@@ -38,6 +38,41 @@ const CheckoutForm = ({
   const [errorMessage, setErrorMessage] = useState("");
   const [paymentElementReady, setPaymentElementReady] = useState(false);
   const [coupon, setCoupon] = useState("");
+  const [checkingCoupon, setCheckingCoupon] = useState(false);
+  const [couponDetails, setCouponDetails] = useState<null | {
+    percent_off: number;
+    duration: number;
+    valid: boolean;
+    active: boolean;
+  }>(null);
+
+  const handleCheckCoupon = async () => {
+    if (!coupon.trim()) {
+      renderWarningToast("Please enter a coupon code first.");
+      return;
+    }
+    try {
+      setCheckingCoupon(true);
+      setCouponDetails(null)
+      const response = await checkCoupon(coupon);
+      if (response.status === 200 && response.data?.data) {
+        const data = response.data.data;
+        setCouponDetails(data);
+        renderSuccessToast("Coupon details retrieved successfully!");
+      } else {
+        renderWarningToast("Invalid coupon");
+        setCouponDetails(null);
+      }
+    } catch (err) {
+      const apiError = err as ApiError;
+      renderWarningToast(
+        apiError.response?.data?.message || "Failed to check coupon"
+      );
+      setCouponDetails(null);
+    } finally {
+      setCheckingCoupon(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -128,7 +163,7 @@ const CheckoutForm = ({
           } per month.`}
       </p>
       <PaymentElement onReady={() => setPaymentElementReady(true)} />
-      <div className="mt-4">
+      {/* <div className="mt-4">
         <label htmlFor="coupon" className="block text-sm font-medium text-gray-500 mb-2">
           Coupon Code
         </label>
@@ -140,6 +175,56 @@ const CheckoutForm = ({
           placeholder="Enter coupon code"
           className="w-full px-3 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-base focus:border-transparent"
         />
+      </div> */}
+      <div className="mt-4 relative">
+        <label
+          htmlFor="coupon"
+          className="block text-sm font-medium text-gray-600 mb-2"
+        >
+          Coupon Code
+        </label>
+
+        <div className="relative">
+          <input
+            id="coupon"
+            type="text"
+            value={coupon}
+            onChange={(e) => setCoupon(e.target.value)}
+            placeholder="Enter coupon code"
+            className="w-full px-3 py-3 pr-[5.5rem] border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-base focus:border-transparent"
+          />
+
+          {/* Check button inside input */}
+          <button
+            type="button"
+            onClick={handleCheckCoupon}
+            disabled={checkingCoupon || !coupon.trim()}
+            className="absolute right-1 top-1 bottom-1 px-4 bg-primary-base text-sm text-white rounded-lg font-medium flex items-center justify-center disabled:opacity-40 m-[2px] cursor-pointer"
+          >
+            {checkingCoupon ? <Loader2 className="animate-spin w-4 h-4" /> : "Validate Coupon"}
+          </button>
+        </div>
+         {/* 🧾 Coupon Details */}
+         {couponDetails && (
+          <div
+            className={`mt-3 text-sm rounded-md p-3 ${
+              couponDetails.valid && couponDetails.active
+                ? "bg-green-50 text-green-700 border border-green-200"
+                : "bg-red-50 text-red-700 border border-red-200"
+            }`}
+          >
+            {couponDetails.valid && couponDetails.active ? (
+              <p>
+                🎉 This coupon gives you{" "}
+                <strong>{couponDetails.percent_off}% off</strong> for{" "}
+                <strong>{couponDetails.duration}</strong>{" "}
+                {couponDetails.duration > 1 ? "months" : "month"}.
+              </p>
+            ) : (
+              <p>⚠️ This coupon is invalid or inactive.</p>
+            )}
+          </div>
+        )}
       </div>
       {errorMessage && <p className="text-red-500 mt-3">{errorMessage}</p>}
       <div className="flex items-center mt-4 gap-2">
