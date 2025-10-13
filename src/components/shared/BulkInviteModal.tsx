@@ -30,7 +30,7 @@ export const BulkInviteModal = ({
   const [paymentInfo, setPaymentInfo] = useState(false);
   const [billingInfo, setBillingInfo] = useState<BillingInfo | null>(null);
   const [update, setUpdate] = useState(false);
-  const [proceed, setProceed] = useState(false);
+  const [, setProceed] = useState(false);
 
   // Initialize emails for resend mode
   useEffect(() => {
