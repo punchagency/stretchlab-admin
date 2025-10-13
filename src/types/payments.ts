@@ -6,4 +6,5 @@ export interface BillingInfo {
   exp_year: number;
   last4: string;
   name: string | null;
+  type?: string
 }

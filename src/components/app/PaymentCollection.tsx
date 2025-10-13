@@ -315,20 +315,35 @@ export const PaymentCollection = ({
         <div className="p-4">
           <div className="bg-gray-50 p-4 rounded-lg mb-4">
             <div className="flex items-center gap-3 mb-3">
-              <div className="w-12 h-8 bg-gray-200 rounded flex items-center justify-center">
-                {billingInfo.brand === "visa" ? (
-                  <span className="text-blue-600 font-bold">VISA</span>
+              <div className="py-1 px-2 bg-gray-200 rounded flex items-center justify-center">
+                {billingInfo.type === "card" ? (
+                  billingInfo.brand === "visa" ? (
+                    <span className="text-blue-600 font-bold">VISA</span>
+                  ) : (
+                    <span className="text-gray-600 font-bold ">
+                      {billingInfo.brand.toUpperCase()}
+                    </span>
+                  )
                 ) : (
                   <span className="text-gray-600 font-bold">
-                    {billingInfo.brand.toUpperCase()}
+                    {billingInfo.type?.toUpperCase() || "OTHER"}
                   </span>
                 )}
               </div>
+
               <div>
-                <p className="font-medium">•••• {billingInfo.last4}</p>
-                <p className="text-sm text-gray-500">
-                  Expires {billingInfo.exp_month}/{billingInfo.exp_year}
-                </p>
+                {billingInfo.type === "card" ? (
+                  <>
+                    <p className="font-medium">•••• {billingInfo.last4}</p>
+                    <p className="text-sm text-gray-500">
+                      Expires {billingInfo.exp_month}/{billingInfo.exp_year}
+                    </p>
+                  </>
+                ) : (
+                  <p className="text-sm text-gray-600 capitalize font-semibold">
+                    {billingInfo.type} payment method
+                  </p>
+                )}
               </div>
             </div>
             {billingInfo.name && (
