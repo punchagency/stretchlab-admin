@@ -7,7 +7,7 @@ import {
   useElements,
 } from "@stripe/react-stripe-js";
 import { useEffect, useState } from "react";
-import { createPaymentMethod, initialize, checkCoupon } from "@/service/payment";
+import { createPaymentMethod, initialize } from "@/service/payment";
 import { renderSuccessToast, renderWarningToast } from "../utils";
 import type { ApiError } from "@/types/response";
 import { Loader2 } from "lucide-react";
@@ -38,41 +38,41 @@ const CheckoutForm = ({
   const [errorMessage, setErrorMessage] = useState("");
   const [paymentElementReady, setPaymentElementReady] = useState(false);
   const [coupon, setCoupon] = useState("");
-  const [checkingCoupon, setCheckingCoupon] = useState(false);
-  const [couponDetails, setCouponDetails] = useState<null | {
-    percent_off: number;
-    duration: number;
-    valid: boolean;
-    active: boolean;
-  }>(null);
+  // const [checkingCoupon, setCheckingCoupon] = useState(false);
+  // const [couponDetails, setCouponDetails] = useState<null | {
+  //   percent_off: number;
+  //   duration: number;
+  //   valid: boolean;
+  //   active: boolean;
+  // }>(null);
 
-  const handleCheckCoupon = async () => {
-    if (!coupon.trim()) {
-      renderWarningToast("Please enter a coupon code first.");
-      return;
-    }
-    try {
-      setCheckingCoupon(true);
-      setCouponDetails(null)
-      const response = await checkCoupon(coupon);
-      if (response.status === 200 && response.data?.data) {
-        const data = response.data.data;
-        setCouponDetails(data);
-        renderSuccessToast("Coupon details retrieved successfully!");
-      } else {
-        renderWarningToast("Invalid coupon");
-        setCouponDetails(null);
-      }
-    } catch (err) {
-      const apiError = err as ApiError;
-      renderWarningToast(
-        apiError.response?.data?.message || "Failed to check coupon"
-      );
-      setCouponDetails(null);
-    } finally {
-      setCheckingCoupon(false);
-    }
-  };
+  // const handleCheckCoupon = async () => {
+  //   if (!coupon.trim()) {
+  //     renderWarningToast("Please enter a coupon code first.");
+  //     return;
+  //   }
+  //   try {
+  //     setCheckingCoupon(true);
+  //     setCouponDetails(null)
+  //     const response = await checkCoupon(coupon);
+  //     if (response.status === 200 && response.data?.data) {
+  //       const data = response.data.data;
+  //       setCouponDetails(data);
+  //       renderSuccessToast("Coupon details retrieved successfully!");
+  //     } else {
+  //       renderWarningToast("Invalid coupon");
+  //       setCouponDetails(null);
+  //     }
+  //   } catch (err) {
+  //     const apiError = err as ApiError;
+  //     renderWarningToast(
+  //       apiError.response?.data?.message || "Failed to check coupon"
+  //     );
+  //     setCouponDetails(null);
+  //   } finally {
+  //     setCheckingCoupon(false);
+  //   }
+  // };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -163,7 +163,7 @@ const CheckoutForm = ({
           } per month.`}
       </p>
       <PaymentElement onReady={() => setPaymentElementReady(true)} />
-      {/* <div className="mt-4">
+      <div className="mt-4">
         <label htmlFor="coupon" className="block text-sm font-medium text-gray-500 mb-2">
           Coupon Code
         </label>
@@ -175,8 +175,8 @@ const CheckoutForm = ({
           placeholder="Enter coupon code"
           className="w-full px-3 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-base focus:border-transparent"
         />
-      </div> */}
-      <div className="mt-4 relative">
+      </div>
+      {/* <div className="mt-4 relative">
         <label
           htmlFor="coupon"
           className="block text-sm font-medium text-gray-600 mb-2"
@@ -194,7 +194,6 @@ const CheckoutForm = ({
             className="w-full px-3 py-3 pr-[5.5rem] border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-base focus:border-transparent"
           />
 
-          {/* Check button inside input */}
           <button
             type="button"
             onClick={handleCheckCoupon}
@@ -204,7 +203,6 @@ const CheckoutForm = ({
             {checkingCoupon ? <Loader2 className="animate-spin w-4 h-4" /> : "Validate Coupon"}
           </button>
         </div>
-         {/* 🧾 Coupon Details */}
          {couponDetails && (
           <div
             className={`mt-3 text-sm rounded-md p-3 ${
@@ -225,7 +223,7 @@ const CheckoutForm = ({
             )}
           </div>
         )}
-      </div>
+      </div> */}
       {errorMessage && <p className="text-red-500 mt-3">{errorMessage}</p>}
       <div className="flex items-center mt-4 gap-2">
         {update && (
@@ -317,20 +315,35 @@ export const PaymentCollection = ({
         <div className="p-4">
           <div className="bg-gray-50 p-4 rounded-lg mb-4">
             <div className="flex items-center gap-3 mb-3">
-              <div className="w-12 h-8 bg-gray-200 rounded flex items-center justify-center">
-                {billingInfo.brand === "visa" ? (
-                  <span className="text-blue-600 font-bold">VISA</span>
+              <div className="py-1 px-2 bg-gray-200 rounded flex items-center justify-center">
+                {billingInfo.type === "card" ? (
+                  billingInfo.brand === "visa" ? (
+                    <span className="text-blue-600 font-bold">VISA</span>
+                  ) : (
+                    <span className="text-gray-600 font-bold ">
+                      {billingInfo.brand.toUpperCase()}
+                    </span>
+                  )
                 ) : (
                   <span className="text-gray-600 font-bold">
-                    {billingInfo.brand.toUpperCase()}
+                    {billingInfo.type?.toUpperCase() || "OTHER"}
                   </span>
                 )}
               </div>
+
               <div>
-                <p className="font-medium">•••• {billingInfo.last4}</p>
-                <p className="text-sm text-gray-500">
-                  Expires {billingInfo.exp_month}/{billingInfo.exp_year}
-                </p>
+                {billingInfo.type === "card" ? (
+                  <>
+                    <p className="font-medium">•••• {billingInfo.last4}</p>
+                    <p className="text-sm text-gray-500">
+                      Expires {billingInfo.exp_month}/{billingInfo.exp_year}
+                    </p>
+                  </>
+                ) : (
+                  <p className="text-sm text-gray-600 capitalize font-semibold">
+                    {billingInfo.type} payment method
+                  </p>
+                )}
               </div>
             </div>
             {billingInfo.name && (
