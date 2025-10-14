@@ -5,7 +5,7 @@ import { useDashboard } from "@/hooks/useDashboard";
 import { useBusinessDetail } from "@/hooks/useBusinessDetail";
 import { SubscriptionInfoCard } from "@/components/dashboard";
 import { getUserInfo } from "@/utils";
-import { Info, RefreshCcw } from "lucide-react";
+import { RefreshCcw } from "lucide-react";
 
 
 export const Dashboard = () => {

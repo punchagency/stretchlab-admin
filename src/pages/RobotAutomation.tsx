@@ -5,7 +5,6 @@ import { RobotHistory } from "@/components/app";
 import { useQuery } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
 import { getUserInfo } from "@/utils";
-import { Info } from "lucide-react";
 
 export const RobotAutomation = () => {
   const { data, isFetching, isPending, refetch } = useQuery({

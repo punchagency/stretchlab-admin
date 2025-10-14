@@ -1,7 +1,7 @@
 import { FilterDropdown, DateRangeFilter, Button } from '../components/shared';
 import { OpportunityBarChart, RankingBarChart, Drilldown, MetricsDisplay } from '../components/analytics';
 import { useAnalytics } from '@/hooks/useAnalytics';
-import { Info, RefreshCcw } from 'lucide-react';
+import { RefreshCcw } from 'lucide-react';
 import { DataTable } from '@/components/datatable';
 import { getLocationTableColumns } from '@/components/analytics';
 import { TableSkeleton } from '@/components/shared';
