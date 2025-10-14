@@ -3,7 +3,7 @@ import { SvgIcon } from "./SvgIcon";
 export const SuccessModal = ({
   isOpen,
   onClose,
-  title,
+  title, 
   message,
 }: {
   isOpen: boolean;

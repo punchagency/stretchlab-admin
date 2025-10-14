@@ -5,7 +5,7 @@ import { useDashboard } from "@/hooks/useDashboard";
 import { useBusinessDetail } from "@/hooks/useBusinessDetail";
 import { SubscriptionInfoCard } from "@/components/dashboard";
 import { getUserInfo } from "@/utils";
-import { Info, RefreshCcw } from "lucide-react";
+import { RefreshCcw } from "lucide-react";
 
 
 export const Dashboard = () => {
@@ -142,14 +142,14 @@ export const Dashboard = () => {
               ) : (
                 <>
 
-                  <div className='flex items-center gap-2 mb-4 p-3 rounded-lg border bg-orange-50 border-orange-200'>
+                  {/* <div className='flex items-center gap-2 mb-4 p-3 rounded-lg border bg-orange-50 border-orange-200'>
                     <Info className="w-5 h-5 text-orange-500" />
                     <p className=" md:text-sm text-xs text-orange-600 font-medium">
                     
                     Currently, Average Note Quality is available only for return appointments.
                     </p>
 
-                  </div>
+                  </div> */}
                   <div className="flex flex-wrap gap-3 mb-6 justify-between flex-col sm:flex-row">
                     <FilterDropdown
                       label="Filter By"
@@ -183,7 +183,7 @@ export const Dashboard = () => {
                         options={filterOptions.flexologist}
                         onChange={(value) => handleFilterChange('flexologist', value)}
                         className="flex-2"
-                        showSearch={true}
+                        showSearch={true} 
                       />
                     )}
                     <FilterDropdown

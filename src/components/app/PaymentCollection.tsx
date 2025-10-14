@@ -20,7 +20,7 @@ const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 const CheckoutForm = ({
   onClose,
   price,
-  robot,
+  robot, 
   update,
   setUpdate,
   setProceed,
