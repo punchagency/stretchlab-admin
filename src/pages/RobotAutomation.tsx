@@ -5,7 +5,6 @@ import { RobotHistory } from "@/components/app";
 import { useQuery } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
 import { getUserInfo } from "@/utils";
-import { Info } from "lucide-react";
 
 export const RobotAutomation = () => {
   const { data, isFetching, isPending, refetch } = useQuery({
@@ -43,13 +42,13 @@ export const RobotAutomation = () => {
         /> 
       )}
 
-      <div className='flex items-center gap-2 mb-4 p-3 rounded-lg border bg-orange-50 border-orange-200 my-4'>
+      {/* <div className='flex items-center gap-2 mb-4 p-3 rounded-lg border bg-orange-50 border-orange-200 my-4'>
         <Info className="w-5 h-5 text-orange-500" />
         <p className=" md:text-sm text-xs text-orange-600 font-medium">
         Currently, only return appointment audit detail is available.
         </p>
 
-      </div>
+      </div> */}
       {data?.data.config && (
         <RobotHistory configId={data?.data.robot_config.id} />
       )}

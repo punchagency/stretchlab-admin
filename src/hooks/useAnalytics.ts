@@ -37,8 +37,8 @@ export const useAnalytics = () => {
     flexologist: "All",
     dataset: "",
     customRange: getTodayDateRange(),
-    // filterMetric: "all",
-    filterMetric: "subsequent",
+    filterMetric: "all",
+    // filterMetric: "subsequent",
   });
 
   const [selectedOpportunity, setSelectedOpportunity] = useState<string | null>(null);
@@ -209,8 +209,8 @@ export const useAnalytics = () => {
       flexologist: ["All"],
       dataset: [],
       filterMetric: [
-        // { value: "all", label: "All Appointments" },
-        // { value: "first", label: "First Appointment" },
+        { value: "all", label: "All Appointments" },
+        { value: "first", label: "First Appointment" },
         { value: "subsequent", label: "Return Appointment" },
       ],
     };
@@ -245,7 +245,7 @@ export const useAnalytics = () => {
   };
 
   const handleFilterChange = (filterKey: string, value: string) => {
-    console.log({ selectedFilters });
+   
     setSelectedFilters(prev => {
       const newFilters = {
         ...prev,

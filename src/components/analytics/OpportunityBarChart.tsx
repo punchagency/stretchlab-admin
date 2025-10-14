@@ -71,7 +71,7 @@ export const OpportunityBarChart: React.FC<OpportunityBarChartProps> = ({
   }));
 
   return (
-    <ResponsiveContainer width="100%" height={350}>
+    <ResponsiveContainer width="100%" height={450}>
       <BarChart
         layout="vertical"
         data={processedData}
