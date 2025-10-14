@@ -49,13 +49,13 @@ export const Analytics = () => {
       </div>
 
       <div className='p-3 sm:p-5'>
-        <div className='flex items-center gap-2 mb-4 p-3 rounded-lg border bg-orange-50 border-orange-200'>
+        {/* <div className='flex items-center gap-2 mb-4 p-3 rounded-lg border bg-orange-50 border-orange-200'>
           <Info className="w-5 h-5 text-orange-500" />
           <p className=" md:text-sm text-xs text-orange-600 font-medium">
           Currently, return appointment analysis is the only option available.
           </p>
 
-        </div>
+        </div> */}
         <div className="flex flex-col sm:flex-row flex-wrap gap-4">
 
           <DateRangeFilter
