@@ -79,7 +79,7 @@ export const Home = () => {
 
       return false;
     }
-    if (menu.title === "User Management" && userInfo?.role_id !== 1) {
+    if (menu.title === "User Management" && ![1, 2].includes(userInfo?.role_id ?? -1) ) {
       return false;
     }
 
