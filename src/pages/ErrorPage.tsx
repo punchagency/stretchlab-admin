@@ -15,7 +15,6 @@ export const ErrorPage = () => {
         console.error(error);
         errorMessage = 'Unknown error';
     }
-    console.error('Application Error:', errorMessage, error);
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-primary-secondary/20 to-primary-tertiary/30 py-8">

@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
 import { getUserInfo } from "@/utils";
 
-export const RobotAutomation = () => {
+export const RobotAutomation = () => { 
   const { data, isFetching, isPending, refetch } = useQuery({
     queryKey: ["robot-config"],
     queryFn: getRobotConfig,
