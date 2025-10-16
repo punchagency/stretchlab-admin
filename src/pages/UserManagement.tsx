@@ -354,7 +354,7 @@ export const UserManagement = () => {
           className="flex items-center w-fit md:w-auto ml-auto md:ml-0 gap-2 py-3 text-white bg-primary-base"
         >
           <SvgIcon name="email-send" fill="#fff" />
-          Invite User
+          Invite Manager
         </Button2>
       </div>
 
@@ -377,7 +377,7 @@ export const UserManagement = () => {
           handleModal={() => setShowModal(true)}
           columns={userColumns}
           data={data?.data?.data.managers}
-          emptyText="No users invited yet."
+          emptyText="No manager invited yet."
           enableSearch
           searchFields={["full_name", "email"]}
           searchPlaceholder="Search by name or email"
