@@ -53,7 +53,7 @@ export const Settings = () => {
       </div>
 
       <div className="px-5 sm:px-7 mt-5 sm:mt-7">
-        <div className="max-w-6xl mx-auto">
+        <div className="">
           <div className="flex flex-col lg:flex-row bg-white rounded-lg shadow-[0_0_10px_rgba(0,0,0,0.1)]">
 
             {/* Desktop Sidebar */}

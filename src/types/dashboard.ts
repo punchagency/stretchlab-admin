@@ -164,6 +164,17 @@ export interface BusinessRpaSubDetails {
   status: string;
 }
 
+interface LocationSummary {
+  location: string;
+  total_bookings_in_location: number;
+  total_submitted_by_location: number;
+  flexologists: {
+    name: string;
+    total_bookings: number;
+    total_submitted: number;
+  }[];
+}
+
 export interface BusinessInfo {
   business_all_locations: string[] | null;
   business_created_at: string;
@@ -175,6 +186,7 @@ export interface BusinessInfo {
   business_rpa_sub_status: string | null;
   business_selected_locations: string[] | null;
   business_username: string;
+  locations_summary?: LocationSummary[];
 }
 
 export interface BusinessInfoResponse {
