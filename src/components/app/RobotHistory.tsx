@@ -1,4 +1,4 @@
-import { getRobotHistory } from "@/service/robot";
+import { getRobotHistory, getOpportunities } from "@/service/robot";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { DataTable } from "../datatable";
 import type { ColumnDef } from "@tanstack/react-table";
@@ -24,11 +24,21 @@ const userColumns: ColumnDef<RobotHistoryType>[] = [
   {
     accessorKey: "flexologist_name",
     header: "Flexologist",
+    cell: ({ row }) => {
+      const flex = row.getValue("flexologist_name") as string;
+      return <p className=" capitalize">{flex}</p>
+
+    },
   },
 
   {
     accessorKey: "location",
     header: "Location",
+    cell: ({ row }) => {
+      const location = row.getValue("location") as string;
+      return <p className=" capitalize">{location}</p>
+
+    },
   },
 
   {
@@ -69,6 +79,21 @@ const userColumns: ColumnDef<RobotHistoryType>[] = [
   {
     accessorKey: "appointment_date",
     header: "Appointment Date",
+    cell: ({ row }) => {
+      const lastLogin = row.getValue("appointment_date") as string | null;
+      if (!lastLogin) return <span className="text-gray-400 italic">No login</span>;
+  
+      const date = new Date(lastLogin);
+      const formattedDate = date.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+  
+      return <span className="text-gray-600">{formattedDate}</span>;
+    },
   },
 
 ];
@@ -85,10 +110,20 @@ const unloggedColumns: ColumnDef<RobotHistoryType>[] = [
   {
     accessorKey: "booking_with",
     header: "Flexologist",
+    cell: ({ row }) => {
+      const location = row.getValue("booking_with") as string;
+      return <p className=" capitalize">{location}</p>
+
+    },
   },
   {
     accessorKey: "booking_location",
     header: "Location",
+    cell: ({ row }) => {
+      const location = row.getValue("booking_location") as string;
+      return <p className=" capitalize">{location}</p>
+
+    },
   },
   {
     accessorKey: "booking_detail",
@@ -101,6 +136,21 @@ const unloggedColumns: ColumnDef<RobotHistoryType>[] = [
   {
     accessorKey: "appointment_date",
     header: "Appointment Date",
+    cell: ({ row }) => {
+      const lastLogin = row.getValue("appointment_date") as string | null;
+      if (!lastLogin) return <span className="text-gray-400 italic">No login</span>;
+  
+      const date = new Date(lastLogin);
+      const formattedDate = date.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+  
+      return <span className="text-gray-600">{formattedDate}</span>;
+    },
   },
   {
     accessorKey: "booking_date",
@@ -118,6 +168,7 @@ export const RobotHistory = ({ configId }: { configId: number }) => {
   const [viewMode, setViewMode] = useState<
     "noteAutomation" | "unloggedBookings"
   >("noteAutomation");
+  const [selectedOpportunities, setSelectedOpportunities] = useState<string[]>([]);
 
   const dateRangeOptions: DurationOption[] = [
     { value: "yesterday", label: "Yesterday" },
@@ -164,6 +215,22 @@ export const RobotHistory = ({ configId }: { configId: number }) => {
     setCustomEndDate(end);
     mutation.mutate();
   };
+
+  const { data: opportunities = [] } = useQuery({
+    queryKey: ["opportunities"],
+    queryFn: getOpportunities,
+  });
+
+  const filteredData = data?.data.rpa_history?.filter((booking: any) => {
+    if (selectedOpportunities.length === 0) return true;
+
+    try {
+      const oppList = JSON.parse(booking.note_oppurtunities || "[]");
+      return selectedOpportunities.some((opp) => oppList.includes(opp));
+    } catch {
+      return false;
+    }
+  });
 
   if (isPending) {
     return (
@@ -223,8 +290,8 @@ export const RobotHistory = ({ configId }: { configId: number }) => {
           <button
             onClick={() => setViewMode("unloggedBookings")}
             className={`${viewMode === "unloggedBookings"
-                ? "bg-primary-base"
-                : "bg-gray-300"
+              ? "bg-primary-base"
+              : "bg-gray-300"
               } text-white font-semibold py-2 px-4 text-xs md:text-base rounded-md`}
           >
             Unlogged Bookings
@@ -248,19 +315,27 @@ export const RobotHistory = ({ configId }: { configId: number }) => {
             <DataTable
               columns={userColumns}
               handleClick={handleClick}
-              data={data?.data.rpa_history}
+              data={filteredData}
               emptyText="No bookings processed today"
               searchFields={["client_name", "flexologist_name", "location", "booking_id"]}
               searchPlaceholder="Search by client name, flexologist name, location, booking id"
               enableSearch={true}
-
+              enableSorting={true}
+              opportunityOptions={opportunities}
+              selectedOpportunities={selectedOpportunities}
+              onOpportunityChange={setSelectedOpportunities}
             />
           ) : (
             <DataTable
               columns={unloggedColumns}
               handleClick={handleClick}
-              data={data?.data.rpa_unlogged_history}
+              data={[...(data?.data.rpa_unlogged_history || [])].sort((a, b) => {
+                const dateA = new Date(a.appointment_date).getTime();
+                const dateB = new Date(b.appointment_date).getTime();
+                return dateB - dateA;
+              })}
               emptyText="No unlogged bookings today"
+              enableSorting={true}
             />
           )}
         </div>

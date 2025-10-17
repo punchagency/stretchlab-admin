@@ -68,7 +68,12 @@ export const NoteTakingAdmin = () => {
   const [isSendingInvite, setIsSendingInvite] = useState("");
 
   const userInfo = getUserInfo();
-
+  const canSeeResendColumn =
+    userInfo?.role_id === 1 ||
+    userInfo?.role_id === 2 ||
+    userInfo?.permissions?.some(
+      (perm: any) => perm.permission_tag === "invite_flex"
+  );
   // Handle user selection for resend invite
   const handleUserSelection = (email: string, isSelected: boolean) => {
     if (isSelected) {
@@ -350,7 +355,8 @@ export const NoteTakingAdmin = () => {
       },
     },
 
-    {
+    ...(canSeeResendColumn
+      ? [{
       id: "resend_invite",
       header: () => {
         // const selectableUsers = data?.data?.users?.filter((user: any) =>
@@ -446,7 +452,8 @@ export const NoteTakingAdmin = () => {
       },
       enableSorting: false,
       enableHiding: false,
-    },
+    } as ColumnDef<Payment>, ]
+    : []),
 
     // Commented out existing resend invite column
     // {
