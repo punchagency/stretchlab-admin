@@ -19,7 +19,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "../ui/button";
-import { Button as Button2, Input, DateRangeFilter } from "@/components/shared";
+import { Button as Button2, Input, DateRangeFilter, MultiSelectDropdown } from "@/components/shared";
 import { useState } from "react";
 import {
   type SortingState,
@@ -59,6 +59,9 @@ interface DataTableProps<TData extends { id: number | string }, TValue> {
   onDurationChange?: (duration: string) => void;
   onCustomRangeChange?: (start: string, end: string) => void;
   durationOptions?: { value: string; label: string }[];
+  opportunityOptions?: string[];
+  selectedOpportunities?: string[];
+  onOpportunityChange?: (values: string[]) => void;
 }
 
 export function DataTable<TData extends { id: number | string }, TValue>({
@@ -84,6 +87,10 @@ export function DataTable<TData extends { id: number | string }, TValue>({
   onDurationChange,
   onCustomRangeChange,
   durationOptions = [],
+  opportunityOptions,
+  selectedOpportunities,
+  onOpportunityChange
+
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -175,14 +182,14 @@ export function DataTable<TData extends { id: number | string }, TValue>({
               onChange={(event) => setGlobalFilter(event.target.value)}
             />
             {(userInfo?.role_id === 1 || userInfo?.role_id === 2 || userInfo?.permissions?.some(
-            (perm: any) => perm.permission_tag === "invite_flex"
-          )) && <Button2
+              (perm: any) => perm.permission_tag === "invite_flex"
+            )) && <Button2
               onClick={handleModal}
               className="flex items-center gap-2 py-3 text-white bg-primary-base justify-center md:justify-start"
             >
-              <SvgIcon name="email-send" fill="#fff" />
-              Invite Flexologist
-            </Button2>}
+                <SvgIcon name="email-send" fill="#fff" />
+                Invite Flexologist
+              </Button2>}
           </div>
           {/* <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -265,7 +272,7 @@ export function DataTable<TData extends { id: number | string }, TValue>({
       )}
 
       {enableSearch && !note && (
-        <div className="flex md:items-center py-1 justify-between md:flex-row flex-col gap-1 md:mb-0 mb-2">
+        <div className={`flex md:items-center py-1 ${opportunityOptions? "gap-3": 'justify-between'} md:flex-row flex-col gap-1 md:mb-0 mb-2`}  >
 
           <Input
             type="search"
@@ -285,6 +292,18 @@ export function DataTable<TData extends { id: number | string }, TValue>({
               className="w-full md:w-60 md:mr-2"
               showLabel={false}
               inputClassName="py-3.5"
+            />
+          )}
+          {opportunityOptions && (
+            <MultiSelectDropdown
+              label="Opportunities"
+              options={opportunityOptions}
+              multiSelect
+              selectedValues={selectedOpportunities || []}
+              onMultiChange={onOpportunityChange}
+              showLabel={false}
+              className="w-full md:w-70"
+              // showSearch={true}
             />
           )}
         </div>
