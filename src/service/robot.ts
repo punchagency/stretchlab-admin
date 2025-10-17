@@ -59,3 +59,8 @@ export const getRobotHistory = async (
   const response = await api.get(`/admin/process/get-rpa-history/${configId}${queryParams}`);
   return response;
 };
+
+export const getOpportunities = async () => {
+  const response = await api.get("/admin/process/get-opportunities");
+  return response.data?.opportunites?? [];
+};

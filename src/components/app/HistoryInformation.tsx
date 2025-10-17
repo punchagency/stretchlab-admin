@@ -147,7 +147,7 @@ export const HistoryInformation = ({
           {data?.note_oppurtunities && (
             <div>
               <h3 className="text-[#344054] font-semibold text-lg">
-                Note Oppurtunities
+                Note Opportunities
               </h3>
               {data?.note_oppurtunities !== "N/A" &&
                 JSON.parse(data?.note_oppurtunities as string).length > 0 ? (
