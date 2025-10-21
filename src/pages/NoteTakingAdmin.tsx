@@ -321,7 +321,7 @@ export const NoteTakingAdmin = () => {
           >
             Date Invited
           </Button>
-        );
+        ); 
       },
       cell: ({ row }) => {
         const dateInvited = row.getValue("invited_at") as string;
