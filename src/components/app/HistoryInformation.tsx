@@ -119,7 +119,7 @@ export const HistoryInformation = ({
               <p className="text-dark-1 text-base">
                 {data?.pre_visit_preparation_rubric}
               </p>
-            </div>
+            </div> 
             <div>
               <h3 className="text-[#344054] font-semibold text-lg">
                 Session Notes Rubric Score

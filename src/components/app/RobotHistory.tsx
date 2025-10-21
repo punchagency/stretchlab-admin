@@ -290,10 +290,10 @@ export const RobotHistory = ({ configId }: { configId: number }) => {
           <button
             onClick={() => setViewMode("unloggedBookings")}
             className={`${viewMode === "unloggedBookings"
-              ? "bg-primary-base"
+              ? "bg-primary-base" 
               : "bg-gray-300"
               } text-white font-semibold py-2 px-4 text-xs md:text-base rounded-md`}
-          >
+          > 
             Unlogged Bookings
           </button>
         </div>

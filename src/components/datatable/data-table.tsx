@@ -189,7 +189,7 @@ export function DataTable<TData extends { id: number | string }, TValue>({
             >
                 <SvgIcon name="email-send" fill="#fff" />
                 Invite Flexologist
-              </Button2>}
+              </Button2>} 
           </div>
           {/* <DropdownMenu>
           <DropdownMenuTrigger asChild>
