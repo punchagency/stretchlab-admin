@@ -245,9 +245,9 @@ const CheckoutForm = ({
           {loading ? (
             <>
               <Loader2 className="animate-spin" />
-              {(update || !updateInfo)  ? "Updating..." : "Submitting..."}
+              {(update || updateInfo)  ? "Updating..." : "Submitting..."}
             </>
-          ) : (update || !updateInfo) ? (
+          ) : (update || updateInfo) ? (
             "Update Payment Method"
           ) : (
             "Submit"
