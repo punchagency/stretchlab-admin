@@ -22,7 +22,7 @@ export const Notification = () => {
     );
   }
 
-  if (error) {
+  if (error) { 
     return (
       <div className="w-full h-[90%]">
         <ErrorHandle retry={refetch} />

@@ -19,11 +19,12 @@ const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
 const CheckoutForm = ({
   onClose,
-  price,
+  price, 
   robot, 
   update,
   setUpdate,
   setProceed,
+  updateInfo,
 }: {
   onClose: () => void;
   price: number;
@@ -31,6 +32,7 @@ const CheckoutForm = ({
   update: boolean;
   setUpdate: (update: boolean) => void;
   setProceed: (proceed: boolean) => void;
+  updateInfo?: boolean;
 }) => {
   const stripe = useStripe();
   const elements = useElements();
@@ -158,10 +160,10 @@ const CheckoutForm = ({
       <div className="flex items-center justify-center mb-4">
         <img src={logo} alt="StretchLab" className="w-40 h-auto mx-auto" />
       </div>
-      <p className="text-sm text-gray-500 mb-4 font-medium text-center">
+     { !updateInfo && <p className="text-sm text-gray-500 mb-4 font-medium text-center">
         {`This will charge you $${price} per ${robot ? "location" : "flexologist"
           } per month.`}
-      </p>
+      </p>}
       <PaymentElement onReady={() => setPaymentElementReady(true)} />
       {/* <div className="mt-4">
         <label htmlFor="coupon" className="block text-sm font-medium text-gray-500 mb-2">
@@ -176,7 +178,7 @@ const CheckoutForm = ({
           className="w-full px-3 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-base focus:border-transparent"
         />
       </div> */}
-      <div className="mt-4 relative">
+      { !updateInfo && <div className="mt-4 relative">
         <label
           htmlFor="coupon"
           className="block text-sm font-medium text-gray-600 mb-2"
@@ -223,7 +225,7 @@ const CheckoutForm = ({
             )}
           </div>
         )}
-      </div>
+      </div>}
       {errorMessage && <p className="text-red-500 mt-3">{errorMessage}</p>}
       <div className="flex items-center mt-4 gap-2">
         {update && (
@@ -245,7 +247,7 @@ const CheckoutForm = ({
               <Loader2 className="animate-spin" />
               {update ? "Updating..." : "Submitting..."}
             </>
-          ) : update ? (
+          ) : update || !updateInfo ? (
             "Update Payment Method"
           ) : (
             "Submit"
@@ -262,8 +264,9 @@ export const PaymentCollection = ({
   billingInfo,
   robot,
   update,
-  setUpdate,
   setProceed,
+  setUpdate,
+  updateInfo,
 }: {
   show: boolean;
   onClose: () => void;
@@ -272,6 +275,7 @@ export const PaymentCollection = ({
   update: boolean;
   setProceed: (proceed: boolean) => void;
   setUpdate: (update: boolean) => void;
+  updateInfo?: boolean
 }) => {
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [price, setPrice] = useState<number | null>(null);
@@ -379,6 +383,7 @@ export const PaymentCollection = ({
             update={update}
             setUpdate={setUpdate}
             setProceed={setProceed}
+            updateInfo={updateInfo}
           />
         </Elements>
       ) : (
