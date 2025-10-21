@@ -62,7 +62,7 @@ export const Billing = () => {
                 onClick={() => setShowPaymentModal(true)}
                 className="bg-primary-base hover:bg-primary-dark text-white text-sm font-medium py-2 px-3 rounded-md"
               >
-                Update
+                Update Payment Details
               </button>}
             </div>
             {isPaymentLoading ? (
