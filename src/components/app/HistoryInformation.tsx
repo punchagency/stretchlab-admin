@@ -151,7 +151,7 @@ export const HistoryInformation = ({
               </h3>
               {data?.note_oppurtunities !== "N/A" &&
                 JSON.parse(data?.note_oppurtunities as string).length > 0 ? (
-                <div className="flex items center gap-2 mt-2">
+                <div className="flex items center gap-2 mt-2 flex-wrap">
                   {JSON.parse(data?.note_oppurtunities as string).map(
                     (item: string, index: number) => (
                       <div
@@ -226,7 +226,7 @@ export const HistoryInformation = ({
                 : "N/A"}
             </p>
           </div>
-          <div>
+          <div> 
             <h3 className="text-[#344054] font-semibold text-lg">
               Note Analysis Progressive Moments
             </h3>
