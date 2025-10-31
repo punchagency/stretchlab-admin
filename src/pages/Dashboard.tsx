@@ -198,7 +198,7 @@ export const Dashboard = () => {
                       label="Appointment Type"
                       value={filterOptions.filterMetric?.find(opt => opt.value === selectedFilters.filterMetric)?.label || selectedFilters.filterMetric || "all"}
                       options={filterOptions.filterMetric || []}
-                      onChange={(value) => handleFilterChange('filterMetric', value)}
+                      onChange={(value) => handleFilterChange('filterMetric', value)} 
                       className="flex-1"
                     />}
                   </div>

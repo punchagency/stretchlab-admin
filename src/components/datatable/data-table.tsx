@@ -303,7 +303,7 @@ export function DataTable<TData extends { id: number | string }, TValue>({
               onMultiChange={onOpportunityChange}
               showLabel={false}
               className="w-full md:w-70"
-              // showSearch={true}
+              showSearch={true}
             />
           )}
         </div>
@@ -331,7 +331,7 @@ export function DataTable<TData extends { id: number | string }, TValue>({
                             : flexRender(
                               header.column.columnDef.header,
                               header.getContext()
-                            )}
+                            )} 
                         </span>
                         {canSort && (
                           <span className="flex flex-col">

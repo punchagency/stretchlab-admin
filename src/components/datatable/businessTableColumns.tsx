@@ -46,7 +46,7 @@ export const businessTableColumns = (onViewDetails: (businessId: number) => void
       });
 
       return (
-        <span className="text-gray-600">{formattedDate}</span>
+        <span className="text-gray-600">{formattedDate}</span> 
       );
     },
   },
