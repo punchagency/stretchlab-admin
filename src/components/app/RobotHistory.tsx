@@ -247,7 +247,7 @@ export const RobotHistory = ({ configId }: { configId: number }) => {
     setBookingId(id);
     setShowModal(true);
   };
-
+ 
   return (
     <>
       <div className="mt-10">
@@ -324,6 +324,7 @@ export const RobotHistory = ({ configId }: { configId: number }) => {
               opportunityOptions={opportunities}
               selectedOpportunities={selectedOpportunities}
               onOpportunityChange={setSelectedOpportunities}
+            
             />
           ) : (
             <DataTable

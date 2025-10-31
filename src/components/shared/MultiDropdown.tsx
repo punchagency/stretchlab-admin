@@ -14,8 +14,6 @@ interface FilterDropdownProps {
   className?: string;
   showLabel?: boolean;
   showSearch?: boolean;
-
-  // 🆕 optional multi-select props
   multiSelect?: boolean;
   selectedValues?: string[];
   onMultiChange?: (values: string[]) => void;
@@ -40,11 +38,12 @@ export const MultiSelectDropdown = ({
     typeof option === "string" ? { value: option, label: option } : option
   );
 
-  const filteredOptions = showSearch && searchTerm
-    ? normalizedOptions.filter((option) =>
-        option.label.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    : normalizedOptions;
+  const filteredOptions =
+    showSearch && searchTerm
+      ? normalizedOptions.filter((option) =>
+          option.label.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      : normalizedOptions;
 
   const displayValue = multiSelect
     ? selectedValues.length > 0
@@ -56,6 +55,7 @@ export const MultiSelectDropdown = ({
     if (!multiSelect) {
       onChange?.(optionValue);
       setIsOpen(false);
+      setSearchTerm("");
     } else {
       let updated = selectedValues.includes(optionValue)
         ? selectedValues.filter((v) => v !== optionValue)
@@ -66,6 +66,7 @@ export const MultiSelectDropdown = ({
 
   const handleClear = (e: React.MouseEvent) => {
     e.stopPropagation();
+    setSearchTerm("");
     if (multiSelect) {
       onMultiChange?.([]);
     } else {
@@ -73,9 +74,16 @@ export const MultiSelectDropdown = ({
     }
   };
 
+  const handleClose = () => {
+    setIsOpen(false);
+    setSearchTerm("");
+  };
+
   return (
     <div className={`flex flex-col space-y-2 ${className}`}>
-      {showLabel && <label className="text-sm font-medium text-gray-700">{label}</label>}
+      {showLabel && (
+        <label className="text-sm font-medium text-gray-700">{label}</label>
+      )}
       <div className="relative">
         <button
           onClick={() => setIsOpen(!isOpen)}
@@ -83,7 +91,8 @@ export const MultiSelectDropdown = ({
         >
           <span className="truncate pr-2 capitalize">{displayValue}</span>
           <div className="flex items-center gap-1">
-            {((multiSelect && selectedValues.length > 0) || (!multiSelect && value)) && (
+            {((multiSelect && selectedValues.length > 0) ||
+              (!multiSelect && value)) && (
               <X
                 className="h-4 w-4 text-gray-400 hover:text-gray-600"
                 onClick={handleClear}
@@ -99,7 +108,7 @@ export const MultiSelectDropdown = ({
 
         {isOpen && (
           <>
-            <div className="fixed inset-0 z-10" onClick={() => setIsOpen(false)} />
+            <div className="fixed inset-0 z-10" onClick={handleClose} />
             <div className="absolute z-20 w-full mt-2 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto">
               <div className="p-2">
                 {showSearch && (

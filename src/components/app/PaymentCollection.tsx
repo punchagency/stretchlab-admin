@@ -267,7 +267,7 @@ export const PaymentCollection = ({
   setProceed,
   setUpdate,
   updateInfo,
-}: {
+}: { 
   show: boolean;
   onClose: () => void;
   robot: boolean;
