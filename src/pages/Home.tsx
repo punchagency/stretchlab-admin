@@ -20,13 +20,17 @@ import { ProfilePictureProvider } from "@/contexts/ProfilePictureContext";
 
 const SidebarLogo = () => {
   const { state } = useSidebar();
-
+  const navigate = useNavigate()
   return (
-    <img
-      src={state === "expanded" ? logo : logoIcon}
-      alt="logo"
-      className={state === "expanded" ? "w-24 h-10" : "w-10 h-9 ml-1"}
-    />
+    <button
+      onClick={() => navigate("/dashboard")}
+    > 
+      <img
+        src={state === "expanded" ? logo : logoIcon}
+        alt="logo"
+        className={state === "expanded" ? "w-24 h-10" : "w-10 h-9 ml-1"}
+      />
+    </button>
   );
 };
 
@@ -79,7 +83,7 @@ export const Home = () => {
 
       return false;
     }
-    if (menu.title === "User Management" && ![1, 2].includes(userInfo?.role_id ?? -1) ) {
+    if (menu.title === "User Management" && ![1, 2].includes(userInfo?.role_id ?? -1)) {
       return false;
     }
 

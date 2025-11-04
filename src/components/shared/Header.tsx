@@ -45,7 +45,7 @@ export const Header = ({
           >
             <div>
               <img src={avatar} alt="avatar" className="w-10 h-10" />
-            </div>
+            </div> 
             <div>
               <p className="text-dark-1 font-medium">{flexologist_name}</p>
               <p className="text-neutral-secondary text-sm">Flexologist</p>
