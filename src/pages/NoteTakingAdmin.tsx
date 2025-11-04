@@ -73,7 +73,7 @@ export const NoteTakingAdmin = () => {
     userInfo?.role_id === 2 ||
     userInfo?.permissions?.some(
       (perm: any) => perm.permission_tag === "invite_flex"
-  );
+    );
   // Handle user selection for resend invite
   const handleUserSelection = (email: string, isSelected: boolean) => {
     if (isSelected) {
@@ -255,6 +255,49 @@ export const NoteTakingAdmin = () => {
     {
       accessorKey: "full_name",
       header: "Name",
+      cell: ({ row }) => {
+        const name = row.getValue("full_name") as string;
+        const locations = row.original.locations?.list ?? [];
+
+        const activeLocation =
+          locations.find((l: any) => l.active && !l.primary) ||
+          locations.find((l: any) => l.active && l.primary) ||
+          null;
+
+        return (
+          <Tooltip>
+            <TooltipTrigger >
+              <span className="cursor-help underline decoration-dotted underline-offset-4">
+                {name}
+              </span>
+            </TooltipTrigger>
+            <TooltipContent className="max-w-xs ">
+              {locations.length > 0 ? (
+                <div className="space-y-1">
+                  {locations.map((loc: any, idx: number) => {
+                    const isActive = !!activeLocation && loc.name === activeLocation.name;
+                    return (
+                      <div key={`${loc.name}-${idx}`} className="flex items-center gap-2">
+                        <span className="text-white/90 capitalize">{loc.name}</span>
+                        {isActive && (
+                          <div className="flex items-center gap-1">
+                            <div className="w-1.5 h-1.5 bg-green-700 rounded-full" />
+                            <span className="ml-0.5 inline-block rounded bg-white/20 px-1 py-[1px] text-[10px] leading-none">
+                              active
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <span>No locations</span>
+              )}
+            </TooltipContent>
+          </Tooltip>
+        );
+      },
     },
     {
       accessorKey: "email",
@@ -321,7 +364,7 @@ export const NoteTakingAdmin = () => {
           >
             Date Invited
           </Button>
-        ); 
+        );
       },
       cell: ({ row }) => {
         const dateInvited = row.getValue("invited_at") as string;
@@ -357,29 +400,29 @@ export const NoteTakingAdmin = () => {
 
     ...(canSeeResendColumn
       ? [{
-      id: "resend_invite",
-      header: () => {
-        // const selectableUsers = data?.data?.users?.filter((user: any) =>
-        //   user.status === 3
-        // ) || [];
-        // const allSelectableSelected = selectableUsers.length > 0 &&
-        //   selectableUsers.every((user: any) => selectedUsers.includes(user.email));
-        // const someSelectableSelected = selectableUsers.some((user: any) =>
-        //   selectedUsers.includes(user.email)
-        // );
+        id: "resend_invite",
+        header: () => {
+          // const selectableUsers = data?.data?.users?.filter((user: any) =>
+          //   user.status === 3
+          // ) || [];
+          // const allSelectableSelected = selectableUsers.length > 0 &&
+          //   selectableUsers.every((user: any) => selectedUsers.includes(user.email));
+          // const someSelectableSelected = selectableUsers.some((user: any) =>
+          //   selectedUsers.includes(user.email)
+          // );
 
-        // const handleSelectAll = (checked: boolean) => {
-        //   if (checked) {
-        //     const selectableEmails = selectableUsers.map((user: any) => user.email);
-        //     setSelectedUsers(selectableEmails);
-        //   } else {
-        //     setSelectedUsers([]);
-        //   }
-        // };
+          // const handleSelectAll = (checked: boolean) => {
+          //   if (checked) {
+          //     const selectableEmails = selectableUsers.map((user: any) => user.email);
+          //     setSelectedUsers(selectableEmails);
+          //   } else {
+          //     setSelectedUsers([]);
+          //   }
+          // };
 
-        return (
-          <div className="flex items-center justify-center gap-2">
-            {/* <Tooltip>
+          return (
+            <div className="flex items-center justify-center gap-2">
+              {/* <Tooltip>
               <TooltipTrigger asChild>
                 <Checkbox
                   checked={allSelectableSelected}
@@ -395,65 +438,65 @@ export const NoteTakingAdmin = () => {
                 <p>Select all eligible users for resend invite</p>
               </TooltipContent>
             </Tooltip> */}
-            <span className="text-sm font-medium text-gray-700">Invite Actions</span>
-          </div>
-        );
-      },
-      cell: ({ row }) => {
-        const email = row.getValue("email") as string;
-        const status = row.getValue("status") as number;
-
-        // For users with null status (never invited), show Send Invite button
-        if (status === null) {
-          return (
-            <div className="flex items-center justify-center">
-              <Button
-                onClick={() => handleSingleInvite(email)}
-                disabled={isSendingInvite === email}
-                className="cursor-pointer w-32"
-                variant="outline"
-              >
-                <SvgIcon name="email-send" fill="#98A2B3" />
-                {isSendingInvite === email ? "Sending..." : "Send Invite"}
-              </Button>
+              <span className="text-sm font-medium text-gray-700">Invite Actions</span>
             </div>
           );
-        }
+        },
+        cell: ({ row }) => {
+          const email = row.getValue("email") as string;
+          const status = row.getValue("status") as number;
 
-        // For users with status 3 (invited but not accepted), show checkbox for bulk resend
-        if (status === 3) {
+          // For users with null status (never invited), show Send Invite button
+          if (status === null) {
+            return (
+              <div className="flex items-center justify-center">
+                <Button
+                  onClick={() => handleSingleInvite(email)}
+                  disabled={isSendingInvite === email}
+                  className="cursor-pointer w-32"
+                  variant="outline"
+                >
+                  <SvgIcon name="email-send" fill="#98A2B3" />
+                  {isSendingInvite === email ? "Sending..." : "Send Invite"}
+                </Button>
+              </div>
+            );
+          }
+
+          // For users with status 3 (invited but not accepted), show checkbox for bulk resend
+          if (status === 3) {
+            return (
+              <div className="flex items-center justify-center">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Checkbox
+                      checked={selectedUsers.includes(email)}
+                      onCheckedChange={(value: boolean) => handleUserSelection(email, !!value)}
+                      aria-label={`Select ${email} for resend invite`}
+                      className="h-6 w-6 rounded-sm border-2 transition-all duration-200 border-primary-base hover:border-primary-base/80 hover:bg-primary-base/5 data-[state=checked]:bg-primary-base data-[state=checked]:border-primary-base data-[state=checked]:shadow-md"
+                    />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Select {email} for resend invite</p>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+            );
+          }
+
+          // For all other statuses, show disabled state
           return (
             <div className="flex items-center justify-center">
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Checkbox
-                    checked={selectedUsers.includes(email)}
-                    onCheckedChange={(value: boolean) => handleUserSelection(email, !!value)}
-                    aria-label={`Select ${email} for resend invite`}
-                    className="h-6 w-6 rounded-sm border-2 transition-all duration-200 border-primary-base hover:border-primary-base/80 hover:bg-primary-base/5 data-[state=checked]:bg-primary-base data-[state=checked]:border-primary-base data-[state=checked]:shadow-md"
-                  />
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Select {email} for resend invite</p>
-                </TooltipContent>
-              </Tooltip>
+              <p className="text-gray-500 text-sm">
+                {status === 1 ? 'Active' : status === 2 ? 'Disabled' : status === 4 ? 'Pending' : status === 5 ? 'Pending' : 'Unknown'}
+              </p>
             </div>
           );
-        }
-
-        // For all other statuses, show disabled state
-        return (
-          <div className="flex items-center justify-center">
-            <p className="text-gray-500 text-sm">
-              {status === 1 ? 'Active' : status === 2 ? 'Disabled' : status === 4 ? 'Pending' : status === 5 ? 'Pending' : 'Unknown'}
-            </p>
-          </div>
-        );
-      },
-      enableSorting: false,
-      enableHiding: false,
-    } as ColumnDef<Payment>, ]
-    : []),
+        },
+        enableSorting: false,
+        enableHiding: false,
+      } as ColumnDef<Payment>,]
+      : []),
 
     // Commented out existing resend invite column
     // {
@@ -602,7 +645,7 @@ export const NoteTakingAdmin = () => {
         </AnimatePresence>
       )}
       <div>
-        <DataTable 
+        <DataTable
           handleModal={() => setShowModal(true)}
           handleBulkInvite={() => setShowBulkInviteModal(true)}
           handleResendInvite={handleResendInvite}

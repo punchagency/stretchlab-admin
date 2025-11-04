@@ -12,6 +12,14 @@ export type Payment = {
   resend_invite: boolean;
   role_id: number;
   permissions?: any
+  locations?: {
+    list: Array<{
+      active: boolean;
+      name: string;
+      primary: boolean;
+    }>;
+    total: number;
+  };
 };
 
 const resendInvite = (email: string) => {
