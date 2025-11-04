@@ -13,7 +13,7 @@ const redirectURL = import.meta.env.VITE_REDIRECT_URL;
 
 export const MainHeader = () => {
   const user = getUserInfo();
-  const { profilePictureUrl } = useProfilePictureContext();
+  const { profilePictureUrl } = useProfilePictureContext(); 
   const { data: notificationsResponse } = useNotifications();
 
   const notifications =
