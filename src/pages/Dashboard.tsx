@@ -62,7 +62,6 @@ export const Dashboard = () => {
   const handleMetricClick = (title: string) => {
     console.log(`Clicked on ${title}`);
   };
-
   return (
     <div className="min-h-screen bg-white">
       <div className="">
@@ -262,7 +261,7 @@ export const Dashboard = () => {
                 columns={userTableColumns}
                 data={userTableData.filter(flexologist => flexologist?.status === 1).map(flexologist => ({
                   ...flexologist,
-                  full_name: flexologist?.full_name.trim(),
+                  full_name: flexologist?.full_name?.trim(),
                 }))}
                 emptyText="No users found"
                 tableContainerClassName="bg-white"
