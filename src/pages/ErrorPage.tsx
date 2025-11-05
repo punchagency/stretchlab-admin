@@ -31,7 +31,8 @@ export const ErrorPage = () => {
                         </h2>
                         <p className="text-base text-gray-600 mb-8 max-w-6xl mx-auto">
                             Sorry, an unexpected error has occurred.            </p>
-
+                            <p className="text-base text-gray-600 mb-8 max-w-6xl mx-auto">
+                            {errorMessage}            </p>
                         <div className="flex gap-4 justify-center">
 
                             <Button
