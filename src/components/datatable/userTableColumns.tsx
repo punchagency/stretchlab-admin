@@ -86,7 +86,7 @@ export const userTableColumns: ColumnDef<UserData>[] = [
       return new Date(a).getTime() - new Date(b).getTime();
     },
   },
-  {
+  { 
     accessorKey: "bookings",
     header: "Bookings",
     

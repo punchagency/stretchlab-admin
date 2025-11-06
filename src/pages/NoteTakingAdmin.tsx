@@ -258,15 +258,16 @@ export const NoteTakingAdmin = () => {
       cell: ({ row }) => {
         const name = row.getValue("full_name") as string;
         const locations = row.original.locations?.list ?? [];
-
-        const activeLocation =
-          locations.find((l: any) => l.active && !l.primary) ||
-          locations.find((l: any) => l.active && l.primary) ||
-          null;
-
+      
+        // Find the index of the active location
+        const activeLocationIndex =
+          locations.findIndex((l) => l.active && !l.primary) !== -1
+            ? locations.findIndex((l) => l.active && !l.primary)
+            : locations.findIndex((l) => l.active && l.primary);
+      
         return (
           <Tooltip>
-            <TooltipTrigger >
+            <TooltipTrigger>
               <span className="cursor-help underline decoration-dotted underline-offset-4">
                 {name}
               </span>
@@ -274,8 +275,9 @@ export const NoteTakingAdmin = () => {
             <TooltipContent className="max-w-xs ">
               {locations.length > 0 ? (
                 <div className="space-y-1">
-                  {locations.map((loc: any, idx: number) => {
-                    const isActive = !!activeLocation && loc.name === activeLocation.name;
+                  {locations.map((loc, idx) => {
+                    const isActive = idx === activeLocationIndex;
+      
                     return (
                       <div key={`${loc.name}-${idx}`} className="flex items-center gap-2">
                         <span className="text-white/90 capitalize">{loc.name}</span>
@@ -297,7 +299,7 @@ export const NoteTakingAdmin = () => {
             </TooltipContent>
           </Tooltip>
         );
-      },
+      },      
     },
     {
       accessorKey: "email",
@@ -738,7 +740,7 @@ export const NoteTakingAdmin = () => {
             Confirm Access Change
           </h1>
           <p className="text-gray-600 text-center mb-4">
-            Are you sure you want to {pendingAction?.value === 1 ? 'disable' : 'enable'} access for{" "}
+            Are you sure you want to {pendingAction?.value === 2 ? 'disable' : 'enable'} access for{" "}
             <span className="font-semibold">{pendingAction?.email}</span>?
           </p>
           <div className="flex gap-3 justify-center">
@@ -751,9 +753,17 @@ export const NoteTakingAdmin = () => {
             <Button2
               onClick={confirmUpdateAccess}
               disabled={isAccessing === pendingAction?.email}
-              className="bg-primary-base hover:bg-primary-base/80 text-white px-6 py-2 rounded-lg"
+              className={`px-6 py-2 rounded-lg text-white ${
+                pendingAction?.value === 2
+                  ? "bg-red-500 hover:bg-red-600"
+                  : "bg-primary-base hover:bg-primary-base/80"
+              }`}
             >
-              {isAccessing === pendingAction?.email ? "Updating..." : "Confirm"}
+               {isAccessing === pendingAction?.email
+          ? "Updating..."
+          : pendingAction?.value === 2
+          ? "Disable"
+          : "Enable"}
             </Button2>
           </div>
         </div>

@@ -263,10 +263,10 @@ export const Dashboard = () => {
                   ...flexologist,
                   full_name: flexologist?.full_name?.trim(),
                 }))}
-                emptyText="No users found"
+                emptyText="No users found" 
                 tableContainerClassName="bg-white"
                 enableSorting={true}
-                enableSearch={true}
+                enableSearch={true} 
                 searchFields={["full_name", "id"]}
                 searchPlaceholder="Search by Name or ID"
                 enableMyTeamDropdown={true}
@@ -299,7 +299,7 @@ export const Dashboard = () => {
             ) : (
               <DataTable
                 columns={businessTableColumns(openBusinessDetail)}
-                data={businessTableData}
+                data={businessTableData} 
                 emptyText="No businesses found"
                 tableContainerClassName="bg-white"
                 enableSorting={true}
