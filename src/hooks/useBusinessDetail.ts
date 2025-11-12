@@ -8,7 +8,7 @@ export const useBusinessDetail = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const {
-    data: businessInfoData,
+    data: businessInfoData, 
     isLoading: isBusinessInfoLoading,
     error: businessInfoError,
     refetch: refetchBusinessInfo,

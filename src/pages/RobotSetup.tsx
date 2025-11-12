@@ -5,7 +5,7 @@ import { Navigate } from "react-router";
 
 export const RobotSetup = () => {
   const userInfo = getUserInfo();
-  if (userInfo?.role_id === 4) {
+  if (userInfo?.role_id === 4) {  
     return <Navigate to="/dashboard" />;
   }
   if (userInfo?.rpa_verified) {
