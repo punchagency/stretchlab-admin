@@ -8,11 +8,9 @@ import {
 } from "@/service/notetaking";
 import { useState } from "react";
 import {
-  Button as Button2,
+  // Button as Button2,
   BulkInviteModal,
   ContainLoader,
-  Input,
-  Modal,
   SvgIcon,
 } from "@/components/shared";
 import { DataTable, type Payment } from "@/components/datatable";
@@ -60,6 +58,7 @@ export const NoteTakingAdmin = () => {
   const [pendingAction, setPendingAction] = useState<{
     type: "access" | "status" | "delete";
     email: string;
+    id?: number;
     value: number | boolean;
   } | null>(null);
   const [isDeleting, setIsDeleting] = useState("");
@@ -205,17 +204,17 @@ export const NoteTakingAdmin = () => {
     }
   };
 
-  // const handleDeleteUser = async (email: string) => {
-  //   setPendingAction({ type: "delete", email, value: false });
-  //   setShowDeleteConfirmation(true);
-  // };
+  const handleDeleteUser = (id: number, email: string) => {
+    setPendingAction({ type: "delete", email, id, value: false });
+    setShowDeleteConfirmation(true);
+  };
 
   const confirmDeleteUser = async () => {
     if (!pendingAction || pendingAction.type !== "delete") return;
-    const { email } = pendingAction;
+    const { email, id } = pendingAction;
     setIsDeleting(email);
     try {
-      const response = await deleteUser(email);
+      const response = await deleteUser(id as number);
       if (response.status === 200) {
         renderSuccessToast(response.data.message || "User deleted successfully");
         refetch();
@@ -393,7 +392,7 @@ export const NoteTakingAdmin = () => {
             disabled={isAccessing === email}
           />
         ) : (
-          <p className="text-gray-500">No Access control</p>
+          <p className="text-gray-500">No Access</p>
         );
       },
     },
@@ -528,7 +527,7 @@ export const NoteTakingAdmin = () => {
       ? [
         {
           accessorKey: "update_status",
-          header: "Give Admin Access",
+          header: "Admin Access",
           cell: ({ row }: { row: Row<Payment> }) => {
             const email = row.getValue("email") as string;
             const role_id = row.original.role_id as number;
@@ -550,40 +549,43 @@ export const NoteTakingAdmin = () => {
                   ? "Updating..."
                   : isRestricting
                     ? "Restrict"
-                    : "Give Access"}
+                    : "Grant"}
               </Button>
             );
           },
         },
       ]
       : []),
-    // {
-    //   id: "delete_user",
-    //   header: "Delete",
-    //   cell: ({ row }: { row: Row<Payment> }) => {
-    //     const email = row.getValue("email") as string;
-    //     return (
-    //       <Tooltip>
-    //         <TooltipTrigger asChild>
-    //           <Button
-    //             onClick={() => handleDeleteUser(email)}
-    //             disabled={isDeleting === email}
-    //             // className="cursor-pointer w-20 bg-red-500 text-white hover:bg-red-600 transition-all duration-300 border-red-500 hover:text-white"
-    //             variant="outline"
-    //             size="sm"
-    //           >
-    //             <SvgIcon name="trash" fill="#DC2626" />
-    //           </Button>
-    //         </TooltipTrigger>
-    //         <TooltipContent>
-    //           <p>Delete Flexologist</p>
-    //         </TooltipContent>
-    //       </Tooltip>
-    //     );
-    //   },
-    //   enableSorting: false,
-    //   enableHiding: false,
-    // },
+    {
+      id: "delete_user",
+      header: "Remove",
+      cell: ({ row }: { row: Row<Payment> }) => {
+        const email = row.getValue("email") as string;
+        const user = row.original as any;
+        const status = user.status as number;
+        const id = user.id as number;
+        const disabled = status !== 3 || isDeleting === email;
+        return (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                onClick={() => handleDeleteUser(id, email)}
+                disabled={disabled}
+                variant="outline"
+                size="sm"
+              >
+                <SvgIcon name="trash" fill="#DC2626" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>{status === 3 ? "Delete Flexologist" : "Only invited (status 3) can be removed"}</p>
+            </TooltipContent>
+          </Tooltip>
+        );
+      },
+      enableSorting: false,
+      enableHiding: false,
+    },
   ];
 
   const validateEmail = (email: string) => {
@@ -654,6 +656,7 @@ export const NoteTakingAdmin = () => {
           data={data.data.users}
           note={true}
           emptyText="No Flexologists invited yet."
+          enableSorting
         />
       </div>
 

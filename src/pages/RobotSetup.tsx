@@ -9,7 +9,7 @@ export const RobotSetup = () => {
     return <Navigate to="/dashboard" />;
   }
   if (userInfo?.rpa_verified) {
-    return <Navigate to="/" />;
+    return <Navigate to="/" />; 
   }
 
   return (

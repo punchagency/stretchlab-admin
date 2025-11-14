@@ -27,6 +27,8 @@ export const Analytics = () => {
     handleFilterChange,
     handleCustomRangeChange,
     handleOpportunitySelect,
+    handleDrilldownLocationClick,
+    clearLocationFilter,
     handleLocationSelect,
     shouldShowLocation,
     shouldShowFlexologist,
@@ -170,6 +172,9 @@ export const Analytics = () => {
                       data={drilldownData}
                       isLoading={isRPAAuditDetailsLoading || isRPAAuditLoading}
                       hasInitialData={!!rpaAuditData}
+                      onLocationClick={handleDrilldownLocationClick}
+                      activeLocation={selectedFilters.location}
+                      onClearLocation={clearLocationFilter}
                     />
                   </div>
                 </>
@@ -250,6 +255,7 @@ export const Analytics = () => {
                       enableSearch
                       searchPlaceholder="Search by Flexologist Name"
                       searchFields={["name"]}
+                      enableSorting
 
                     />
                   </>

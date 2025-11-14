@@ -4,6 +4,7 @@ import { useCallback } from "react";
 type PendingAction = {
   type: "access" | "status" | "delete";
   email: string;
+  id?: number;
   value: number | boolean;
 } | null;
 
@@ -151,7 +152,7 @@ export const NoteTakingAdminModals = (props: NoteTakingAdminModalsProps) => {
               <SvgIcon name="trash" fill="#DC2626" />
             </div>
           </div>
-          <h1 className="text-lg md:text-xl font-semibold text-center mb-2">Delete Flexologist</h1>
+          <h1 className="text-lg md:text-xl font-semibold text-center mb-2">Remove Flexologist</h1>
           <p className="text-gray-600 text-center mb-4">
             Are you sure you want to delete{" "}
             <span className="font-semibold">{pendingAction?.email}</span>? This action cannot be undone.

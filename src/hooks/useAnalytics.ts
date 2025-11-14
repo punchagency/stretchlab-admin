@@ -291,6 +291,27 @@ export const useAnalytics = () => {
     }
   };
 
+  const handleDrilldownLocationClick = (location: string) => {
+    // Toggle: if clicking the same location, reset to All; else set to location
+    const isSame = selectedFilters.location?.toLowerCase() === location.toLowerCase();
+    setSelectedFilters(prev => ({
+      ...prev,
+      filterBy: 'Location',
+      location: isSame ? 'All' : location,
+    }));
+    setSelectedLocation(isSame ? null : location);
+    // Preserve selectedOpportunity to support combined drilldown when set
+  };
+
+  const clearLocationFilter = () => {
+    setSelectedFilters(prev => ({
+      ...prev,
+      filterBy: 'Location',
+      location: 'All',
+    }));
+    setSelectedLocation(null);
+  };
+
   const handleRankByChange = (value: string) => {
     setSelectedRankBy(value);
   };
@@ -422,6 +443,8 @@ export const useAnalytics = () => {
     handleOpportunitySelect,
     handleRankByChange,
     handleLocationSelect,
+    handleDrilldownLocationClick,
+    clearLocationFilter,
     shouldShowLocation: selectedFilters.filterBy === "Location",
     shouldShowFlexologist: selectedFilters.filterBy === "Flexologist",
 
