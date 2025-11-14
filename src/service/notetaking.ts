@@ -38,9 +38,9 @@ export const bulkInviteFlexologists = async (emails: string[], resend: boolean =
   return response;
 };
 
-export const deleteUser = async (email: string) => {
-  const response = await api.post("/admin/process/delete-user", {
-    email
+export const deleteUser = async (id: number) => {
+  const response = await api.post("/admin/process/remove-user", {
+    id,
   });
   return response;
 };

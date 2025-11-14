@@ -128,6 +128,7 @@ export const BulkInviteModal = ({
                   <ol className="text-sm text-blue-700 space-y-1 list-decimal list-inside">
                     <li>Download the CSV template below</li>
                     <li>Fill in the email addresses in the template</li>
+                    <li><b>IMPORTANT:</b> ONLY add email addresses to the first column in the template</li>
                     <li>Upload the completed CSV file</li>
                     <li>Click "Send Bulk Invites" to invite all flexologists</li>
                   </ol>

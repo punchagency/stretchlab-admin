@@ -93,7 +93,7 @@ export const Dashboard = () => {
                     key={index}
                     title={metric.title}
                     value={metric.value}
-                    subtitle={metric.subtitle}
+                    subtitle={metric.subtitle} 
                     buttonText={metric.buttonText}
                     buttonVariant={metric.buttonVariant}
                     showCurrency={metric.showCurrency}
@@ -283,7 +283,7 @@ export const Dashboard = () => {
             <h2 className="text-base font-semibold text-gray-900 mb-4 pl-2 sm:pl-0"> Business List</h2>
 
             {isBusinessTableLoading ? (
-
+ 
               <TableSkeleton rows={5} columns={4} />
             ) : businessTableError ? (
               <div className="flex flex-col justify-center items-center py-12">

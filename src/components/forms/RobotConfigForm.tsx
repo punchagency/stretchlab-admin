@@ -44,7 +44,7 @@ export const RobotConfigForm = ({
       try {
         const parsed = JSON.parse(locationData);
         return Array.isArray(parsed) ? parsed : [];
-      } catch (e) {
+      } catch (e) { 
         console.error('Error parsing locations:', e);
         return [];
       }

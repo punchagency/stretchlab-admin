@@ -12,7 +12,7 @@ import type {
   ActivitiesResponse,
   FilterState,
   FilterOptions,
-  MetricCardData
+  MetricCardData 
 } from "@/types";
 import { getUserInfo } from "@/utils";
 

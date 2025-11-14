@@ -8,7 +8,7 @@ export const Notification = () => {
     notifications,
     unreadCount,
     columns,
-    isLoading,
+    isLoading, 
     error,
     refetch,
     markAllAsReadMutation,
@@ -16,7 +16,7 @@ export const Notification = () => {
 
   if (isLoading) {
     return (
-      <div className="w-full h-[90%]">
+      <div className="w-full h-[90%] p-">
         <ContainLoader text="Fetching notifications..." />
       </div>
     );
