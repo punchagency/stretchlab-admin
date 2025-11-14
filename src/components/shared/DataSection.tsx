@@ -76,7 +76,7 @@ export const DataSection: React.FC<DataSectionProps> = ({
       badge: 'bg-green-100 text-green-800',
     },
   }[colorScheme];
-
+ 
   const formatName = (name: string) =>
     name
       .split(' ')

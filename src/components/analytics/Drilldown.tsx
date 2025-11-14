@@ -16,12 +16,18 @@ interface DrilldownProps {
   data: DrilldownData | null;
   isLoading: boolean;
   hasInitialData: boolean;
+  onLocationClick?: (locationName: string) => void;
+  activeLocation?: string | null;
+  onClearLocation?: () => void;
 }
 
 export const Drilldown: React.FC<DrilldownProps> = ({
   selected,
   data,
   isLoading,
+  onLocationClick,
+  activeLocation,
+  onClearLocation,
 }) => {
 
   const [locationPage, setLocationPage] = useState(0);
@@ -132,7 +138,10 @@ export const Drilldown: React.FC<DrilldownProps> = ({
     colorScheme,
     icon,
     selected,
-    text
+    text,
+    onItemClick,
+    activeLocation,
+    onClearLocation,
   }: {
     title: string;
     items: any[];
@@ -143,6 +152,9 @@ export const Drilldown: React.FC<DrilldownProps> = ({
     icon: React.ReactNode;
     selected: string | null;
     text: string;
+    onItemClick?: (name: string) => void;
+    activeLocation?: string | null;
+    onClearLocation?: () => void;
   }) => {
     const colorClasses = {
       blue: {
@@ -167,6 +179,15 @@ export const Drilldown: React.FC<DrilldownProps> = ({
           <span className={`ml-auto px-2 py-1 text-xs font-bold rounded-full ${colors.badge}`}>
             {items.length} {text}
           </span>
+          {title === 'By Location' && activeLocation && activeLocation !== 'All' && (
+            <button
+              type="button"
+              onClick={onClearLocation}
+              className="ml-2 px-2 py-1 text-xs rounded-md border bg-white text-gray-700 hover:bg-gray-50"
+            >
+              Show all locations
+            </button>
+          )}
         </div>
 
         {items.length > 0 ? (
@@ -174,7 +195,8 @@ export const Drilldown: React.FC<DrilldownProps> = ({
             {getPaginatedData(items, currentPage).map((item: any, idx: number) => (
               <div
                 key={idx}
-                className={`flex justify-between items-center p-3 rounded-lg border transition-colors ${colors.item}`}
+                className={`flex justify-between items-center p-3 rounded-lg border transition-colors ${colors.item} ${onItemClick ? 'cursor-pointer' : ''}`}
+                onClick={onItemClick ? () => onItemClick(item.name) : undefined}
               >
                 <span className="text-sm font-medium text-gray-700 truncate flex-1 mr-3 capitalize">
                   {item.name}
@@ -257,6 +279,9 @@ export const Drilldown: React.FC<DrilldownProps> = ({
             icon={<MapPin className="w-4 h-4 text-blue-600" />}
             selected={selected}
             text="Locations"
+            onItemClick={onLocationClick}
+            activeLocation={activeLocation}
+            onClearLocation={onClearLocation}
           />
 
           <DataSection

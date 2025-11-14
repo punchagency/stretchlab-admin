@@ -196,7 +196,7 @@ export const CouponSection = ({ settingsData }: CouponSectionProps) => {
                       }`}>{coupon.duration_in_months}</span>
                     </div>
                   )}
-
+  
                   {coupon.max_redemptions && (
                     <div className="flex items-center justify-between text-sm">
                       <span className={coupon.available ? 'text-gray-600' : 'text-gray-500'}>Max Redemptions:</span>
