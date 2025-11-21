@@ -93,7 +93,7 @@ export const Home = () => {
   return (
     <ProfilePictureProvider>
       <SidebarProvider>
-        <Sidebar className="p-2 border-sidebar-border" collapsible="icon">
+        <Sidebar className="border-sidebar-border" collapsible="icon">
           <SidebarHeader className="pt-5">
             <SidebarLogo />
           </SidebarHeader>

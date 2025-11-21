@@ -335,7 +335,7 @@ export const RobotConfigForm = ({
                         </div>
                       </div>
                     ))}
-                  </div>
+                  </div> 
 
                   {/* <div className="bg-primary-base/10 rounded-lg p-3">
                      <p className="text-sm text-primary-base">

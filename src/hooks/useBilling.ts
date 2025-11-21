@@ -10,7 +10,7 @@ import {
 
 export interface ProcessedBillingData {
   flexologistQuantity: number;
-  flexologistPrice: number;
+  flexologistPrice: number;  
   flexologistTotal: number;
   rpaQuantity: number;
   rpaPrice: number;
@@ -20,7 +20,7 @@ export interface ProcessedBillingData {
   rpaBillingDate: string | null;
   hasSubscriptionData: boolean;
   flexologistStatus: string | undefined;
-  rpaStatus: string | undefined;
+  rpaStatus: string | undefined;   
   noteTakingData: any;
   rpaData : any;
 }
@@ -60,7 +60,7 @@ export const useBilling = () => {
     // const rpaDiscountInfo = rpaData?.discount_info
     // const flexologistDiscountInfo = noteTakingData?.discount_info
 
-    return {
+    return {  
       flexologistQuantity,
       flexologistPrice,
       flexologistTotal,
