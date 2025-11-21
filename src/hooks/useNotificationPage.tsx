@@ -14,7 +14,7 @@ import {
 export const useNotificationPage = () => {
   const navigate = useNavigate();
   const {
-    data: notificationsResponse,
+    data: notificationsResponse, 
     isLoading,
     error,
     refetch,
@@ -86,7 +86,7 @@ export const useNotificationPage = () => {
       size: 140,
       cell: ({ getValue, row }) => {
         const type = getValue() as NotificationType;
-        const notification = row.original;
+        const notification = row.original;   
         return (
           <div className="flex items-center">
             <span 
@@ -171,8 +171,8 @@ export const useNotificationPage = () => {
             destructive: true,
             show: true,
           },
-        ];
-
+        ];      
+                                            
         return (
           <div className="flex items-center justify-center">
             <ActionDropdown 

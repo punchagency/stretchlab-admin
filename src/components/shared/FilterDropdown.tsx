@@ -12,7 +12,7 @@ interface FilterDropdownProps {
   options: string[] | FilterOption[];
   onChange: (value: string) => void;
   className?: string;
-  showLabel?: boolean;
+  showLabel?: boolean; 
   showSearch?: boolean;
 }
 

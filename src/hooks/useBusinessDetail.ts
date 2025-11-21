@@ -17,7 +17,7 @@ export const useBusinessDetail = () => {
     queryFn: () => getBusinessInfo(selectedBusinessId!),
     enabled: !!selectedBusinessId,
     staleTime: 5 * 60 * 1000,
-    refetchOnWindowFocus: false,
+    refetchOnWindowFocus: true,
   });
 
   const openBusinessDetail = (businessId: number) => {

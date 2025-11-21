@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+ import React, { useState } from "react";
 import { Button, Spinner, OTPInputComponent } from "../shared";
 import { verify2FALogin, resend2FAVerificationCode } from "@/service/auth";
 import type { ApiError } from "@/types";
