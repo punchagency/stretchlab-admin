@@ -192,7 +192,7 @@ export const CouponSection = ({ settingsData }: CouponSectionProps) => {
                     <div className="flex items-center justify-between text-sm">
                       <span className={coupon.available ? 'text-gray-600' : 'text-gray-500'}>Duration Months:</span>
                       <span className={`font-medium ${
-                        coupon.available ? 'text-gray-900' : 'text-gray-500'
+                        coupon.available ? 'text-gray-900' : 'text-gray-500' 
                       }`}>{coupon.duration_in_months}</span>
                     </div>
                   )}

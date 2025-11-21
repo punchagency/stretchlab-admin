@@ -383,7 +383,7 @@ export const useSettings = () => {
     setCouponFormData(prev => ({
       ...prev,
       [name]: value.trim()
-    }));
+    })); 
   };
 
   const handleAddCoupon = async () => {

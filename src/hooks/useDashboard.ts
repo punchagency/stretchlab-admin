@@ -38,8 +38,8 @@ export const useDashboard = () => {
   } = useQuery<DashboardMetricsResponse>({
     queryKey: ['dashboardMetrics'],
     queryFn: getDashboardMetrics,
-    staleTime: 5 * 60 * 1000,
-    refetchOnWindowFocus: false,
+    // staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: "always",
   });
   const userInfo = getUserInfo();
   const {
@@ -50,8 +50,7 @@ export const useDashboard = () => {
   } = useQuery<ChartFiltersResponse>({
     queryKey: ['chartFilters', 'dashboard'],
     queryFn: () => getChartFilters(),
-    staleTime: 5 * 60 * 1000,
-    refetchOnWindowFocus: false,
+    refetchOnWindowFocus: "always",
   });
 
   const {
@@ -67,8 +66,7 @@ export const useDashboard = () => {
       }
       return getUserTableData(myTeamDuration);
     },
-    staleTime: 3 * 60 * 1000,
-    refetchOnWindowFocus: false,
+    refetchOnWindowFocus: "always",
   });
 
   const {
@@ -80,7 +78,7 @@ export const useDashboard = () => {
     queryKey: ['businessTableData'],
     queryFn: getBusinessTableData,
     staleTime: 3 * 60 * 1000,
-    refetchOnWindowFocus: false,
+    refetchOnWindowFocus: true,
   });
 
   const {
@@ -91,8 +89,8 @@ export const useDashboard = () => {
   } = useQuery<ActivitiesResponse>({
     queryKey: ['activitiesData'],
     queryFn: getActivitiesData,
-    staleTime: 5 * 60 * 1000,
-    refetchOnWindowFocus: false,
+    refetchOnWindowFocus: "always",
+    
   });
 
   const processFilterOptions = () => {
