@@ -45,7 +45,7 @@ export const HistoryInformation = ({
             </div>
             <div>
               <h3 className="text-[#344054] font-semibold text-lg">Location</h3>
-              <p className="text-dark-1 text-base">{data?.location}</p>
+              <p className="text-dark-1 text-base capitalize">{data?.location}</p>
             </div>
             <div>
               <h3 className="text-[#344054] font-semibold text-lg">
@@ -83,10 +83,10 @@ export const HistoryInformation = ({
               </div>
             </div>
             <div>
-              <h3 className="text-[#344054] font-semibold text-lg">
+              <h3 className="text-[#344054] font-semibold text-lg ">
                 Flexologist Name
               </h3>
-              <p className="text-dark-1 text-base">{data?.flexologist_name}</p>
+              <p className="text-dark-1 text-base capitalize">{data?.flexologist_name}</p>
             </div>
           </div>
         </div>
@@ -97,7 +97,13 @@ export const HistoryInformation = ({
               <h3 className="text-[#344054] font-semibold text-lg">
                 Appointment Date
               </h3>
-              <p className="text-dark-1 text-base">{data?.appointment_date}</p>
+              <p className="text-dark-1 text-base">{data?.appointment_date ? new Date(data?.appointment_date).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+              }) : "N/A"}</p>
             </div>
             <div>
               <h3 className="text-[#344054] font-semibold text-lg">
@@ -119,7 +125,7 @@ export const HistoryInformation = ({
               <p className="text-dark-1 text-base">
                 {data?.pre_visit_preparation_rubric}
               </p>
-            </div> 
+            </div>
             <div>
               <h3 className="text-[#344054] font-semibold text-lg">
                 Session Notes Rubric Score
@@ -226,7 +232,7 @@ export const HistoryInformation = ({
                 : "N/A"}
             </p>
           </div>
-          <div> 
+          <div>
             <h3 className="text-[#344054] font-semibold text-lg">
               Note Analysis Progressive Moments
             </h3>
