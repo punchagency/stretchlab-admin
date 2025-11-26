@@ -31,7 +31,7 @@ export const useNotificationPage = () => {
   const notifications = [...transformedNotifications].sort((a, b) => {
     if (a.isRead !== b.isRead) {
       return a.isRead ? 1 : -1; 
-    }
+    } 
     const aOriginal = originalNotifications.find(orig => orig.id === a.id);
     const bOriginal = originalNotifications.find(orig => orig.id === b.id);
     if (aOriginal && bOriginal) {
@@ -61,7 +61,7 @@ export const useNotificationPage = () => {
     switch (type) {
       case "booking":
         navigate("/robot-automation");
-        break;
+        break;    
       case "robot automation":
         navigate("/robot-automation");
         break;
