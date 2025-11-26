@@ -37,7 +37,7 @@ export const LocationSelectionModal = ({
             const normalizedInitialSelections = initialSelectedLocations.map(loc => loc.toLowerCase());
 
             const matchedLocations = locations.filter(location =>
-                normalizedInitialSelections.includes(location.toLowerCase())
+                normalizedInitialSelections.includes(location.toLowerCase())      
             );
 
             setSelectedLocations(matchedLocations);

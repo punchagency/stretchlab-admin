@@ -46,7 +46,7 @@ export const Dashboard = () => {
     retryFilters,
     retryChart,
     retryUserTable,
-    retryBusinessTable,    
+    retryBusinessTable,
     retryActivities,
   } = useDashboard();
 
@@ -65,7 +65,7 @@ export const Dashboard = () => {
   return (
     <div className="min-h-screen bg-white">
       <div className="">
-        <div className="px-3 sm:px-5 mt-5 flex flex-col space-y-10">   
+        <div className="px-3 sm:px-5 mt-5 flex flex-col space-y-10">
 
           <div className="py-4 px-3 sm:px-4 bg-[#F5F5F5] rounded-lg shadow-md">
             <h2 className="text-base font-semibold text-gray-900 mb-3">Platform Live Metrics</h2>
@@ -112,7 +112,7 @@ export const Dashboard = () => {
             <Activities
               data={activitiesData}
               isLoading={isActivitiesLoading}
-              error={activitiesError}   
+              error={activitiesError}
               onRetry={retryActivities}
             />
           </div>}
@@ -154,7 +154,7 @@ export const Dashboard = () => {
                       options={filterOptions.filterBy}
                       onChange={(value) => handleFilterChange('filterBy', value)}
                       className="flex-1"
-                    />   
+                    />
                     <DateRangeFilter
                       label="Duration"
                       value={filterOptions.duration.find(opt => opt.value === selectedFilters.duration)?.label || selectedFilters.duration}
@@ -294,7 +294,7 @@ export const Dashboard = () => {
                   Retry
                 </Button>
               </div>
-            ) : ( 
+            ) : (
               <DataTable
                 columns={businessTableColumns(openBusinessDetail)}
                 data={businessTableData} 

@@ -253,7 +253,9 @@ export const NoteTakingAdmin = () => {
       accessorKey: "full_name",
       header: "Name",
       cell: ({ row }) => {
+       
         const name = row.getValue("full_name") as string;
+        const decodedName =  name ? decodeURIComponent(name) : "";
         const locations = row.original.locations?.list ?? [];
       
         // Find the index of the active location
@@ -266,7 +268,7 @@ export const NoteTakingAdmin = () => {
           <Tooltip>
             <TooltipTrigger>
               <span className="cursor-help underline decoration-dotted underline-offset-4">
-                {name}
+                {decodedName}
               </span>
             </TooltipTrigger>
             <TooltipContent className="max-w-xs ">

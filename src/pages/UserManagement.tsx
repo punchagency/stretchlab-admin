@@ -301,14 +301,13 @@ export const UserManagement = () => {
         const allPermissions = data?.data?.data.permissions || [];
         const status = user.status
         return (
-          status === 1 ? <Popover>.
+          status === 1 ? <Popover>
             <PopoverTrigger asChild>
               <Button variant="outline" className="">
                 <MoreHorizontal className="h-5 w-5 text-gray-600" />
               </Button>
             </PopoverTrigger>
 
-            {/* ✅ Adjusted positioning */}
             <PopoverContent
               side="left"
               align="start"
