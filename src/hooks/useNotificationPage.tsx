@@ -54,7 +54,7 @@ export const useNotificationPage = () => {
   const handleDelete = (id: number) => {
     deleteNotificationMutation.mutate({
       notification_id: id,
-    });
+    });    
   };
 
   const handleGoToPage = (type: NotificationType) => {

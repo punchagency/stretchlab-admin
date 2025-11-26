@@ -131,7 +131,7 @@ export const useAnalytics = () => {
   });
 
   const {
-    data: rankingData, 
+    data: rankingData,
     isLoading: isRankingLoading,
     error: rankingError,
     refetch: refetchRanking,

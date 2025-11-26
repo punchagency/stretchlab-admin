@@ -61,7 +61,7 @@ const userColumns: ColumnDef<RobotHistoryType>[] = [
       } as const;
 
       const matchedStatus = Object.keys(statuses).find((key) =>
-        status.toLowerCase().includes(key)
+        status?.toLowerCase()?.includes(key)
       );
 
       return matchedStatus ? (
