@@ -11,7 +11,8 @@ export type Payment = {
   invited_at: string;
   resend_invite: boolean;
   role_id: number;
-  permissions?: any
+  permissions?: any;
+  excluded_locations?: string[];
   locations?: {
     list: Array<{
       active: boolean;
@@ -58,7 +59,7 @@ export const userColumns: ColumnDef<Payment>[] = [
       const status = row.getValue("status") as number;
       const statuses: Record<number, string> = {
         1: "Active",
-        2: "Disabled", 
+        2: "Disabled",
         3: "Invited",
         4: "Declined",
         5: "Expired",

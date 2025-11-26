@@ -31,6 +31,7 @@ import {
   PopoverContent,
 } from "@/components/ui/popover";
 import { MoreHorizontal } from "lucide-react";
+import { LocationSelectionModal } from "@/components/LocationSelectionModal";
 
 export const UserManagement = () => {
   const { data, isPending, error, isFetching, refetch } = useQuery({
@@ -47,6 +48,14 @@ export const UserManagement = () => {
 
   // ✅ Manage multiple permission loading states at once
   const [isPermissionLoading, setIsPermissionLoading] = useState<Set<string>>(new Set());
+
+  // 🆕 Location modal state
+  const [showLocationModal, setShowLocationModal] = useState(false);
+  const [pendingPermission, setPendingPermission] = useState<{
+    userId: number;
+    permissionTag: string;
+    addPermission: boolean;
+  } | null>(null);
 
   if (isPending) {
     return (
@@ -108,6 +117,13 @@ export const UserManagement = () => {
     permission_tag: string,
     add_permission: boolean
   ) => {
+    // 🆕 If granting exclude_location permission, show location modal
+    if (permission_tag === "exclude_location" && add_permission) {
+      setPendingPermission({ userId: user_id, permissionTag: permission_tag, addPermission: add_permission });
+      setShowLocationModal(true);
+      return;
+    }
+
     const key = `${user_id}-${permission_tag}`;
     setIsPermissionLoading((prev) => new Set(prev).add(key));
 
@@ -121,6 +137,42 @@ export const UserManagement = () => {
       if (response.status >= 200) {
         renderSuccessToast(response.data.message);
         refetch();
+      } else {
+        renderErrorToast(response.data.message);
+      }
+    } catch (error) {
+      const apiError = error as ApiError;
+      renderErrorToast(apiError.response?.data?.message || "Error updating permission");
+    } finally {
+      setIsPermissionLoading((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(key);
+        return newSet;
+      });
+    }
+  };
+
+  // 🆕 Handle location selection confirmation
+  const handleLocationConfirm = async (selectedLocations: string[]) => {
+    if (!pendingPermission) return;
+
+    const { userId, permissionTag, addPermission } = pendingPermission;
+    const key = `${userId}-${permissionTag}`;
+    setIsPermissionLoading((prev) => new Set(prev).add(key));
+
+    try {
+      const response = await grantOrRevokePermission({
+        user_id: userId,
+        permission_tag: permissionTag,
+        add_permission: addPermission,
+        excluded_locations: selectedLocations,
+      });
+
+      if (response.status >= 200) {
+        renderSuccessToast(response.data.message);
+        refetch();
+        setShowLocationModal(false);
+        setPendingPermission(null);
       } else {
         renderErrorToast(response.data.message);
       }
@@ -249,7 +301,7 @@ export const UserManagement = () => {
         const allPermissions = data?.data?.data.permissions || [];
         const status = user.status
         return (
-          status === 1 ? <Popover>
+          status === 1 ? <Popover>.
             <PopoverTrigger asChild>
               <Button variant="outline" className="">
                 <MoreHorizontal className="h-5 w-5 text-gray-600" />
@@ -261,7 +313,7 @@ export const UserManagement = () => {
               side="left"
               align="start"
               sideOffset={5}
-              className="w-60 space-y-2 translate-x-[-5px]"
+              className="w-70 space-y-2 translate-x-[-5px]"
             >
               <h4 className="font-semibold text-sm mb-2">Manage Permissions</h4>
 
@@ -276,38 +328,86 @@ export const UserManagement = () => {
                   (p: any) => p.permission_tag === perm.permission_tag
                 );
                 const key = `${user.id}-${perm.permission_tag}`;
+                const isExcludeLocation = perm.permission_tag === "exclude_location";
 
                 return (
                   <div
                     key={perm.permission_tag}
                     className="flex justify-between items-center border-b pb-2"
                   >
-                    <span className="text-sm font-medium">
-                      {perm.permission_name}
-                    </span>
-                    <Button
-                      size="sm"
-                      variant={hasPermission ? "destructive" : "outline"}
-                      disabled={isPermissionLoading.has(key)}
-                      onClick={() =>
-                        handlePermissionChange(
-                          user.id,
-                          perm.permission_tag,
-                          !hasPermission
-                        )
-                      }
-                    >
-                      {isPermissionLoading.has(key)
-                        ? "Updating..."
-                        : hasPermission
-                        ? "Revoke"
-                        : "Grant"}
-                    </Button>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-medium">
+                        {perm.permission_name}
+                      </span>
+                      {/* 🆕 Show excluded locations count badge */}
+                      {/* {isExcludeLocation && hasPermission && user.excluded_locations?.length > 0 && (
+                        <span className="text-xs bg-primary-light text-primary-base px-2 py-0.5 rounded-full font-semibold">
+                          {user.excluded_locations.length} excluded
+                        </span>
+                      )} */}
+                    </div>
+
+                    {/* 🆕 Show Edit/Revoke for exclude_location when granted */}
+                    {isExcludeLocation && hasPermission ? (
+                      <div className="flex gap-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          disabled={isPermissionLoading.has(key)}
+                          onClick={() => {
+                            setPendingPermission({
+                              userId: user.id,
+                              permissionTag: perm.permission_tag,
+                              addPermission: true
+                            });
+                            setShowLocationModal(true);
+                          }}
+                          className="text-xs"
+                        >
+                          Edit
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          disabled={isPermissionLoading.has(key)}
+                          onClick={() =>
+                            handlePermissionChange(
+                              user.id,
+                              perm.permission_tag,
+                              false
+                            )
+                          }
+                          className="text-xs"
+                        >
+                          {isPermissionLoading.has(key) ? "Updating..." : "Revoke"}
+                        </Button>
+                      </div>
+                    ) : (
+                      <Button
+                        size="sm"
+                        variant={hasPermission ? "destructive" : "outline"}
+                        disabled={isPermissionLoading.has(key)}
+                        onClick={() =>
+                          handlePermissionChange(
+                            user.id,
+                            perm.permission_tag,
+                            !hasPermission
+                          )
+                        }
+                        className="text-xs"
+                      >
+                        {isPermissionLoading.has(key)
+                          ? "Updating..."
+                          : hasPermission
+                            ? "Revoke"
+                            : "Grant"}
+                      </Button>
+                    )}
                   </div>
                 );
               })}
             </PopoverContent>
-          </Popover> :    <p className="text-gray-500">Not Access</p>
+          </Popover> : <p className="text-gray-500">Not Access</p>
         );
       },
     },
@@ -418,6 +518,22 @@ export const UserManagement = () => {
           </Button2>
         </form>
       </Modal>
+
+      {/* 🆕 Location Selection Modal */}
+      <LocationSelectionModal
+        show={showLocationModal}
+        onClose={() => {
+          setShowLocationModal(false);
+          setPendingPermission(null);
+        }}
+        onConfirm={handleLocationConfirm}
+        isLoading={pendingPermission ? isPermissionLoading.has(`${pendingPermission.userId}-${pendingPermission.permissionTag}`) : false}
+        initialSelectedLocations={
+          pendingPermission
+            ? data?.data?.data.managers.find((m: any) => m.id === pendingPermission.userId)?.excluded_locations || []
+            : []
+        }
+      />
     </div>
   );
 };

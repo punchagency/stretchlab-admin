@@ -13,7 +13,7 @@ const redirectURL = import.meta.env.VITE_REDIRECT_URL;
 
 export const MainHeader = () => {
   const user = getUserInfo();
-  const { profilePictureUrl } = useProfilePictureContext(); 
+  const { profilePictureUrl } = useProfilePictureContext();
   const { data: notificationsResponse } = useNotifications();
 
   const notifications =
@@ -26,7 +26,7 @@ export const MainHeader = () => {
   };
 
   return (
-    <header className="flex items-center justify-between px-6 py-4 bg-white border-b border-gray-200 mb-4">
+    <header className="sticky top-0 z-20 flex items-center justify-between px-6 py-4 bg-white border-b border-gray-200 mb-4 shadow-sm">
       <div className="flex items-center">
         <SidebarTrigger className="p-2" />
       </div>
