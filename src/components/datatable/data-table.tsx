@@ -189,7 +189,7 @@ export function DataTable<TData extends { id: number | string }, TValue>({
             >
                 <SvgIcon name="email-send" fill="#fff" />
                 Invite Flexologist
-              </Button2>} 
+              </Button2>}
           </div>
           {/* <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -272,7 +272,7 @@ export function DataTable<TData extends { id: number | string }, TValue>({
       )}
 
       {enableSearch && !note && (
-        <div className={`flex md:items-center py-1 ${opportunityOptions? "gap-3": 'justify-between'} md:flex-row flex-col gap-1 md:mb-0 mb-2`}  >
+        <div className={`flex md:items-center py-1 ${opportunityOptions ? "gap-3" : 'justify-between'} md:flex-row flex-col gap-1 md:mb-0 mb-2`}  >
 
           <Input
             type="search"
@@ -331,7 +331,7 @@ export function DataTable<TData extends { id: number | string }, TValue>({
                             : flexRender(
                               header.column.columnDef.header,
                               header.getContext()
-                            )} 
+                            )}
                         </span>
                         {canSort && (
                           <span className="flex flex-col">

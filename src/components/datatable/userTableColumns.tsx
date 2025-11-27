@@ -13,11 +13,11 @@ export const userTableColumns: ColumnDef<UserData>[] = [
   //     ); 
   //   },
   // },
-  {
+  { 
     accessorKey: "full_name",
-    header: "Name",
-    cell: ({ row }) => {
-      const user = row.original;
+    header: "Name",   
+    cell: ({ row }) => { 
+      const user = row.original;  
       const decodedName = user?.full_name ? decodeURIComponent(user.full_name) : "";
       const initials = decodedName?.split(" ").map(n => n[0]).join("").toUpperCase();
 
@@ -34,7 +34,7 @@ export const userTableColumns: ColumnDef<UserData>[] = [
               <span className="text-sm font-medium text-gray-600">
                 {initials}
               </span>
-            )}
+            )} 
           </div>
           <span className="font-medium text-gray-900">{decodedName}</span>
         </div>
@@ -74,8 +74,8 @@ export const userTableColumns: ColumnDef<UserData>[] = [
         day: "numeric",
         hour: "2-digit",
         minute: "2-digit",
-      });
-
+      });  
+            
       return <span className="text-gray-600">{formattedDate}</span>;
     },
     sortingFn: (rowA, rowB, columnId) => {
@@ -83,10 +83,10 @@ export const userTableColumns: ColumnDef<UserData>[] = [
       const b = rowB.getValue(columnId) as string | null;
       if (!a && !b) return 0;
       if (!a) return -1;
-      if (!b) return 1;
+      if (!b) return 1;   
       return new Date(a).getTime() - new Date(b).getTime();
     },
-  },
+  },  
   {
     accessorKey: "bookings",
     header: "Bookings",

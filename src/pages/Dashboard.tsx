@@ -91,7 +91,7 @@ export const Dashboard = () => {
                     key={index}
                     title={metric.title}
                     value={metric.value}
-                    subtitle={metric.subtitle} 
+                    subtitle={metric.subtitle}
                     buttonText={metric.buttonText}
                     buttonVariant={metric.buttonVariant}
                     showCurrency={metric.showCurrency}
@@ -116,7 +116,7 @@ export const Dashboard = () => {
               onRetry={retryActivities}
             />
           </div>}
-   
+
 
           <div className="bg-[#F5F5F5] rounded-lg shadow-md py-4 px-3 sm:px-4">
             <h2 className="text-base font-semibold text-gray-900 mb-4">Company Metrics</h2>
@@ -180,7 +180,7 @@ export const Dashboard = () => {
                         options={filterOptions.flexologist}
                         onChange={(value) => handleFilterChange('flexologist', value)}
                         className="flex-2"
-                        showSearch={true} 
+                        showSearch={true}
                       />
                     )}
                     <FilterDropdown
@@ -195,7 +195,7 @@ export const Dashboard = () => {
                       label="Appointment Type"
                       value={filterOptions.filterMetric?.find(opt => opt.value === selectedFilters.filterMetric)?.label || selectedFilters.filterMetric || "all"}
                       options={filterOptions.filterMetric || []}
-                      onChange={(value) => handleFilterChange('filterMetric', value)} 
+                      onChange={(value) => handleFilterChange('filterMetric', value)}
                       className="flex-1"
                     />}
                   </div>
@@ -261,10 +261,10 @@ export const Dashboard = () => {
                   ...flexologist,
                   full_name: flexologist?.full_name?.trim(),
                 }))}
-                emptyText="No users found" 
+                emptyText="No users found"
                 tableContainerClassName="bg-white"
                 enableSorting={true}
-                enableSearch={true} 
+                enableSearch={true}
                 searchFields={["full_name", "id"]}
                 searchPlaceholder="Search by Name or ID"
                 enableMyTeamDropdown={true}
@@ -281,7 +281,7 @@ export const Dashboard = () => {
             <h2 className="text-base font-semibold text-gray-900 mb-4 pl-2 sm:pl-0"> Business List</h2>
 
             {isBusinessTableLoading ? (
- 
+
               <TableSkeleton rows={5} columns={4} />
             ) : businessTableError ? (
               <div className="flex flex-col justify-center items-center py-12">
@@ -297,7 +297,7 @@ export const Dashboard = () => {
             ) : (
               <DataTable
                 columns={businessTableColumns(openBusinessDetail)}
-                data={businessTableData} 
+                data={businessTableData}
                 emptyText="No businesses found"
                 tableContainerClassName="bg-white"
                 enableSorting={true}

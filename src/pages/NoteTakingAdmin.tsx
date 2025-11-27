@@ -91,7 +91,7 @@ export const NoteTakingAdmin = () => {
 
   // Clear selected users
   const clearSelectedUsers = () => {
-    setSelectedUsers([]);
+    setSelectedUsers([]); 
   };
 
   const getTooltipDescription = (status: number) => {
@@ -252,7 +252,7 @@ export const NoteTakingAdmin = () => {
     {
       accessorKey: "full_name",
       header: "Name",
-      cell: ({ row }) => {
+      cell: ({ row }) => {    
        
         const name = row.getValue("full_name") as string;
         const decodedName =  name ? decodeURIComponent(name) : "";
