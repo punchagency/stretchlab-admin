@@ -15,6 +15,7 @@ import {
   RobotSetup,
   Settings,
   Analytics,
+  Report,
   TwoFactorLogin,
   Notification,
   Billing,
@@ -44,11 +45,15 @@ const router = createBrowserRouter([
       },
       {
         path: "analytics",
-        element: <Analytics />,
+        element: <Analytics />, 
+      },
+      {
+        path: "report",
+        element: <Report />,
       },
       {
         path: "note-taking-app",
-        element: <NoteTakingAdmin />,
+        element: <NoteTakingAdmin />, 
       },
       {
         path: "robot-automation",

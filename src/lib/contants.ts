@@ -34,6 +34,11 @@ export const menuList = [
     icon: "billing",
     link: "/billing",
   },
+    {
+    title: "Report",
+    icon: "analytics",
+    link: "/report",
+  },
   {
     title: "User Management",
     icon: "users",
