@@ -44,7 +44,7 @@ export type AdminReportResponse = {
 };  
 
 export const getAdminReport = async (type: string) => {
-  const response = await api.get<AdminReportResponse>("/admin/report", {
+  const response = await api.get<AdminReportResponse>("/admin/report/get-report", {
     params: { type },
   });
   return response.data;
