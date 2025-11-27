@@ -87,6 +87,9 @@ export const Home = () => {
       return false;
     }
 
+      if (menu.title === "Report" && userInfo?.role_id !== 1) {
+    return false;
+  }
     return true;
   });
 
@@ -116,7 +119,7 @@ export const Home = () => {
           </SidebarFooter> */}
           <SidebarRail />
         </Sidebar>
-        <div className="flex-1 bg-white">
+        <div className="flex-1 bg-white overflow-x-hidden">
           <MainHeader />
           <div>
             <Outlet />
