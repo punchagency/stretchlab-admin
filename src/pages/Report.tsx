@@ -23,7 +23,7 @@ export const Report = () => {
       ? [
         {
           accessorKey: "first_name",
-          header: "Name",
+          header: "Client Name",
           cell: ({ row }) => {
             const first = row.getValue("first_name") as string;
             const last = row.original.last_name;
@@ -38,69 +38,69 @@ export const Report = () => {
           accessorKey: "user_id",
           header: "User ID",
         },
-        {
-          accessorKey: "gsl_category",
-          header: "GSL Category",
-        },
-        {
-          accessorKey: "details",
-          header: "Details",
-          cell: ({ row }) => {
-            const value = row.getValue("details") as string;
-            return (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <div className="max-w-[220px] truncate cursor-default py-2">{value}</div>
-                </TooltipTrigger>
-                <TooltipContent side="bottom" className="max-w-xs">{value}</TooltipContent>
-              </Tooltip>
-            );
-          },
-        },
-        {
-          accessorKey: "amount",
-          header: "Amount",
-        },
+        // {
+        //   accessorKey: "gsl_category",
+        //   header: "GSL Category",
+        // },
+        // {
+        //   accessorKey: "details",
+        //   header: "Details",
+        //   cell: ({ row }) => {
+        //     const value = row.getValue("details") as string;
+        //     return (
+        //       <Tooltip>
+        //         <TooltipTrigger asChild>
+        //           <div className="max-w-[220px] truncate cursor-default py-2">{value}</div>
+        //         </TooltipTrigger>
+        //         <TooltipContent side="bottom" className="max-w-xs">{value}</TooltipContent>
+        //       </Tooltip>
+        //     );
+        //   },
+        // },
+        // {
+        //   accessorKey: "amount",
+        //   header: "Amount",
+        // },
         {
           accessorKey: "due_date",
           header: "Due Date",
         },
-          {
-          accessorKey: "due_status",
-          header: "Due Status",
-        },
-        {
-          accessorKey: "agreement_date",
-          header: "Agreement Date",
-        },
-        {
-          accessorKey: "agreement_id",
-          header: "Agreement ID",
-        },
-        {
-          accessorKey: "processed_by",
-          header: "Processed By",
-        },
+        //   {
+        //   accessorKey: "due_status",
+        //   header: "Due Status",
+        // },
+        // {
+        //   accessorKey: "agreement_date",
+        //   header: "Agreement Date",
+        // },
+        // {
+        //   accessorKey: "agreement_id",
+        //   header: "Agreement ID",
+        // },
+        // {
+        //   accessorKey: "processed_by",
+        //   header: "Processed By",
+        // },
          {
           accessorKey: "sold_by",
           header: "Sold By",
         },
-        {
-          accessorKey: "invoice_id",
-          header: "Invoice ID",
-        },
-        {
-          accessorKey: "invoice_category",
-          header: "Invoice Category",
-        },
-        {
-          accessorKey: "invoice_class",
-          header: "Invoice Class",
-        },
-        {
-          accessorKey: "invoice_type",
-          header: "Invoice Type",
-        },
+        // {
+        //   accessorKey: "invoice_id",
+        //   header: "Invoice ID",
+        // },
+        // {
+        //   accessorKey: "invoice_category",
+        //   header: "Invoice Category",
+        // },
+        // {
+        //   accessorKey: "invoice_class",
+        //   header: "Invoice Class",
+        // },
+        // {
+        //   accessorKey: "invoice_type",
+        //   header: "Invoice Type",
+        // },
         {
           accessorKey: "location",
           header: "Location",
@@ -109,20 +109,20 @@ export const Report = () => {
             return <span className="capitalize">{location}</span>;
           },
         },
-        {
-          accessorKey: "user_pay_preference",
-          header: "User Pay Preference",
-        },
+        // {
+        //   accessorKey: "user_pay_preference",
+        //   header: "User Pay Preference",
+        // },
        
-        {
-          accessorKey: "cell_phone",
-          header: "Cell Phone",
-        },
+        // {
+        //   accessorKey: "cell_phone",
+        //   header: "Cell Phone",
+        // },
       ]
       : [
         {
           accessorKey: "first_name",
-          header: "Name",
+          header: "Client Name",
           cell: ({ row }) => {
             const first = row.getValue("first_name") as string;
             const last = row.original.last_name;
@@ -157,19 +157,21 @@ export const Report = () => {
         },
         {
           accessorKey: "package_name",
-          header: "Package",
+          header: "Max Monthly Credits",
           cell: ({ row }) => {
             const value = row.getValue("package_name") as string;
-            const isLong = (value || "").length > 20;
+            const shortValue = value.includes('-') ? value.split('-').pop()?.trim() : value;
+
+            const isLong = (shortValue || "").length > 20;
             return isLong ? (
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <div className="max-w-[220px] truncate cursor-default py-2">{value}</div>
+                  <div className="max-w-[220px] truncate cursor-default py-2">{shortValue}</div>
                 </TooltipTrigger>
-                <TooltipContent side="bottom" className="max-w-xs">{value}</TooltipContent>
+                <TooltipContent side="bottom" className="max-w-xs">{shortValue}</TooltipContent>
               </Tooltip>
             ) : (
-              <div className="max-w-[220px] truncate cursor-default">{value}</div>
+              <div className="max-w-[220px] truncate cursor-default">{shortValue}</div>
             );
           },
         },
@@ -177,26 +179,26 @@ export const Report = () => {
           accessorKey: "unused_credit",
           header: "Unused Credit",
         },
-        {
-          accessorKey: "cell_phone",
-          header: "Cell Phone",
-        },
-        {
-          accessorKey: "created_at",
-          header: "Created At",
-          cell: ({ row }) => {
-            const created = row.getValue("created_at") as string;
-            const date = new Date(created);
-            const formatted = date.toLocaleString("en-US", {
-              year: "numeric",
-              month: "short",
-              day: "numeric",
-              hour: "2-digit",
-              minute: "2-digit",
-            });
-            return <span className="text-gray-600">{formatted}</span>;
-          },
-        },
+        // {
+        //   accessorKey: "cell_phone",
+        //   header: "Cell Phone",
+        // },
+        // {
+        //   accessorKey: "created_at",
+        //   header: "Created At",
+        //   cell: ({ row }) => {
+        //     const created = row.getValue("created_at") as string;
+        //     const date = new Date(created);
+        //     const formatted = date.toLocaleString("en-US", {
+        //       year: "numeric",
+        //       month: "short",
+        //       day: "numeric",
+        //       hour: "2-digit",
+        //       minute: "2-digit",
+        //     });
+        //     return <span className="text-gray-600">{formatted}</span>;
+        //   },
+        // },
       ];
 
   if (isLoading) {
@@ -205,7 +207,7 @@ export const Report = () => {
         <ContainLoader text="Fetching report..." />
       </div>
     );
-  }
+  }  
 
   if (error) {
     return (

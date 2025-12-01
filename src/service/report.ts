@@ -10,7 +10,7 @@ export interface AdminReportItem {
   package_name: string;
   unused_credit: string;
   cell_phone: string;
-  home_phone: string;
+  home_phone: string;   
   work_phone: string;
   created_at: string;
 }
@@ -39,7 +39,7 @@ export interface HealthReportItem {
   user_pay_preference: string;
 }
 
-export type AdminReportResponse = {              
+export type AdminReportResponse = {                
   data: (AdminReportItem | HealthReportItem)[];
 };  
 

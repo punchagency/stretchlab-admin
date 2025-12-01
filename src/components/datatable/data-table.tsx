@@ -329,7 +329,7 @@ export function DataTable<TData extends { id: number | string }, TValue>({
                           {header.isPlaceholder
                             ? null
                             : flexRender(
-                              header.column.columnDef.header,
+                              header.column.columnDef.header,  
                               header.getContext()
                             )}
                         </span>
@@ -359,7 +359,7 @@ export function DataTable<TData extends { id: number | string }, TValue>({
                     handleClick?.(row.original.id as number);
                   }}
                   key={index}
-                  data-state={row.getIsSelected() && "selected"}
+                  data-state={row.getIsSelected() && "selected"}          
                   className="border-sidebar-border"
                 >
                   {row.getVisibleCells().map((cell, index) => (
