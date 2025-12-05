@@ -79,3 +79,23 @@ export const changeReportStatus = async (data: ChangeReportStatusRequest) => {
   const response = await api.post("/admin/report/change-status", data);
   return response.data;
 };
+
+export interface StudioManagerConfig {
+  managers: string[];
+  location: string[];
+}
+
+export interface RobotConfigResponse {
+  studio_managers?: string;
+  [key: string]: any;
+}
+
+export const getRobotConfig = async () => {
+  const response = await api.get<RobotConfigResponse>("/admin/process/get-robot-config");
+  return response.data;
+};
+
+export const addStudioManagers = async (data: StudioManagerConfig[]) => {
+  const response = await api.post("/admin/report/add-studio-managers", data);
+  return response.data;
+};

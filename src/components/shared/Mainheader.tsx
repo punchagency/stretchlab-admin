@@ -8,6 +8,7 @@ import { transformNotification } from "@/utils/notification";
 import { NotificationDropdown } from "./NotificationDropdown";
 import { Button } from "@/components/shared";
 import { ExternalLink } from "lucide-react";
+import { useNavigate } from "react-router";
 
 const redirectURL = import.meta.env.VITE_REDIRECT_URL;
 
@@ -15,6 +16,7 @@ export const MainHeader = () => {
   const user = getUserInfo();
   const { profilePictureUrl } = useProfilePictureContext();
   const { data: notificationsResponse } = useNotifications();
+  const navigate = useNavigate();
 
   const notifications =
     notificationsResponse?.notifications?.map(transformNotification) || [];
@@ -52,7 +54,7 @@ export const MainHeader = () => {
           </div>
         </NotificationDropdown>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate("/settings")}>
           <Avatar className="h-8 w-8">
             <AvatarImage src={profilePictureUrl || undefined} alt="profile" />
             <AvatarFallback className="capitalize">

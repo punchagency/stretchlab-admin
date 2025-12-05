@@ -10,7 +10,7 @@ type PasswordSectionProps = {
 export const PasswordSection = ({ settingsData }: PasswordSectionProps) => {
   const {
     user,
-    passwordTab,
+    passwordTab, 
     passwordData,
     twoFactorSettings,
     twoFactorModal,
