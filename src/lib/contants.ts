@@ -20,10 +20,11 @@ export const menuList = [
     link: "/robot-automation",
   },
   {
-    title: "Settings",
-    icon: "settings",
-    link: "/settings",
+    title: "User Management",
+    icon: "users",
+    link: "/user-management",
   },
+ 
   {
     title: "Notification",
     icon: "bell",
@@ -40,8 +41,9 @@ export const menuList = [
     link: "/report",
   },
   {
-    title: "User Management",
-    icon: "users",
-    link: "/user-management",
+    title: "Settings",
+    icon: "settings",
+    link: "/settings",
   },
+
 ];

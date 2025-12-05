@@ -69,7 +69,7 @@ export const ResetForm = () => {
         <p className="text-gray-500 mb-6">
           Enter your new password to reset your account.
         </p>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit}> 
           <div className="mb-4 flex flex-col gap-4 relative">
             <Input
               label="Enter Password"

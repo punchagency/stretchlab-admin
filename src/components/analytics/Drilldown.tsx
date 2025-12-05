@@ -246,11 +246,15 @@ export const Drilldown: React.FC<DrilldownProps> = ({
                 <>Percent of appointments with opportunities: <span className="font-medium text-primary-base">{selected}</span></>
               ) : (
                 'Overall distribution across locations and flexologists'
-              )}
+              )}  
             </p>
           </div>
         </div>
       </div>
+
+
+
+
 
       <div className="md:p-6 p-3">
 
