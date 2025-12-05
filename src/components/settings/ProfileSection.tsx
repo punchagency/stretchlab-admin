@@ -5,7 +5,7 @@ import { EmailChangeModal } from "./EmailChangeModal";
 
 type ProfileSectionProps = {
   settingsData: ReturnType<typeof useSettings>;
-};
+}; 
 
 export const ProfileSection = ({ settingsData }: ProfileSectionProps) => {
   const {

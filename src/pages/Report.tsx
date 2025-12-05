@@ -136,7 +136,9 @@ export const Report = () => {
             ? "Healthcare setup error report"
             : type === "resign_soon"
               ? "Resign Soon Report"
-              : "Unused credit report"}
+              : type === "welld"
+                ? "Welld Report"
+                : "Unused credit report"}
         </h3>
         <FilterDropdown
           value={type}
@@ -144,6 +146,7 @@ export const Report = () => {
             { value: "increase", label: "Unused credit report" },
             { value: "health", label: "Healthcare setup error report" },
             { value: "resign_soon", label: "Resign Soon Report" },
+            { value: "welld", label: "Welld Report" },
           ]}
           onChange={(value) => setType(value)}
           className="w-full md:w-70"
@@ -162,7 +165,9 @@ export const Report = () => {
             ? ["first_name", "last_name", "details", "user_id", "cell_phone"]
             : type === "resign_soon"
               ? ["full_name", "location", "package", "sessions_left"]
-              : ["first_name", "last_name", "email", "user_id", "location", "package_name"]
+              : type === "welld"
+                ? ["full_name", "location", "email", "pass_id", "program", "remarks"]
+                : ["first_name", "last_name", "email", "user_id", "location", "package_name"]
         }
         searchPlaceholder="Search by name, email, user ID"
       />
