@@ -24,7 +24,7 @@ const SidebarLogo = () => {
   return (
     <button
       onClick={() => navigate("/dashboard")}
-    > 
+    >
       <img
         src={state === "expanded" ? logo : logoIcon}
         alt="logo"
@@ -87,9 +87,9 @@ export const Home = () => {
       return false;
     }
 
-      if (menu.title === "Report" && userInfo?.role_id !== 1) {
-    return false;
-  }
+    if (menu.title === "Report" && userInfo?.role_id !== 1) {
+      return false;
+    }
     return true;
   });
 

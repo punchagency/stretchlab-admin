@@ -414,7 +414,7 @@ export const UserManagement = () => {
 
   const validateEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => { 
     e.preventDefault();
     setFormError("");
     if (!validateEmail(email)) {
@@ -446,7 +446,7 @@ export const UserManagement = () => {
     <div className="px-7">
       <div className="flex justify-between items-center mb-8 md:mb-10">
         <h3 className="md:text-2xl text-lg font-semibold ">
-          User Management
+          User Management   
         </h3>
         <Button2
           onClick={() => setShowModal(true)}

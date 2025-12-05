@@ -14,7 +14,7 @@ export const ProfileSection = ({ settingsData }: ProfileSectionProps) => {
     profileImage,
     emailChangeModal,
     isLoadingEmailChange,
-    isLoadingProfilePicture,
+    isLoadingProfilePicture, 
     isLoadingProfilePictureDelete,
     hasProfileImage,
     handleProfileInputChange,

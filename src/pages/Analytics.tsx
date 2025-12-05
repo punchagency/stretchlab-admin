@@ -17,7 +17,7 @@ export const Analytics = () => {
     drilldownData,
     rankingData,
     rpaAuditData,
-    isFiltersLoading,
+    isFiltersLoading, 
     isRPAAuditLoading,
     isRPAAuditDetailsLoading,
     isRankingLoading,

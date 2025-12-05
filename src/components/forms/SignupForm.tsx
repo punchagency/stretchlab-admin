@@ -26,7 +26,6 @@ export const SignupForm = () => {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setError("");
     const { name, value } = e.target;
     if (name === "username") {
       setValidUsername(false);
