@@ -58,8 +58,26 @@ export interface ResignSoonReportItem {
   updated_at: string | null;
 }
 
+export interface WelldReportItem {
+  id: number;
+  admin_id: string;
+  full_name: string;
+  location: string;
+  email: string;
+  phone: string;
+  pass_id: string;
+  program: string;
+  remarks: string;
+  status: string;
+  error: boolean;
+  completed: boolean | null;
+  completed_at: string | null;
+  created_at: string | null;
+  updated_at: string | null;
+}
+
 export type AdminReportResponse = {
-  data: (AdminReportItem | HealthReportItem | ResignSoonReportItem)[];
+  data: (AdminReportItem | HealthReportItem | ResignSoonReportItem | WelldReportItem)[];
 };
 
 export const getAdminReport = async (type: string) => {

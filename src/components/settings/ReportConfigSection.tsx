@@ -105,7 +105,7 @@ export const ReportConfigSection = () => {
                         (l) => l.toLowerCase() === location.toLowerCase()
                     );
                     if (existingIndex !== -1) {
-                        return {
+                        return {  
                             ...config,
                             locations: config.locations.filter((_, idx) => idx !== existingIndex),
                         };
@@ -193,7 +193,7 @@ export const ReportConfigSection = () => {
                             <div className="mb-6">
                                 <h4 className="text-sm font-semibold text-dark-1 mb-3 flex items-center gap-2">
                                     <div className="w-2 h-2 bg-primary-base rounded-full"></div>
-                                    Select Managers
+                                    Select Managers 
                                 </h4>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                                     {managers.map((manager: Manager) => {

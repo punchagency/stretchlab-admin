@@ -4,7 +4,7 @@ import { useSettings } from "@/hooks/useSettings";
 import { TwoFactorModal } from "./TwoFactorModal";
 
 type PasswordSectionProps = {
-  settingsData: ReturnType<typeof useSettings>;
+  settingsData: ReturnType<typeof useSettings>; 
 };
 
 export const PasswordSection = ({ settingsData }: PasswordSectionProps) => {
@@ -71,7 +71,7 @@ export const PasswordSection = ({ settingsData }: PasswordSectionProps) => {
               labelStyle="text-sm font-medium"
             />
 
-            <div className="space-y-1">
+            <div className="space-y-1">  
               <Input
                 label="New password"
                 type="password"
@@ -85,7 +85,7 @@ export const PasswordSection = ({ settingsData }: PasswordSectionProps) => {
               <p className="text-xs text-muted-foreground">
                 Password must be at least 8 characters long
               </p>
-            </div>
+            </div> 
 
             <Input
               label="Confirm password"

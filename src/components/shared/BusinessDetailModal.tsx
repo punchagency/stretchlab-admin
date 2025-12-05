@@ -127,7 +127,7 @@ export const BusinessDetailModal: React.FC<BusinessDetailModalProps> = ({
                                         <div>
                                             <label className="text-sm font-medium text-gray-600">Currency</label>
                                             <p className="text-gray-900 uppercase">{businessInfo.business_rpa_sub_details.currency}</p>
-                                        </div>
+                                        </div> 
                                         {/* <div>
                                             <label className="text-sm font-medium text-gray-600">Start Date</label>
                                             <p className="text-gray-900">{formatTimestamp(businessInfo.business_rpa_sub_details.start_date)}</p>
