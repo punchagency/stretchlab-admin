@@ -22,7 +22,7 @@ export const businessTableColumns = (onViewDetails: (businessId: number) => void
         <span className="font-medium text-gray-900">{username}</span>
       );
     },
-  },
+  }, 
   {
     accessorKey: "buisness_flexologists_count",
     header: "Flexologists Count",

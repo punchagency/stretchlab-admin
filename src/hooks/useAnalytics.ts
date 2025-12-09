@@ -99,7 +99,7 @@ export const useAnalytics = () => {
     queryFn: async () => {
       if (!selectedOpportunity &&
         selectedFilters.location === "All" &&
-        selectedFilters.flexologist === "All") {
+        selectedFilters.flexologist === "All") { 
         return null;
       }
       const opportunityToUse = selectedOpportunity ;
@@ -123,7 +123,7 @@ export const useAnalytics = () => {
         params.end_date = selectedFilters.customRange.end;
       }
 
-      return getRPAAuditDetails(params);
+      return getRPAAuditDetails(params);  
     },
     enabled: !!rpaAuditData,
     staleTime: 2 * 60 * 1000,
@@ -277,7 +277,7 @@ export const useAnalytics = () => {
 
   const handleOpportunitySelect = (opportunity: string) => {
     if (selectedOpportunity === opportunity) {
-      setSelectedOpportunity(null);
+      setSelectedOpportunity(null);       
     } else {
       setSelectedOpportunity(opportunity);
     }

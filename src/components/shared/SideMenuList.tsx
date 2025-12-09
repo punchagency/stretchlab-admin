@@ -34,11 +34,10 @@ export const SideMenuList = ({
       <SidebarMenuButton
         size="lg"
         onClick={handleNavigate}
-        className={`text-[#667185] ${
-          pathname.pathname === link
-            ? "bg-primary-base text-white hover:bg-primary-base hover:text-white"
-            : ""
-        }`}
+        className={`text-[#667185] ${pathname.pathname === link
+          ? "bg-primary-base text-white hover:bg-primary-base hover:text-white"
+          : ""
+          }`}
         tooltip={isMobile ? undefined : title}
       >
         <SvgIcon

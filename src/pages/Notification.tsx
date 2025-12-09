@@ -35,7 +35,7 @@ export const Notification = () => {
       <div className="">
         <div className="mb-6 flex justify-between items-start md:items-center flex-col md:flex-row gap-4 ">
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-semibold text-gray-900 ml-1">Notifications</h1>
+            <h1 className=" text-lg md:text-2xl font-semibold text-gray-900 ml-1">Notifications</h1>
             {unreadCount > 0 && (
               <span className="bg-accent-base text-white text-xs font-medium w-6 h-6 rounded-full flex items-center justify-center">
                 {unreadCount}

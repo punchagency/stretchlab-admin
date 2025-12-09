@@ -229,7 +229,7 @@ export const ReportConfigSection = () => {
                             `}
                                                     >
                                                         {isSelected && (
-                                                            <motion.div
+                                                            <motion.div 
                                                                 initial={{ scale: 0 }}
                                                                 animate={{ scale: 1 }}
                                                                 className="w-2 h-2 bg-white rounded-sm"
