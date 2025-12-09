@@ -22,7 +22,7 @@ export const RobotConfigForm = ({
   refetch: () => void;
   isSignupFlow?: boolean;
 }) => {
-  const navigate = useNavigate();
+  const navigate = useNavigate();  
   // const [verified, setVerified] = useState(data ? true : false);
   const [verified, setVerified] = useState(false)
   const [verifying, setVerifying] = useState(false);

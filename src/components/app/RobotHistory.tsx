@@ -1,5 +1,5 @@
 import { getRobotHistory, getOpportunities } from "@/service/robot";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { DataTable } from "../datatable";
 import type { ColumnDef } from "@tanstack/react-table";
 import type { RobotHistoryType, BookingType } from "@/types/shared";
@@ -73,7 +73,7 @@ const userColumns: ColumnDef<RobotHistoryType>[] = [
         </div>
       ) : (
         <p className="text-gray-500 text-center">No status</p>
-      );    
+      );
     },
   },
   {
@@ -82,7 +82,7 @@ const userColumns: ColumnDef<RobotHistoryType>[] = [
     cell: ({ row }) => {
       const lastLogin = row.getValue("appointment_date") as string | null;
       if (!lastLogin) return <span className="text-gray-400 italic">No login</span>;
-  
+
       const date = new Date(lastLogin);
       const formattedDate = date.toLocaleDateString("en-US", {
         year: "numeric",
@@ -91,7 +91,7 @@ const userColumns: ColumnDef<RobotHistoryType>[] = [
         hour: "2-digit",
         minute: "2-digit",
       });
-  
+
       return <span className="text-gray-600">{formattedDate}</span>;
     },
   },
@@ -139,7 +139,7 @@ const unloggedColumns: ColumnDef<RobotHistoryType>[] = [
     cell: ({ row }) => {
       const lastLogin = row.getValue("appointment_date") as string | null;
       if (!lastLogin) return <span className="text-gray-400 italic">No login</span>;
-  
+
       const date = new Date(lastLogin);
       const formattedDate = date.toLocaleDateString("en-US", {
         year: "numeric",
@@ -148,7 +148,7 @@ const unloggedColumns: ColumnDef<RobotHistoryType>[] = [
         hour: "2-digit",
         minute: "2-digit",
       });
-  
+
       return <span className="text-gray-600">{formattedDate}</span>;
     },
   },
@@ -159,7 +159,6 @@ const unloggedColumns: ColumnDef<RobotHistoryType>[] = [
 ];
 
 export const RobotHistory = ({ configId }: { configId: number }) => {
-  const queryClient = useQueryClient();
   const [showModal, setShowModal] = useState(false);
   const [selectedRange, setSelectedRange] = useState("yesterday");
   const [customStartDate, setCustomStartDate] = useState("");
@@ -182,43 +181,33 @@ export const RobotHistory = ({ configId }: { configId: number }) => {
 
 
 
-  const { data, isPending } = useQuery({
-    queryKey: ["robot-history", configId, selectedRange],
-    queryFn: () => getRobotHistory(configId as number, selectedRange),
-    // refetchOnWindowFocus: false,
-    // enabled: !!configId,
-  });
-
-  const mutation = useMutation({
-    mutationFn: () => {
-      if (selectedRange === "custom") {
+  const { data, isPending, isFetching } = useQuery({
+    queryKey: ["robot-history", configId, selectedRange, customStartDate, customEndDate],
+    queryFn: () => {
+      if (selectedRange === "custom" && customStartDate && customEndDate) {
         return getRobotHistory(configId as number, selectedRange, customStartDate, customEndDate);
       }
       return getRobotHistory(configId as number, selectedRange);
     },
-    onSuccess: (data) => {
-      queryClient.setQueryData(["robot-history", configId, selectedRange], data);
-    },
+    enabled: selectedRange !== "custom" || (!!customStartDate && !!customEndDate),
+    refetchOnWindowFocus: false,
+    staleTime: 2 * 60 * 1000,
   });
-
-  const mutating = mutation.isPending;
 
   const handleRangeChange = (value: string) => {
     setSelectedRange(value);
-    if (value !== "custom") {
-      mutation.mutate();
-    }
   };
 
   const handleCustomRangeChange = (start: string, end: string) => {
     setCustomStartDate(start);
     setCustomEndDate(end);
-    mutation.mutate();
   };
 
   const { data: opportunities = [] } = useQuery({
     queryKey: ["opportunities"],
     queryFn: getOpportunities,
+    refetchOnWindowFocus: false,
+    staleTime: 10 * 60 * 1000,
   });
 
   const filteredData = data?.data.rpa_history?.filter((booking: any) => {
@@ -247,7 +236,7 @@ export const RobotHistory = ({ configId }: { configId: number }) => {
     setBookingId(id);
     setShowModal(true);
   };
- 
+
   return (
     <>
       <div className="mt-10">
@@ -266,7 +255,6 @@ export const RobotHistory = ({ configId }: { configId: number }) => {
             </span>
           </h4>
           <div className="flex items-center gap-2">
-
             <DateRangeFilter
               label="Date Range"
               value={dateRangeOptions.find(opt => opt.value === selectedRange)?.label || "Yesterday"}
@@ -290,15 +278,15 @@ export const RobotHistory = ({ configId }: { configId: number }) => {
           <button
             onClick={() => setViewMode("unloggedBookings")}
             className={`${viewMode === "unloggedBookings"
-              ? "bg-primary-base" 
+              ? "bg-primary-base"
               : "bg-gray-300"
               } text-white font-semibold py-2 px-4 text-xs md:text-base rounded-md`}
-          > 
+          >
             Unlogged Bookings
           </button>
         </div>
         <div className="relative">
-          {mutating && (
+          {isFetching && !isPending && (
             <AnimatePresence>
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
@@ -310,7 +298,7 @@ export const RobotHistory = ({ configId }: { configId: number }) => {
                 Fetching data...
               </motion.div>
             </AnimatePresence>
-          )}
+          )}          
           {viewMode === "noteAutomation" ? (
             <DataTable
               columns={userColumns}
@@ -324,7 +312,7 @@ export const RobotHistory = ({ configId }: { configId: number }) => {
               opportunityOptions={opportunities}
               selectedOpportunities={selectedOpportunities}
               onOpportunityChange={setSelectedOpportunities}
-            
+
             />
           ) : (
             <DataTable

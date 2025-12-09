@@ -15,7 +15,7 @@ interface ActivitiesProps {
   data: ActivitiesData | undefined;
   isLoading: boolean;
   error: any;
-  onRetry: () => void;
+  onRetry: () => void; 
 }
 
 const Activities: React.FC<ActivitiesProps> = ({ data, isLoading, error, onRetry }) => {

@@ -148,13 +148,13 @@ export function DataTable<TData extends { id: number | string }, TValue>({
   });
 
   return (
-    <div className={`w-full max-w-full overflow-hidden px-2 sm:px-0 ${className || ""}`}>
+    <div className={`w-full max-w-full overflow-hidden px-1 sm:px-0 ${className || ""}`}>
       {note && (
-        <div className="flex flex-col md:flex-row md:items-center gap-4 justify-between py-3 md:py-4 mb-3 md:mb-0">
+        <div className="flex flex-col md:flex-row md:items-center gap-4 justify-between py-3 md:py-4 mb-3 md:mb-0 flex-wrap">
           {(userInfo?.role_id === 1 || userInfo?.role_id === 2 || userInfo?.permissions?.some(
             (perm: any) => perm.permission_tag === "invite_flex"
           )
-          ) && <div className="flex flex-col sm:flex-row gap-3 order-2 md:order-1">
+          ) && <div className="flex flex-col sm:flex-row gap-3 order-2 md:order-1 flex-wrap">
               <Button2
                 onClick={handleBulkInvite}
                 className="flex items-center justify-center md:justify-start gap-2 py-3 px-4 text-primary-base border-2 border-primary-base hover:bg-primary-base hover:text-white transition-colors"
@@ -172,7 +172,7 @@ export function DataTable<TData extends { id: number | string }, TValue>({
                 </Button2>
               )}
             </div>}
-          <div className="flex flex-col sm:flex-row gap-3 md:items-center order-1 md:order-2">
+          <div className="flex flex-col sm:flex-row gap-3 md:items-center order-1 md:order-2 flex-wrap">
             <Input
               type="search"
               icon="search"
@@ -278,7 +278,7 @@ export function DataTable<TData extends { id: number | string }, TValue>({
             type="search"
             icon="search"
             placeholder={searchPlaceholder}
-            className="max-w-sm w-full md:min-w-[30rem] py-3 rounded-md border-1 border-gray-300"
+            className="w-full md:min-w-[30rem] py-3 rounded-md border-1 border-gray-300"
             value={globalFilter}
             onChange={(event) => setGlobalFilter(event.target.value)}
           />
@@ -310,7 +310,7 @@ export function DataTable<TData extends { id: number | string }, TValue>({
       )}
 
       <div
-        className={`rounded-md border w-[85vw] mx-auto md:w-full overflow-x-auto border-sidebar-border ${tableContainerClassName || ""}`}
+        className={`rounded-md border  mx-auto md:w-full overflow-x-auto border-sidebar-border ${tableContainerClassName || ""}`}
       >
         <Table className={`border-sidebar-border ${tableClassName}`}>
           <TableHeader className="bg-primary-light ">

@@ -16,6 +16,9 @@ export interface AdminReportItem {
   completed: boolean | null;
   completed_at: string | null;
   updated_at: string | null;
+  contacted?: boolean;
+  first_contacted_at?: string | null;
+  latest_contacted_at?: string | null;
 }
 
 export interface HealthReportItem {
@@ -115,5 +118,15 @@ export const getRobotConfig = async () => {
 
 export const addStudioManagers = async (data: StudioManagerConfig[]) => {
   const response = await api.post("/admin/report/add-studio-managers", data);
+  return response.data;
+};
+
+export interface ContactReportRequest {
+  id: number;
+  type: "increase";
+}
+
+export const contactReport = async (data: ContactReportRequest) => {
+  const response = await api.post("/admin/report/contacted", data);
   return response.data;
 };

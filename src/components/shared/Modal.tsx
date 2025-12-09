@@ -19,7 +19,7 @@ export const Modal: React.FC<ModalProps> = ({
     <AnimatePresence>
       {show && (
         <motion.div
-          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/30 backdrop-blur-sm"
+          className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/30 backdrop-blur-sm pointer-events-auto"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -27,7 +27,7 @@ export const Modal: React.FC<ModalProps> = ({
           onClick={onClose}
         >
           <motion.div
-            className={`bg-white max-h-[90%] overflow-y-auto max-w-[95%] relative rounded-lg shadow-lg p-6 ${size === "sm" && "w-[30rem]"
+            className={`bg-white max-h-[90%] overflow-y-auto max-w-[95%] relative rounded-lg shadow-lg p-6 pointer-events-auto ${size === "sm" && "w-[30rem]"
               } ${size === "md" && "w-[40rem]"} ${size === "lg" && "w-[50rem]"
               }  ${size === "xl" && "w-[70rem]"}
             ${size === "2xl" && "w-[90rem]"}

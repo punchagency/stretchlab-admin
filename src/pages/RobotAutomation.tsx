@@ -6,10 +6,12 @@ import { useQuery } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
 import { getUserInfo } from "@/utils";
 
-export const RobotAutomation = () => { 
+export const RobotAutomation = () => {
   const { data, isFetching, isPending, refetch } = useQuery({
     queryKey: ["robot-config"],
     queryFn: getRobotConfig,
+    refetchOnWindowFocus: false,
+    staleTime: 5 * 60 * 1000,
   });
   const userInfo = getUserInfo();
 
@@ -39,7 +41,7 @@ export const RobotAutomation = () => {
         <RobotConfigForm
           refetch={refetch}
           data={data?.data.config ? data.data.robot_config : undefined}
-        /> 
+        />
       )}
 
       {/* <div className='flex items-center gap-2 mb-4 p-3 rounded-lg border bg-orange-50 border-orange-200 my-4'>

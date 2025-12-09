@@ -66,7 +66,7 @@ export const BusinessDetailModal: React.FC<BusinessDetailModalProps> = ({
                 {isLoading ? (
                     <BusinessDetailSkeleton />
                 ) : businessInfo ? (
-                    <div className="space-y-6">
+                    <div className="space-y-6"> 
                         <div className="bg-[#F5F5F5] p-4 rounded-lg">
                             <h3 className="text-lg font-semibold text-gray-900 mb-4">Basic Information</h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
