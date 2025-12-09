@@ -632,7 +632,7 @@ export const NoteTakingAdmin = () => {
 
   return (
     <div className="px-7">
-      <h3 className="md:text-2xl text-lg font-semibold mb-8 md:mb-16">
+      <h3 className="md:text-2xl text-lg font-semibold mb-3 md:mb-8">
         Note Taking Admin Dashboard
       </h3>
       {isFetching && !isPending && (

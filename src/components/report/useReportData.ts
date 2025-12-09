@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { getAdminReport, changeReportStatus, type AdminReportResponse } from "@/service/report";
+import { getAdminReport, changeReportStatus, contactReport, type AdminReportResponse } from "@/service/report";
 import { renderSuccessToast, renderErrorToast } from "@/components/utils";
 
 export const useReportData = () => {
@@ -33,6 +33,24 @@ export const useReportData = () => {
         });
     };
 
+    const contactMutation = useMutation({
+        mutationFn: contactReport,
+        onSuccess: () => {
+            renderSuccessToast("Contact recorded successfully");
+            refetch();
+        },
+        onError: (error: any) => {
+            renderErrorToast(error?.response?.data?.message || "Failed to record contact");
+        },
+    });
+
+    const handleContact = (id: number) => {
+        contactMutation.mutate({
+            id,
+            type: "increase",
+        });
+    };
+
     return {
         type,
         setType,
@@ -42,5 +60,7 @@ export const useReportData = () => {
         refetch,
         handleStatusChange,
         isUpdating: statusMutation.isPending,
+        handleContact,
+        isContacting: contactMutation.isPending,
     };
 };

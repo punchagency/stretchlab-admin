@@ -444,13 +444,13 @@ export const UserManagement = () => {
 
   return (
     <div className="px-7">
-      <div className="flex justify-between items-center mb-8 md:mb-10">
+      <div className="flex flex-col md:flex-row justify-between md:items-center mb-8 md:mb-10 gap-2">
         <h3 className="md:text-2xl text-lg font-semibold ">
           User Management   
         </h3>
         <Button2
           onClick={() => setShowModal(true)}
-          className="flex items-center w-fit md:w-auto ml-auto md:ml-0 gap-2 py-3 text-white bg-primary-base"
+          className="flex items-center self-start md:ml-0 gap-2 py-3 text-white bg-primary-base"
         >
           <SvgIcon name="email-send" fill="#fff" />
           Invite Manager

@@ -25,7 +25,7 @@ export const PasswordSection = ({ settingsData }: PasswordSectionProps) => {
   } = settingsData;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4"> 
       <div className="border-b border-border pb-3 sm:pb-4 px-3 sm:px-6">
         <h2 className="text-base text-gray-900 mb-1 font-semibold">
           Password & Security

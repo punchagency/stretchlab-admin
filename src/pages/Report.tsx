@@ -69,12 +69,16 @@ export const Report = () => {
     refetch,
     handleStatusChange,
     isUpdating,
+    handleContact,
+    isContacting,
   } = useReportData();
 
   const columns = getReportColumns({
     type,
     handleStatusChange,
     isUpdating,
+    handleContact,
+    isContacting,
   });
 
   // Loading state for checking configuration

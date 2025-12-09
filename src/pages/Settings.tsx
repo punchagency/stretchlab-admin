@@ -20,7 +20,7 @@ export const Settings = () => {
       if (item.id === "coupon" && person?.role_id !== 1) return false;
       if (item.id === "reportconfig" && person?.role_id !== 1) return false;
       return true;
-    }
+    } 
   );
 
   const renderContent = () => {

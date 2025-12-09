@@ -20,15 +20,15 @@ export const usersColumns: ColumnDef<UserTableData>[] = [
     header: "Created at / Joined",
   },
   {
-    id: "actions",
+    id: "actions",    
     header: "Actions",
-    cell: () => {
+    cell: () => {  
       return (
         <Button
           onClick={() => {}}
           className="bg-gray-100 text-gray-700 hover:bg-gray-200"
         >
-          View Detail
+          View Detail                 
         </Button>
       );
     },
