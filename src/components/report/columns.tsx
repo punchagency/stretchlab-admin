@@ -1,7 +1,7 @@
 import { type ColumnDef } from "@tanstack/react-table";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { Switch } from "@/components/ui/switch";
-// import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 
 interface GetReportColumnsProps {
     type: string;
@@ -30,8 +30,8 @@ export const getReportColumns = ({
     type,
     handleStatusChange,
     isUpdating,
-    // handleContact,
-    // isContacting,
+    handleContact,
+    isContacting,
 }: GetReportColumnsProps): ColumnDef<any>[] => {
     if (type === "health") {
         return [
@@ -471,73 +471,73 @@ export const getReportColumns = ({
             accessorKey: "unused_credit",
             header: "Unused Credit",
         },
-        // {
-        //     accessorKey: "contacted",
-        //     header: "Contacted",
-        //     cell: ({ row }) => {
-        //         const contacted = row.getValue("contacted") as boolean;
-        //         return (
-        //             <span className={`px-3 py-1 rounded-full text-xs font-medium ${contacted ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"
-        //                 }`}>
-        //                 {contacted ? "Yes" : "No"}
-        //             </span>
-        //         );
-        //     },
-        // },
-        // {
-        //     accessorKey: "first_contacted_at",
-        //     header: "First Contacted",
-        //     cell: ({ row }) => {
-        //         const firstContactedAt = row.getValue("first_contacted_at") as string | null;
-        //         if (!firstContactedAt) return <span className="text-gray-400">N/A</span>;
-        //         const date = new Date(firstContactedAt);
-        //         const formatted = date.toLocaleString("en-US", {
-        //             year: "numeric",
-        //             month: "short",
-        //             day: "numeric",
-        //             hour: "2-digit",
-        //             minute: "2-digit",
-        //         });
-        //         return <span className="text-gray-600">{formatted}</span>;
-        //     },
-        // },
-        // {
-        //     accessorKey: "latest_contacted_at",
-        //     header: "Latest Contacted",
-        //     cell: ({ row }) => {
-        //         const latestContactedAt = row.getValue("latest_contacted_at") as string | null;
-        //         if (!latestContactedAt) return <span className="text-gray-400">N/A</span>;
-        //         const date = new Date(latestContactedAt);
-        //         const formatted = date.toLocaleString("en-US", {
-        //             year: "numeric",
-        //             month: "short",
-        //             day: "numeric",
-        //             hour: "2-digit",
-        //             minute: "2-digit",
-        //         });
-        //         return <span className="text-gray-600">{formatted}</span>;
-        //     },
-        // },
-        // {
-        //     id: "contact_action",
-        //     header: "Action",
-        //     cell: ({ row }) => {
-        //         const id = row.original.id;
-        //         const contacted = row.original.contacted as boolean;
+        {
+            accessorKey: "contacted",
+            header: "Contacted",
+            cell: ({ row }) => {
+                const contacted = row.getValue("contacted") as boolean;
+                return (
+                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${contacted ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"
+                        }`}>
+                        {contacted ? "Yes" : "No"}
+                    </span>
+                );
+            },
+        },
+        {
+            accessorKey: "first_contacted_at",
+            header: "First Contacted",
+            cell: ({ row }) => {
+                const firstContactedAt = row.getValue("first_contacted_at") as string | null;
+                if (!firstContactedAt) return <span className="text-gray-400">N/A</span>;
+                const date = new Date(firstContactedAt);
+                const formatted = date.toLocaleString("en-US", {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                });
+                return <span className="text-gray-600">{formatted}</span>;
+            },
+        },
+        {
+            accessorKey: "latest_contacted_at",
+            header: "Latest Contacted",
+            cell: ({ row }) => {                                        
+                const latestContactedAt = row.getValue("latest_contacted_at") as string | null;
+                if (!latestContactedAt) return <span className="text-gray-400">N/A</span>;
+                const date = new Date(latestContactedAt);
+                const formatted = date.toLocaleString("en-US", {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                });
+                return <span className="text-gray-600">{formatted}</span>;
+            },
+        },
+        {
+            id: "contact_action",
+            header: "Action",
+            cell: ({ row }) => {
+                const id = row.original.id;
+                const contacted = row.original.contacted as boolean;
 
-        //         return (
-        //             <Button
-        //                 size="sm"
-        //                 onClick={() => handleContact?.(id)}
-        //                 disabled={isContacting}
-        //                 variant={contacted ? "outline" : "default"}
-        //                 className="text-xs"
-        //             >
-        //                 {contacted ? "Contact Again" : "Mark as Contacted"}
-        //             </Button>
-        //         );
-        //     },
-        // },
+                return (
+                    <Button
+                        size="sm"
+                        onClick={() => handleContact?.(id)}
+                        disabled={isContacting}
+                        variant={contacted ? "outline" : "default"}
+                        className="text-xs"
+                    >
+                        {contacted ? "Contact Again" : "Mark as Contacted"}
+                    </Button>
+                );
+            },
+        },
        
     ];
 };
