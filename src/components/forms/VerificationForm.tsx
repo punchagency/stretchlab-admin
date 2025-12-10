@@ -19,7 +19,7 @@ export const VerificationForm = () => {
     if (!code) {
       setError("Code is required");
       return;
-    }
+    } 
     if (code.length !== 6) {
       setError("Code must be 6 digits");
       return;
