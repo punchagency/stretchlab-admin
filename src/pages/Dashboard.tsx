@@ -199,8 +199,6 @@ export const Dashboard = () => {
                       className="flex-1"
                     />}
                   </div>
-
-
                   <div className="p-1 relative">
                     {isChartLoading && (
                       <ChartSkeleton />
@@ -253,7 +251,7 @@ export const Dashboard = () => {
                   <RefreshCcw className="w-4 h-4 mr-2" />
                   Retry
                 </Button>
-              </div>
+              </div> 
             ) : (
               <DataTable
                 columns={userTableColumns}

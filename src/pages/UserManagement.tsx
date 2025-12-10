@@ -475,7 +475,10 @@ export const UserManagement = () => {
         <DataTable
           handleModal={() => setShowModal(true)}
           columns={userColumns}
-          data={data?.data?.data.managers}
+          data={data?.data?.data.managers.map((manager: any )=> ({
+            ...manager,
+            full_name: manager.full_name?.trim(),
+          }))}
           emptyText="No manager invited yet."
           enableSearch
           searchFields={["full_name", "email"]}
