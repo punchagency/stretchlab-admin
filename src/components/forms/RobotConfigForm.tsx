@@ -118,7 +118,7 @@ export const RobotConfigForm = ({
         username: formData.clubReadyUsername,
         password: formData.clubReadyPassword,
       });
-      if (response.status === 200) {
+      if (response.status === 200) {  
         if (response.data.status) {
           setVerified(true);
           setLocations(response.data.locations);

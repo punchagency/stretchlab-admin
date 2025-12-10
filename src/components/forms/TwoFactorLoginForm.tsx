@@ -153,7 +153,7 @@ export const TwoFactorLoginForm: React.FC<TwoFactorLoginFormProps> = ({
                 "Verify & Continue"
               )}
             </Button>
-          </form>
+          </form> 
 
           <div className="mt-8 text-center">
             <button
