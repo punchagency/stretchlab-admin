@@ -17,6 +17,7 @@ interface FilterDropdownProps {
   multiSelect?: boolean;
   selectedValues?: string[];
   onMultiChange?: (values: string[]) => void;
+  placeholder?: string;
 }
 
 export const MultiSelectDropdown = ({
@@ -30,6 +31,7 @@ export const MultiSelectDropdown = ({
   multiSelect = false,
   selectedValues = [],
   onMultiChange,
+  placeholder = "Select...",
 }: FilterDropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -41,15 +43,15 @@ export const MultiSelectDropdown = ({
   const filteredOptions =
     showSearch && searchTerm
       ? normalizedOptions.filter((option) =>
-          option.label.toLowerCase().includes(searchTerm.toLowerCase())
-        )
+        option.label.toLowerCase().includes(searchTerm.toLowerCase())
+      )
       : normalizedOptions;
 
   const displayValue = multiSelect
     ? selectedValues.length > 0
       ? selectedValues.join(", ")
-      : "Filter By Opportunities"
-    : normalizedOptions.find((o) => o.value === value)?.label || "Select...";
+      : placeholder
+    : normalizedOptions.find((o) => o.value === value)?.label || placeholder;;
 
   const toggleOption = (optionValue: string) => {
     if (!multiSelect) {
@@ -89,19 +91,18 @@ export const MultiSelectDropdown = ({
           onClick={() => setIsOpen(!isOpen)}
           className="flex items-center justify-between w-full px-3 py-3.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-base focus:border-primary-base transition-colors"
         >
-          <span className="truncate pr-2 capitalize">{displayValue}</span>
+          <span className="truncate pr-2 ">{displayValue}</span>
           <div className="flex items-center gap-1">
             {((multiSelect && selectedValues.length > 0) ||
               (!multiSelect && value)) && (
-              <X
-                className="h-4 w-4 text-gray-400 hover:text-gray-600"
-                onClick={handleClear}
-              />
-            )}
+                <X
+                  className="h-4 w-4 text-gray-400 hover:text-gray-600"
+                  onClick={handleClear}
+                />
+              )}
             <ChevronDown
-              className={`h-4 w-4 flex-shrink-0 transition-transform ${
-                isOpen ? "rotate-180" : ""
-              }`}
+              className={`h-4 w-4 flex-shrink-0 transition-transform ${isOpen ? "rotate-180" : ""
+                }`}
             />
           </div>
         </button>
@@ -135,11 +136,10 @@ export const MultiSelectDropdown = ({
                       <button
                         key={index}
                         onClick={() => toggleOption(option.value)}
-                        className={`flex items-center gap-2 w-full px-3 py-2 text-left text-sm rounded-sm capitalize transition-colors ${
-                          selected
-                            ? "bg-primary-50 text-primary-base"
-                            : "text-gray-900 hover:bg-gray-100"
-                        }`}
+                        className={`flex items-center gap-2 w-full px-3 py-2 text-left text-sm rounded-sm  transition-colors ${selected
+                          ? "bg-primary-50 text-primary-base"
+                          : "text-gray-900 hover:bg-gray-100"
+                          }`}
                       >
                         {multiSelect && (
                           <input

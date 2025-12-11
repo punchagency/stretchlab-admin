@@ -5,7 +5,7 @@ import { EmailChangeModal } from "./EmailChangeModal";
 
 type ProfileSectionProps = {
   settingsData: ReturnType<typeof useSettings>;
-}; 
+};
 
 export const ProfileSection = ({ settingsData }: ProfileSectionProps) => {
   const {
@@ -14,7 +14,7 @@ export const ProfileSection = ({ settingsData }: ProfileSectionProps) => {
     profileImage,
     emailChangeModal,
     isLoadingEmailChange,
-    isLoadingProfilePicture, 
+    isLoadingProfilePicture,
     isLoadingProfilePictureDelete,
     hasProfileImage,
     handleProfileInputChange,
