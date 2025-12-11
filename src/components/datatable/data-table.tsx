@@ -304,6 +304,7 @@ export function DataTable<TData extends { id: number | string }, TValue>({
               showLabel={false}
               className="w-full md:w-70"
               showSearch={true}
+              placeholder="Select Opportunities"
             />
           )}
         </div>

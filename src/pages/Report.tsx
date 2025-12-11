@@ -81,7 +81,7 @@ export const Report = () => {
     isContacting,
   });
 
-  // Loading state for checking configuration
+
   if (isCheckingConfig || hasConfiguration === null) {
     return (
       <div className="w-full h-[90vh]">
@@ -90,7 +90,6 @@ export const Report = () => {
     );
   }
 
-  // Error state for configuration check
   if (configError) {
     return (
       <div className="w-full h-[90vh]">
@@ -135,7 +134,7 @@ export const Report = () => {
   return (
     <div className="p-4 sm:p-6 sm:pt-0 min-h-screen">
       <div className="mb-4 flex flex-col md:flex-row justify-between md:items-center gap-2 md:gap-4">
-        <h3 className="md:text-2xl text-lg font-semibold capitalize">
+        <p className="text-base md:text-xl  lg:text-2xl font-semibold capitalize">
           {type === "health"
             ? "Healthcare setup error report"
             : type === "resign_soon"
@@ -143,7 +142,7 @@ export const Report = () => {
               : type === "welld"
                 ? "Welld Report"
                 : "Unused credit report"}
-        </h3>
+        </p>
         <FilterDropdown
           value={type}
           options={[

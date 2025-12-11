@@ -13,7 +13,7 @@ import type { BillingInfo } from "@/types";
 import { setUserCookie } from "@/utils";
 import { useNavigate } from "react-router";
 
-export const RobotConfigForm = ({ 
+export const RobotConfigForm = ({
   data,
   refetch,
   isSignupFlow = false,
@@ -22,7 +22,7 @@ export const RobotConfigForm = ({
   refetch: () => void;
   isSignupFlow?: boolean;
 }) => {
-  const navigate = useNavigate();  
+  const navigate = useNavigate();
   // const [verified, setVerified] = useState(data ? true : false);
   const [verified, setVerified] = useState(false)
   const [verifying, setVerifying] = useState(false);
@@ -44,7 +44,7 @@ export const RobotConfigForm = ({
       try {
         const parsed = JSON.parse(locationData);
         return Array.isArray(parsed) ? parsed : [];
-      } catch (e) { 
+      } catch (e) {
         console.error('Error parsing locations:', e);
         return [];
       }
@@ -118,7 +118,7 @@ export const RobotConfigForm = ({
         username: formData.clubReadyUsername,
         password: formData.clubReadyPassword,
       });
-      if (response.status === 200) {  
+      if (response.status === 200) {
         if (response.data.status) {
           setVerified(true);
           setLocations(response.data.locations);
@@ -335,7 +335,7 @@ export const RobotConfigForm = ({
                         </div>
                       </div>
                     ))}
-                  </div> 
+                  </div>
 
                   {/* <div className="bg-primary-base/10 rounded-lg p-3">
                      <p className="text-sm text-primary-base">
@@ -420,7 +420,7 @@ export const RobotConfigForm = ({
           <Config data={data} setIsConfig={setIsConfig} refetch={refetch} />
         ) : (
           <div className="mt-5 block md:flex items-center gap-5 mx-auto w-full max-w-[1550px]">
-            <div className="border border-grey-1 w-full md:w-[70%] lg:w-1/2 rounded-3xl py-6 px-4 md:px-8">
+            <div className="border border-grey-1 w-full lg:w-1/2 rounded-3xl py-6 px-4 md:px-8">
               <h2 className="text-lg md:text-xl font-semibold">
                 Configuration Settings
               </h2>

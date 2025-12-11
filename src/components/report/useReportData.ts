@@ -29,7 +29,7 @@ export const useReportData = () => {
         statusMutation.mutate({
             id,
             type,
-            status: newStatus,
+            status: newStatus,  
         });
     };
 

@@ -332,7 +332,7 @@ export const PaymentCollection = ({
                   <span className="text-gray-600 font-bold">
                     {billingInfo.type?.toUpperCase() || "OTHER"}
                   </span>
-                )}
+                )}    
               </div>
 
               <div>
