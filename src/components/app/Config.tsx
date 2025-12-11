@@ -34,16 +34,15 @@ export const Config = ({
   };
 
   return (
-    <div className="mt-5 flex items-center justify-between w-full md:w-[70%] lg:w-1/2 bg-primary-secondary px-3 py-3 rounded-xl shadow-md">
+    <div className="mt-5 flex items-center justify-between w-full lg:w-1/2 bg-primary-secondary px-3 py-3 rounded-xl shadow-md">
       <div>
         <div className="flex items-center gap-2">
           <h4 className="text-base md:text-lg  font-semibold capitalize">
             {data?.name}
           </h4>
           <div
-            className={`${
-              data?.active ? "bg-green-500/20" : "bg-red-500/20"
-            } text-white px-2 py-1 rounded-xl text-xs md:text-sm  font-semibold`}
+            className={`${data?.active ? "bg-green-500/20" : "bg-red-500/20"
+              } text-white px-2 py-1 rounded-xl text-xs md:text-sm  font-semibold`}
           >
             {data?.active ? (
               <span className="text-green-500 text-xs md:text-sm font-semibold">
@@ -65,9 +64,8 @@ export const Config = ({
         <p className="text-xs md:text-sm font-semibold text-gray-500">
           <span className="mr-1">Status:</span>
           <span
-            className={`font-semibold ${
-              data?.status === "RUNNING" ? "text-green-500" : "text-gray-500"
-            }`}
+            className={`font-semibold ${data?.status === "RUNNING" ? "text-green-500" : "text-gray-500"
+              }`}
           >
             {data?.status || "STOPPED"}
           </span>

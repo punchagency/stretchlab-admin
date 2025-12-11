@@ -2,6 +2,7 @@ import { type ColumnDef } from "@tanstack/react-table";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
+import { Flag } from "lucide-react";
 
 interface GetReportColumnsProps {
     type: string;
@@ -61,6 +62,10 @@ export const getReportColumns = ({
                 header: "Sold By",
             },
             {
+                accessorKey: "remark",
+                header: "Remark",
+            },
+            {
                 accessorKey: "location",
                 header: "Location",
                 cell: ({ row }) => {
@@ -68,65 +73,6 @@ export const getReportColumns = ({
                     return <p className="capitalize py-2 ">{location}</p>;
                 },
             },
-            // {
-            //     accessorKey: "completed",
-            //     header: "Completed",
-            //     cell: ({ row }) => {
-            //         const completed = row.getValue("completed") as boolean | null;
-            //         return getCompletionBadge(completed);
-            //     },
-            // },
-            // {
-            //     id: "change_status",
-            //     header: "Change Status",
-            //     cell: ({ row }) => {
-            //         const completed = row.original.completed as boolean | null;
-            //         const id = row.original.id;
-
-            //         return (
-            //             <Switch
-            //                 checked={completed === true}
-            //                 onCheckedChange={() => handleStatusChange(id, completed)}
-            //                 disabled={isUpdating}
-            //                 className="data-[state=checked]:bg-primary-base"
-            //             />
-            //         );
-            //     },
-            // },
-            // {
-            //     accessorKey: "completed_at",
-            //     header: "Completed At",
-            //     cell: ({ row }) => {
-            //         const completedAt = row.getValue("completed_at") as string | null;
-            //         if (!completedAt) return <span>N/A</span>;
-            //         const date = new Date(completedAt);
-            //         const formatted = date.toLocaleString("en-US", {
-            //             year: "numeric",
-            //             month: "short",
-            //             day: "numeric",
-            //             hour: "2-digit",
-            //             minute: "2-digit",
-            //         });
-            //         return <span className="text-gray-600">{formatted}</span>;
-            //     },
-            // },
-            // {
-            //     accessorKey: "updated_at",
-            //     header: "Updated At",
-            //     cell: ({ row }) => {
-            //         const updatedAt = row.getValue("updated_at") as string | null;
-            //         if (!updatedAt) return <span>N/A</span>;
-            //         const date = new Date(updatedAt);
-            //         const formatted = date.toLocaleString("en-US", {
-            //             year: "numeric",
-            //             month: "short",
-            //             day: "numeric",
-            //             hour: "2-digit",
-            //             minute: "2-digit",
-            //         });
-            //         return <span className="text-gray-600">{formatted}</span>;
-            //     },
-            // },
         ];
     }
 
@@ -349,64 +295,6 @@ export const getReportColumns = ({
                     );
                 },
             },
-            // {
-            //     accessorKey: "completed",
-            //     header: "Completed",
-            //     cell: ({ row }) => {
-            //         const completed = row.getValue("completed") as boolean | null;
-            //         return getCompletionBadge(completed);
-            //     },
-            // },
-            // {
-            //     id: "change_status",
-            //     header: "Change Status",
-            //     cell: ({ row }) => {
-            //         const completed = row.original.completed as boolean | null;
-            //         const id = row.original.id;
-            //         return (
-            //             <Switch
-            //                 className="data-[state=checked]:bg-primary-base"
-            //                 checked={completed === true}
-            //                 onCheckedChange={() => handleStatusChange(id, completed)}
-            //                 disabled={isUpdating}
-            //             />
-            //         );
-            //     },
-            // },
-            // {
-            //     accessorKey: "completed_at",
-            //     header: "Completed At",
-            //     cell: ({ row }) => {
-            //         const completedAt = row.getValue("completed_at") as string | null;
-            //         if (!completedAt) return <span>N/A</span>;
-            //         const date = new Date(completedAt);
-            //         const formatted = date.toLocaleString("en-US", {
-            //             year: "numeric",
-            //             month: "short",
-            //             day: "numeric",
-            //             hour: "2-digit",
-            //             minute: "2-digit",
-            //         });
-            //         return <span className="text-gray-600">{formatted}</span>;
-            //     },
-            // },
-            // {
-            //     accessorKey: "updated_at",
-            //     header: "Updated At",
-            //     cell: ({ row }) => {
-            //         const updatedAt = row.getValue("updated_at") as string | null;
-            //         if (!updatedAt) return <span>N/A</span>;
-            //         const date = new Date(updatedAt);
-            //         const formatted = date.toLocaleString("en-US", {
-            //             year: "numeric",
-            //             month: "short",
-            //             day: "numeric",
-            //             hour: "2-digit",
-            //             minute: "2-digit",
-            //         });
-            //         return <span className="text-gray-600">{formatted}</span>;
-            //     },
-            // },
         ];
     }
 
@@ -470,6 +358,37 @@ export const getReportColumns = ({
         {
             accessorKey: "unused_credit",
             header: "Unused Credit",
+            cell: ({ row }) => {
+                const unused = Number(row.getValue("unused_credit"));
+
+                // Extract number from "3 Stretches Monthly" → 3
+                const packageName = row.getValue("package_name") as string;
+                const match = packageName.match(/\d+/);
+                const maxMonthlyCredits = match ? Number(match[0]) : null;
+
+                const isMismatch =
+                    maxMonthlyCredits !== null && unused !== maxMonthlyCredits;
+
+                return (
+                    <div className="flex items-center gap-2">
+                        <span>{unused}</span>
+
+                        {isMismatch && (
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Flag size={16}
+                                        fill="currentColor"
+                                        // stroke="none"
+                                        className="text-red-600 cursor-pointer" />
+                                </TooltipTrigger>
+                                <TooltipContent side="right">
+                                    Max Monthly Credits does not match the Unused Credit
+                                </TooltipContent>
+                            </Tooltip>
+                        )}
+                    </div>
+                );
+            },
         },
         {
             accessorKey: "contacted",
@@ -504,7 +423,7 @@ export const getReportColumns = ({
         {
             accessorKey: "latest_contacted_at",
             header: "Latest Contacted",
-            cell: ({ row }) => {                                        
+            cell: ({ row }) => {
                 const latestContactedAt = row.getValue("latest_contacted_at") as string | null;
                 if (!latestContactedAt) return <span className="text-gray-400">N/A</span>;
                 const date = new Date(latestContactedAt);
@@ -538,6 +457,6 @@ export const getReportColumns = ({
                 );
             },
         },
-       
+
     ];
 };

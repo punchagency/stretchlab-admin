@@ -84,7 +84,7 @@ export const Dashboard = () => {
                 </Button>
               </div>
             ) : (
-              <div className={`grid grid-cols-1 ${userInfo?.role_id === 1 ? 'lg:grid-cols-3  md:grid-cols-2' : 'lg:grid-cols-1'
+              <div className={`grid grid-cols-1 ${userInfo?.role_id === 1 ? 'lg:grid-cols-3  md:grid-cols-1' : 'lg:grid-cols-1'
                 } gap-4`}>
                 {dashboardMetrics.map((metric, index) => (
                   <MetricCard
@@ -251,7 +251,7 @@ export const Dashboard = () => {
                   <RefreshCcw className="w-4 h-4 mr-2" />
                   Retry
                 </Button>
-              </div> 
+              </div>
             ) : (
               <DataTable
                 columns={userTableColumns}
