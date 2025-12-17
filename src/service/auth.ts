@@ -58,3 +58,8 @@ export const resend2FAVerificationCode = async (email: string) => {
   const response = await api.post("/admin/auth/resend-2fa-verification-code", { email });
   return response;
 };
+
+export const logout = async (refreshToken: string) => {
+  const response = await api.post("/admin/auth/logout", { refresh_token: refreshToken });
+  return response;
+};

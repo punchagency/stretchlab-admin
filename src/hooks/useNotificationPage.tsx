@@ -3,18 +3,19 @@ import { type ColumnDef } from "@tanstack/react-table";
 import { ActionDropdown, type ActionItem } from "@/components/shared";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { useNotifications, useUpdateNotification, useDeleteNotification, useMarkAllAsRead } from "@/service/notification";
-import { 
-  transformNotification, 
-  getBadgeStyles, 
+import {
+  transformNotification,
+  getBadgeStyles,
   getTypeDisplayName,
-  type Notification, 
-  type NotificationType 
+  type Notification,
+  type NotificationType
 } from "@/utils/notification";
+import { useMemo, useCallback } from "react";
 
 export const useNotificationPage = () => {
   const navigate = useNavigate();
   const {
-    data: notificationsResponse, 
+    data: notificationsResponse,
     isLoading,
     error,
     refetch,
@@ -26,12 +27,12 @@ export const useNotificationPage = () => {
 
   const originalNotifications = notificationsResponse?.notifications || [];
   const transformedNotifications = originalNotifications.map(transformNotification);
-  
+
   // Sort notifications: unread first, then by creation date (newest first)
   const notifications = [...transformedNotifications].sort((a, b) => {
     if (a.isRead !== b.isRead) {
-      return a.isRead ? 1 : -1; 
-    } 
+      return a.isRead ? 1 : -1;
+    }
     const aOriginal = originalNotifications.find(orig => orig.id === a.id);
     const bOriginal = originalNotifications.find(orig => orig.id === b.id);
     if (aOriginal && bOriginal) {
@@ -41,27 +42,27 @@ export const useNotificationPage = () => {
     }
     return 0;
   });
-  
+
   const unreadCount = notifications.filter((n: Notification) => !n.isRead).length;
 
-  const handleMarkAsRead = (id: number) => {
+  const handleMarkAsRead = useCallback((id: number) => {
     updateNotificationMutation.mutate({
       notification_id: id,
       is_read: true,
     });
-  };
+  }, [updateNotificationMutation]);
 
-  const handleDelete = (id: number) => {
+  const handleDelete = useCallback((id: number) => {
     deleteNotificationMutation.mutate({
       notification_id: id,
-    });    
-  };
+    });
+  }, [deleteNotificationMutation]);
 
-  const handleGoToPage = (type: NotificationType) => {
+  const handleGoToPage = useCallback((type: NotificationType) => {
     switch (type) {
       case "booking":
         navigate("/robot-automation");
-        break;    
+        break;
       case "robot automation":
         navigate("/robot-automation");
         break;
@@ -75,21 +76,24 @@ export const useNotificationPage = () => {
       default:
         break;
     }
-  };
+  }, [navigate]);
 
 
 
-  const columns: ColumnDef<Notification>[] = [
+  // Cell components defined outside the hook to prevent recreation on every render
+  // and satisfy HMR requirements.
+
+  const columns = useMemo<ColumnDef<Notification>[]>(() => [
     {
       accessorKey: "type",
       header: "Type",
       size: 140,
       cell: ({ getValue, row }) => {
         const type = getValue() as NotificationType;
-        const notification = row.original;   
+        const notification = row.original;
         return (
           <div className="flex items-center">
-            <span 
+            <span
               className={`px-3 py-1 rounded-full text-xs ${!notification.isRead ? 'font-bold' : 'font-medium'} border ${getBadgeStyles(type)}`}
             >
               {getTypeDisplayName(type)}
@@ -106,7 +110,7 @@ export const useNotificationPage = () => {
         const description = getValue() as string;
         const notification = row.original;
         const isLongText = description.length > 60;
-        
+
         return (
           <div className={`text-gray-900 ${!notification.isRead ? 'font-bold' : 'font-medium'}`}>
             {isLongText ? (
@@ -148,7 +152,7 @@ export const useNotificationPage = () => {
       size: 80,
       cell: ({ row }) => {
         const notification = row.original;
-        
+
         const actionItems: ActionItem[] = [
           {
             label: updateNotificationMutation.isPending ? "Updating..." : "Mark As Read",
@@ -171,11 +175,11 @@ export const useNotificationPage = () => {
             destructive: true,
             show: true,
           },
-        ];      
-                                            
+        ];
+
         return (
           <div className="flex items-center justify-center">
-            <ActionDropdown 
+            <ActionDropdown
               items={actionItems}
               disabled={updateNotificationMutation.isPending}
             />
@@ -183,7 +187,7 @@ export const useNotificationPage = () => {
         );
       },
     },
-  ];
+  ], [updateNotificationMutation.isPending, deleteNotificationMutation.isPending, handleMarkAsRead, handleDelete, handleGoToPage]);
 
   return {
     notifications,

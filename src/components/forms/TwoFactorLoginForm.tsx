@@ -1,10 +1,10 @@
- import React, { useState } from "react";
+import React, { useState } from "react";
 import { Button, Spinner, OTPInputComponent } from "../shared";
 import { verify2FALogin, resend2FAVerificationCode } from "@/service/auth";
 import type { ApiError } from "@/types";
 import { renderSuccessToast, renderErrorToast } from "../utils";
 import { useNavigate } from "react-router";
-import { setUserCookie } from "@/utils";
+import { setUserCookie, setRefreshToken } from "@/utils";
 import logo from "@/assets/images/stretchlab.png";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -50,8 +50,11 @@ export const TwoFactorLoginForm: React.FC<TwoFactorLoginFormProps> = ({
       const response = await verify2FALogin(code, userEmail);
 
       if (response.status === 200) {
-        setUserCookie(response.data.token);
-        renderSuccessToast(response.data.message || "2FA verification successful");
+        setUserCookie(response.data.access_token);
+        if (response.data.refresh_token) {
+          setRefreshToken(response.data.refresh_token);
+        } 
+        renderSuccessToast(response.data.message || "2FA verification successful");               
         navigate("/dashboard");
       }
     } catch (error) {
@@ -88,7 +91,7 @@ export const TwoFactorLoginForm: React.FC<TwoFactorLoginFormProps> = ({
     }
   };
 
-  return (
+  return ( 
     <div className="flex flex-col justify-center min-h-screen bg-gradient-to-br from-primary-secondary/20 to-primary-tertiary/30">
       <div className="flex flex-col items-center justify-center px-2 sm:px-4 py-8">
         <div className="mb-8">
@@ -153,7 +156,7 @@ export const TwoFactorLoginForm: React.FC<TwoFactorLoginFormProps> = ({
                 "Verify & Continue"
               )}
             </Button>
-          </form> 
+          </form>
 
           <div className="mt-8 text-center">
             <button

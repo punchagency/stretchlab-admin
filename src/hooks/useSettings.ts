@@ -4,7 +4,7 @@ import { getTwoFactorStatus, enableTwoFactor, disableTwoFactor, changePassword, 
 import { renderErrorToast, renderSuccessToast } from "@/components/utils";
 import type { ApiError } from "@/types";
 import type { ProfileFormData, PasswordFormData, TwoFactorSettings, TwoFactorModalState, Coupon, CouponFormData } from "@/types/settings";
-import { useProfilePictureContext } from "@/contexts/ProfilePictureContext";
+import { useProfilePictureContext } from "@/hooks/useProfilePictureContext";
 
 export const useSettings = () => {
   const user = useMemo(() => getUserInfo(), []);
@@ -116,7 +116,7 @@ export const useSettings = () => {
             couponsData = response.data.data;
           }
         }
-        
+
         setCoupons(couponsData);
         setHasLoadedCoupons(true);
       }
@@ -383,7 +383,7 @@ export const useSettings = () => {
     setCouponFormData(prev => ({
       ...prev,
       [name]: value.trim()
-    })); 
+    }));
   };
 
   const handleAddCoupon = async () => {

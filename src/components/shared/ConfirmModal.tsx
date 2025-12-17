@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Spinner } from "./Spinner";
 import { SvgIcon } from "./SvgIcon";
 
@@ -9,6 +10,9 @@ export const ConfirmModal = ({
   message,
   loading,
   error,
+  confirmText,
+  confirmButtonClassName,
+  confirmPhrase,
 }: {
   isOpen: boolean;
   onClose: () => void;
@@ -17,8 +21,21 @@ export const ConfirmModal = ({
   message: string;
   loading: boolean;
   error: boolean;
+  confirmText?: string;
+  confirmButtonClassName?: string;
+  confirmPhrase?: string;
 }) => {
+  const [inputValue, setInputValue] = useState("");
+
+  useEffect(() => {
+    if (isOpen) {
+      setInputValue("");
+    }
+  }, [isOpen]);
+
   if (!isOpen) return null;
+
+  const isConfirmDisabled = loading || (!!confirmPhrase && inputValue !== confirmPhrase);
 
   return (
     <div className="fixed inset-0 flex items-center px-4 justify-center z-50">
@@ -34,9 +51,25 @@ export const ConfirmModal = ({
         </div>
         <h2 className="text-base text-center font-semibold mb-4">{title}</h2>
         <p className="mb-6 text-center text-grey-5 text-sm">{message}</p>
+
+        {confirmPhrase && (
+          <div className="mb-6">
+            <p className="text-sm text-gray-700 mb-2">
+              Type <span className="font-bold">"{confirmPhrase}"</span> to confirm:
+            </p>
+            <input
+              type="text"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-base focus:border-transparent"
+              placeholder={`Type "${confirmPhrase}"`}
+            />
+          </div>
+        )}
+
         {error && (
           <p className="my-4 text-center text-red-500 text-sm">
-            Error submitting notes. Try again
+            Error Occurred. Please Try again
           </p>
         )}
         <div className="flex space-x-4">
@@ -48,17 +81,18 @@ export const ConfirmModal = ({
             Cancel
           </button>
           <button
-            disabled={loading}
+            disabled={isConfirmDisabled}
             onClick={onConfirm}
-            className="px-4 py-2 w-full bg-primary-base text-white rounded-md hover:bg-opacity-80 disabled:opacity-50 disabled:cursor-not-allowed"
+            className={`px-4 py-2 w-full text-white rounded-md hover:bg-opacity-80 disabled:opacity-50 disabled:cursor-not-allowed ${confirmButtonClassName || "bg-primary-base"
+              }`}
           >
             {loading ? (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center justify-center gap-2">
                 <Spinner />
-                <span>Submitting...</span>
+                <span>Loading...</span>
               </div>
             ) : (
-              "Submit"
+              confirmText || "Submit"
             )}
           </button>
         </div>

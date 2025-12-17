@@ -14,6 +14,8 @@ export interface ApiError {
       message: string;
       error?: string;
       token?: string;
+      access_token?: string;
+      refresh_token?: string
     };
     status: number;
   };
@@ -32,7 +34,8 @@ export interface LoginResponse {
   message: string;
   requires_2fa?: boolean;
   status: string;
-  token?: string; 
+  access_token?: string;
+  refresh_token?: string;
   user: User;
 }
 

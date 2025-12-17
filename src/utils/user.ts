@@ -20,7 +20,10 @@ interface CustomJwtPayload extends JwtPayload {
 
 export const setUserCookie = (token: string): void => {
   const expireAt = new Date();
-  expireAt.setHours(23, 59, 59, 999);
+  expireAt.setHours(expireAt.getHours() + 1);
+
+  // Remove temporary token to prevent precedence issues in interceptors
+  Cookies.remove("temp_token", { domain: cookieDomain });
 
   Cookies.set("token", token, {
     expires: expireAt,
@@ -32,7 +35,7 @@ export const setUserCookie = (token: string): void => {
 
 export const setTempUserCookie = (token: string): void => {
   const expireAt = new Date();
-  expireAt.setHours(23, 59, 59, 999);
+  expireAt.setHours(expireAt.getHours() + 1);
   Cookies.set("temp_token", token, {
     expires: expireAt,
     domain: cookieDomain,
@@ -71,4 +74,25 @@ export const getTempUserInfo = (): CustomJwtPayload | null => {
 export const deleteUserCookie = (): void => {
   Cookies.remove("token", { domain: cookieDomain });
   Cookies.remove("temp_token", { domain: cookieDomain });
+  Cookies.remove("refresh_token", { domain: cookieDomain });
+};
+
+export const setRefreshToken = (token: string): void => {
+  const expireAt = new Date();
+  expireAt.setDate(expireAt.getDate() + 7);
+
+  Cookies.set("refresh_token", token, {
+    expires: expireAt,
+    domain: cookieDomain,
+    secure: true,
+    sameSite: "None"
+  });
+};
+
+export const getRefreshToken = (): string | null => {
+  return Cookies.get("refresh_token") || null;
+};
+
+export const removeRefreshToken = (): void => {
+  Cookies.remove("refresh_token", { domain: cookieDomain });
 };

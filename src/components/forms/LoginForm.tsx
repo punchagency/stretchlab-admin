@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Input, Button, Spinner } from "../shared";
 import { login } from "@/service/auth";
 import type { ApiError, LoginResponse } from "@/types";
-import { setTempUserCookie, setUserCookie, deleteUserCookie } from "@/utils";
+import { setTempUserCookie, setUserCookie, deleteUserCookie, setRefreshToken } from "@/utils";
 import { Link, useNavigate } from "react-router";
 import { renderSuccessToast, renderErrorToast } from "../utils";
 
@@ -42,12 +42,15 @@ export const LoginForm = () => {
           navigate(`/2fa-login?email=${encodeURIComponent(formData.email)}`);
           return;
         }
-        if (loginData.token) {
+        if (loginData.access_token) {
           if (
             loginData.user.is_verified &&
             loginData.user.is_clubready_verified
           ) {
-            setUserCookie(loginData.token);
+            setUserCookie(loginData.access_token);
+            if (loginData.refresh_token) {
+              setRefreshToken(loginData.refresh_token);
+            }
             renderSuccessToast(loginData.message);
             navigate("/dashboard");
           } else if (
@@ -55,10 +58,16 @@ export const LoginForm = () => {
             !loginData.user.is_clubready_verified
           ) {
             console.log("is_verified and !is_clubready_verified");
-            setTempUserCookie(loginData.token);
+            setTempUserCookie(loginData.access_token);
+            if (loginData.refresh_token) {
+              setRefreshToken(loginData.refresh_token);
+            }
             navigate("/robot-setup");
           } else {
-            setTempUserCookie(loginData.token);
+            setUserCookie(loginData.access_token);
+            if (loginData.refresh_token) {
+              setRefreshToken(loginData.refresh_token);
+            }
             navigate("/verification");
           }
         } else {
@@ -69,7 +78,10 @@ export const LoginForm = () => {
       const apiError = error as ApiError;
       console.log({ apiError: apiError.response.data });
       if (apiError.response.status === 403) {
-        setUserCookie(apiError.response.data.token as string);
+        setUserCookie(apiError.response.data.access_token as string);
+        if (apiError.response.data.refresh_token) {
+          setRefreshToken(apiError.response.data.refresh_token);
+        }
         renderSuccessToast(apiError.response.data.message);
         window.location.href = redirectUrl;
         // window.location.reload();

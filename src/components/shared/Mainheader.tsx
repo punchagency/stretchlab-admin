@@ -2,7 +2,7 @@ import { Bell } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { getUserInfo } from "@/utils";
-import { useProfilePictureContext } from "@/contexts/ProfilePictureContext";
+import { useProfilePictureContext } from "@/hooks/useProfilePictureContext";
 import { useNotifications } from "@/service/notification";
 import { transformNotification } from "@/utils/notification";
 import { NotificationDropdown } from "./NotificationDropdown";
