@@ -149,7 +149,7 @@ export const TwoFactorLoginForm: React.FC<TwoFactorLoginFormProps> = ({
                   )}
                 </button>
                 <p className="text-xs text-grey-4 mt-1">
-                  Code expires in 10 minutes
+                  Code expires in 5 minutes
                 </p>
               </div>
             </div>
