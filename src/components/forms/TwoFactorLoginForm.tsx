@@ -8,6 +8,9 @@ import { setUserCookie, setRefreshToken } from "@/utils";
 import logo from "@/assets/images/stretchlab.png";
 import { useIsMobile } from "@/hooks/use-mobile";
 
+const redirectUrl = import.meta.env.VITE_REDIRECT_URL;
+
+
 interface TwoFactorLoginFormProps {
   userEmail: string;
 }
@@ -53,12 +56,20 @@ export const TwoFactorLoginForm: React.FC<TwoFactorLoginFormProps> = ({
         setUserCookie(response.data.access_token);
         if (response.data.refresh_token) {
           setRefreshToken(response.data.refresh_token);
-        } 
-        renderSuccessToast(response.data.message || "2FA verification successful");               
+        }
+        renderSuccessToast(response.data.message || "2FA verification successful");
         navigate("/dashboard");
       }
     } catch (error) {
       const apiError = error as ApiError;
+      if (apiError.response.status === 403) {
+        setUserCookie(apiError.response.data.access_token as string);
+        if (apiError.response.data.refresh_token) {
+          setRefreshToken(apiError.response.data.refresh_token);
+        }
+        window.location.href = redirectUrl;
+        return;
+      }
       renderErrorToast(apiError.response?.data.message || "Invalid verification code");
     } finally {
       setIsLoading(false);
@@ -91,7 +102,7 @@ export const TwoFactorLoginForm: React.FC<TwoFactorLoginFormProps> = ({
     }
   };
 
-  return ( 
+  return (
     <div className="flex flex-col justify-center min-h-screen bg-gradient-to-br from-primary-secondary/20 to-primary-tertiary/30">
       <div className="flex flex-col items-center justify-center px-2 sm:px-4 py-8">
         <div className="mb-8">

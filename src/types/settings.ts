@@ -53,6 +53,7 @@ export type Coupon = {
   name: string;
   percent_off: number;
   available: boolean;
+  id: string
 };
 
 export type CouponFormData = {

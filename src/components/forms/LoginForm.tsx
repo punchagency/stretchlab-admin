@@ -36,12 +36,12 @@ export const LoginForm = () => {
       setIsLoading(true);
       deleteUserCookie();
       const response = await login(formData.email, formData.password);
+      if (response.status === 202) {
+        navigate(`/2fa-login?email=${encodeURIComponent(formData.email)}`);
+        return;
+      }
       if (response.status === 200) {
         const loginData = response.data as LoginResponse;
-        if (loginData.requires_2fa) {
-          navigate(`/2fa-login?email=${encodeURIComponent(formData.email)}`);
-          return;
-        }
         if (loginData.access_token) {
           if (
             loginData.user.is_verified &&
@@ -57,7 +57,6 @@ export const LoginForm = () => {
             loginData.user.is_verified &&
             !loginData.user.is_clubready_verified
           ) {
-            console.log("is_verified and !is_clubready_verified");
             setTempUserCookie(loginData.access_token);
             if (loginData.refresh_token) {
               setRefreshToken(loginData.refresh_token);
@@ -71,20 +70,17 @@ export const LoginForm = () => {
             navigate("/verification");
           }
         } else {
-          renderErrorToast("Login failed: No authentication token received");
+          renderErrorToast("Login failed: Please try again");
         }
       }
     } catch (error) {
       const apiError = error as ApiError;
-      console.log({ apiError: apiError.response.data });
       if (apiError.response.status === 403) {
         setUserCookie(apiError.response.data.access_token as string);
         if (apiError.response.data.refresh_token) {
           setRefreshToken(apiError.response.data.refresh_token);
         }
-        renderSuccessToast(apiError.response.data.message);
         window.location.href = redirectUrl;
-        // window.location.reload();
         return;
       }
       renderErrorToast(apiError.response.data.message);

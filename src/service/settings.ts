@@ -99,3 +99,8 @@ export const deleteUser = async () => {
   const response = await api.delete("/admin/settings/delete-user");
   return response;
 };
+
+export const deleteCoupon = async (id: string) => {
+  const response = await api.delete(`/admin/settings/delete-coupon?coupon_id=${id}`);
+  return response;
+};
