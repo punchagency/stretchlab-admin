@@ -164,7 +164,7 @@ export const TwoFactorModal = ({ isOpen, onClose, mode, onSuccess }: TwoFactorMo
               </div>
             ) : (
               mode === "disable" ? "Disable 2FA" : "Verify 2FA"
-            )}
+            )} 
           </Button>
         </div>
       </form>
