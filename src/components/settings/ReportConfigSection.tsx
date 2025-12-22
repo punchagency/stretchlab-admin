@@ -97,7 +97,7 @@ export const ReportConfigSection = () => {
                     id: crypto.randomUUID(),
                     managers: tempManagers,
                     locations: tempLocations,
-                    isEditing: false,
+                    isEditing: false,  
                 },
             ]);
             setIsAddingNew(false);

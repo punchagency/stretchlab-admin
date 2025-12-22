@@ -91,7 +91,7 @@ export const EmailChangeModal = ({ isOpen, onClose, newEmail }: EmailChangeModal
           />
           
           <p className="text-xs text-gray-500 mt-2 text-center">
-            Code expires in 10 minutes
+            Code expires in 5 minutes 
           </p>
         </div>
 

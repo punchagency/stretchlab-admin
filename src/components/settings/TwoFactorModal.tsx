@@ -132,7 +132,7 @@ export const TwoFactorModal = ({ isOpen, onClose, mode, onSuccess }: TwoFactorMo
               )}
             </button>
             <p className="text-xs text-gray-500 mt-1">
-              Code expires in 10 minutes
+              Code expires in 5 minutes
             </p>
           </div>
         </div>
@@ -164,7 +164,7 @@ export const TwoFactorModal = ({ isOpen, onClose, mode, onSuccess }: TwoFactorMo
               </div>
             ) : (
               mode === "disable" ? "Disable 2FA" : "Verify 2FA"
-            )}
+            )} 
           </Button>
         </div>
       </form>

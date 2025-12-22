@@ -24,7 +24,7 @@ export const menuList = [
     icon: "users",
     link: "/user-management",
   },
- 
+
   {
     title: "Notification",
     icon: "bell",
@@ -35,7 +35,7 @@ export const menuList = [
     icon: "billing",
     link: "/billing",
   },
-    {
+  {
     title: "Report",
     icon: "analytics",
     link: "/report",
@@ -44,6 +44,11 @@ export const menuList = [
     title: "Settings",
     icon: "settings",
     link: "/settings",
+  },
+  {
+    title: "Support",
+    icon: "support",
+    link: "/support",
   },
 
 ];

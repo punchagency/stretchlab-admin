@@ -1,8 +1,8 @@
-import { Button, Input, Spinner, FilterDropdown } from "@/components/shared";
+import { Button, Input, Spinner, FilterDropdown, ConfirmModal, SvgIcon } from "@/components/shared";
 import type { Coupon } from "@/types/settings";
 
 interface CouponSectionProps {
-  settingsData: any; 
+  settingsData: any;
 }
 
 export const CouponSection = ({ settingsData }: CouponSectionProps) => {
@@ -14,12 +14,16 @@ export const CouponSection = ({ settingsData }: CouponSectionProps) => {
     handleCouponInputChange,
     handleCouponInputBlur,
     handleAddCoupon,
+    deleteCouponModal,
+    setDeleteCouponModal,
+    handleDeleteCoupon,
+    isLoadingDeleteCoupon,
   } = settingsData;
 
   const handleCouponTypeChange = (value: string) => {
     handleCouponInputChange({
       target: { name: 'coupon_type', value }
-    } as React.ChangeEvent<HTMLSelectElement>); 
+    } as React.ChangeEvent<HTMLSelectElement>);
   };
 
   return (
@@ -123,86 +127,88 @@ export const CouponSection = ({ settingsData }: CouponSectionProps) => {
           <div className="text-center py-8">
             <p className="text-sm text-muted-foreground">No coupons found.</p>
           </div>
-        ) : ( 
+        ) : (
           <div className="grid gap-6 lg:grid-cols-2">
             {coupons.map((coupon: Coupon) => (
               <div
-                key={coupon.code}
-                className={`rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow duration-200 border ${
-                  coupon.available
-                    ? 'bg-white border-gray-100'
-                    : 'bg-gray-50 border-gray-200 opacity-75'
-                }`}
+                key={coupon.id}
+                className={`rounded-lg p-3 shadow-md hover:shadow-lg transition-shadow duration-200 border ${coupon.available
+                  ? 'bg-white border-gray-100'
+                  : 'bg-gray-50 border-gray-200 opacity-75'
+                  }`}
               >
-                {/* Header with Status */}
+
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
-                      <h4 className={`text-lg font-semibold ${
-                        coupon.available ? 'text-gray-900' : 'text-gray-500'
-                      }`}>
+                      <h4 className={`text-lg font-semibold ${coupon.available ? 'text-gray-900' : 'text-gray-500'
+                        }`}>
                         {coupon.name}
                       </h4>
                       <span
-                        className={`inline-flex items-center px-2 py-1 rounded-md text-xs font-medium ${
-                          coupon.active
-                            ? 'bg-green-100 text-green-700'
-                            : 'bg-red-100 text-red-700'
-                        }`}
+                        className={`inline-flex items-center px-2 py-1 rounded-md text-xs font-medium ${coupon.active
+                          ? 'bg-green-100 text-green-700'
+                          : 'bg-red-100 text-red-700'
+                          }`}
                       >
                         {coupon.active ? 'Active' : 'Inactive'}
                       </span>
                     </div>
-                    
-                    {/* Coupon Code */}
-                    <div className={`inline-flex items-center px-3 py-1.5 rounded-md text-sm font-mono font-medium border ${
-                      coupon.available 
-                        ? 'bg-gray-50 text-gray-700' 
-                        : 'bg-gray-100 text-gray-500'
-                    }`}>
+
+
+                    <div className={`inline-flex items-center px-3 py-1.5 rounded-md text-sm font-mono font-medium border ${coupon.available
+                      ? 'bg-gray-50 text-gray-700'
+                      : 'bg-gray-100 text-gray-500'
+                      }`}>
                       {coupon.code}
                     </div>
                   </div>
 
-                  {/* Discount */}
-                  <div className="text-right">
-                    <div className={`text-2xl font-bold ${
-                      coupon.available ? 'text-primary-base' : 'text-gray-400'
-                    }`}>
-                      {coupon.percent_off}%
+
+                  <div className="flex items-start gap-4">
+
+                    <div className="text-right">
+                      <div className={`text-2xl font-bold ${coupon.available ? 'text-primary-base' : 'text-gray-400'
+                        }`}>
+                        {coupon.percent_off}%
+                      </div>
+                      <div className={`text-xs uppercase tracking-wide ${coupon.available ? 'text-gray-500' : 'text-gray-400'
+                        }`}>
+                        OFF
+                      </div>
                     </div>
-                    <div className={`text-xs uppercase tracking-wide ${
-                      coupon.available ? 'text-gray-500' : 'text-gray-400'
-                    }`}>
-                      OFF
-                    </div>
+
+                    {coupon.available && <button
+                      onClick={() => setDeleteCouponModal({ isOpen: true, couponId: coupon.id })}
+                      className="text-gray-400 hover:text-red-500 transition-colors p-1 cursor-pointer"
+                      title="Delete Coupon"
+                    >
+                      <SvgIcon name="trash" className="w-4 h-4" fill="red" />
+                    </button>}
                   </div>
                 </div>
 
-                {/* Details */}
+
                 <div className="space-y-3 pt-4 border-t border-gray-100">
                   <div className="flex items-center justify-between text-sm">
                     <span className={coupon.available ? 'text-gray-600' : 'text-gray-500'}>Duration:</span>
-                    <span className={`font-medium capitalize ${
-                      coupon.available ? 'text-gray-900' : 'text-gray-500'
-                    }`}>{coupon.duration}</span>
+                    <span className={`font-medium capitalize ${coupon.available ? 'text-gray-900' : 'text-gray-500'
+                      }`}>{coupon.duration}</span>
                   </div>
 
                   {coupon.duration_in_months && (
                     <div className="flex items-center justify-between text-sm">
                       <span className={coupon.available ? 'text-gray-600' : 'text-gray-500'}>Duration Months:</span>
-                      <span className={`font-medium ${
-                        coupon.available ? 'text-gray-900' : 'text-gray-500' 
-                      }`}>{coupon.duration_in_months}</span>
+                      <span className={`font-medium ${coupon.available ? 'text-gray-900' : 'text-gray-500'
+                        }`}>{coupon.duration_in_months}</span>
                     </div>
                   )}
-  
+
                   {coupon.max_redemptions && (
                     <div className="flex items-center justify-between text-sm">
                       <span className={coupon.available ? 'text-gray-600' : 'text-gray-500'}>Max Redemptions:</span>
-                      <span className={`font-medium ${
-                        coupon.available ? 'text-gray-900' : 'text-gray-500'
-                      }`}>{coupon.max_redemptions}</span>
+                      <span className={`font-medium ${coupon.available ? 'text-gray-900' : 'text-gray-500'
+                        }`}>{coupon.max_redemptions}</span>
                     </div>
                   )}
 
@@ -235,6 +241,18 @@ export const CouponSection = ({ settingsData }: CouponSectionProps) => {
           </div>
         )}
       </div>
-    </div>
+
+      <ConfirmModal
+        isOpen={deleteCouponModal.isOpen}
+        onClose={() => setDeleteCouponModal({ isOpen: false, couponId: "" })}
+        onConfirm={handleDeleteCoupon}
+        title="Delete Coupon"
+        message="Are you sure you want to delete this coupon? This action cannot be undone."
+        loading={isLoadingDeleteCoupon}
+        error={false}
+        confirmText="Delete"
+        confirmButtonClassName="bg-red-500 hover:bg-red-600"
+      />
+    </div >
   );
 };

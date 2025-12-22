@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Input, Button, Spinner } from "../shared";
 import { checkUsername, signup } from "@/service/auth";
 import type { ApiError } from "@/types";
-import { setTempUserCookie } from "@/utils";
+import { setTempUserCookie, setRefreshToken } from "@/utils";
 import { useNavigate } from "react-router";
 import { renderErrorToast, renderSuccessToast } from "../utils";
 export const SignupForm = () => {
@@ -105,7 +105,10 @@ export const SignupForm = () => {
         formData.username
       );
       if (response.status === 201) {
-        setTempUserCookie(response.data.token);
+        setTempUserCookie(response.data.access_token);
+        if (response.data.refresh_token) {
+          setRefreshToken(response.data.refresh_token);
+        } 
         renderSuccessToast("Account created successfully");
         navigate("/verification");
       }

@@ -103,7 +103,7 @@ export const InvoiceHistory = ({
                 {flexologistStatus === "trialing" ? "Trial Ends:" : flexologistStatus === "canceled" ? "Cancelled" : "Next Billing Date:"}
               </div>
               {flexologistStatus !== "canceled" && <div className="font-medium text-gray-900 text-base">
-                { noteTakingData.discount ? formatBillingDate(noteTakingData?.discount_info?.end_date)  :noteTakingBillingDate}
+                { noteTakingData.discount ? noteTakingData?.discount_info?.end_date? formatBillingDate(noteTakingData?.discount_info?.end_date) : noteTakingBillingDate  :noteTakingBillingDate}
               </div>}
             </div>
           )}
@@ -131,14 +131,14 @@ export const InvoiceHistory = ({
           {noteTakingData.discount && <div className="bg-orange-50 border border-orange-200 rounded-md p-3 mb-3">
             <div className="text-orange-900 text-xs font-medium">
               The Note Taking plan currently has a {noteTakingData?.discount_info?.percent_off}% discount applied,
-              valid until {formatBillingDate(noteTakingData?.discount_info?.end_date)}.
+              valid until {noteTakingData?.discount_info?.end_date ? formatBillingDate(noteTakingData?.discount_info?.end_date): noteTakingBillingDate}.
             </div>
           </div>}
         </>}
 
 
         {rpaQuantity > 0 && <> <div className="pt-3 sm:pt-4">
-          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 flex-wrap">
             <div>
               <div className="text-gray-600 mb-2 text-sm">RPA Automation Add-on:</div>
               <div className="font-medium text-gray-900 text-base">
@@ -152,7 +152,7 @@ export const InvoiceHistory = ({
                   {rpaStatus === "trialing" ? "Trial Ends:" : rpaStatus === "canceled" ? "Cancelled" : "Next Billing Date:"}
                 </div>
                 {rpaStatus !== "canceled" && <div className="font-medium text-gray-900 text-base">
-                  {rpaData.discount ? formatBillingDate(rpaData?.discount_info?.end_date) : rpaBillingDate}
+                  {rpaData.discount ? rpaData?.discount_info?.end_date ? formatBillingDate(rpaData?.discount_info?.end_date) : rpaBillingDate : rpaBillingDate}
                   
                 </div>}
               </div>
@@ -182,7 +182,7 @@ export const InvoiceHistory = ({
         </div> {rpaData.discount && <div className="bg-orange-50 border border-orange-200 rounded-md p-3 mb-3">
           <div className="text-orange-900 text-xs font-medium">
             The RPA plan currently has a {rpaData?.discount_info?.percent_off}% discount applied,
-            valid until {formatBillingDate(rpaData?.discount_info?.end_date)}.
+            valid until {rpaData?.discount_info?.end_date ? formatBillingDate(rpaData?.discount_info?.end_date): rpaBillingDate}.
           </div>
         </div>}</>}
       </div>

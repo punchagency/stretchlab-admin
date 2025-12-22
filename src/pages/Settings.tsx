@@ -1,13 +1,14 @@
-import { Lock, User, NotebookTabs, Settings2 } from "lucide-react";
+import { Lock, User, NotebookTabs, Settings2, Trash2 } from "lucide-react";
 import { useSettings } from "@/hooks/useSettings";
-import { ProfileSection, PasswordSection, CouponSection, ReportConfigSection } from "@/components/settings";
+import { ProfileSection, PasswordSection, CouponSection, ReportConfigSection, AccountDeletionSection } from "@/components/settings";
 import { getUserInfo } from "@/utils";
 
 const SETTINGS_NAV_ITEMS = [
   { id: "profile", label: "Profile", icon: User },
   { id: "password", label: "Password & Security", icon: Lock },
   { id: "coupon", label: "Coupon", icon: NotebookTabs },
-  { id: "reportconfig", label: "Report Config", icon: Settings2 }
+  { id: "reportconfig", label: "Report Config", icon: Settings2 },
+  { id: "account_deletion", label: "Account Deletion", icon: Trash2 },
 ] as const;
 
 export const Settings = () => {
@@ -19,8 +20,9 @@ export const Settings = () => {
     (item) => {
       if (item.id === "coupon" && person?.role_id !== 1) return false;
       if (item.id === "reportconfig" && person?.role_id !== 1) return false;
+      if (item.id === "account_deletion" && person?.role_id !== 2) return false;
       return true;
-    } 
+    }
   );
 
   const renderContent = () => {
@@ -52,6 +54,8 @@ export const Settings = () => {
             <p className="text-gray-500">You do not have permission to view this section.</p>
           </div>
         );
+      case "account_deletion":
+        return <AccountDeletionSection />;
       default:
         return <ProfileSection settingsData={settingsData} />;
     }

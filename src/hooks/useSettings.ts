@@ -1,10 +1,10 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { getUserInfo } from "@/utils";
-import { getTwoFactorStatus, enableTwoFactor, disableTwoFactor, changePassword, changeEmailInitiate, uploadProfilePicture, getCoupons, addCoupon } from "@/service/settings";
+import { getTwoFactorStatus, enableTwoFactor, disableTwoFactor, changePassword, changeEmailInitiate, uploadProfilePicture, getCoupons, addCoupon, deleteCoupon } from "@/service/settings";
 import { renderErrorToast, renderSuccessToast } from "@/components/utils";
 import type { ApiError } from "@/types";
 import type { ProfileFormData, PasswordFormData, TwoFactorSettings, TwoFactorModalState, Coupon, CouponFormData } from "@/types/settings";
-import { useProfilePictureContext } from "@/contexts/ProfilePictureContext";
+import { useProfilePictureContext } from "@/hooks/useProfilePictureContext";
 
 export const useSettings = () => {
   const user = useMemo(() => getUserInfo(), []);
@@ -52,6 +52,14 @@ export const useSettings = () => {
   const [isLoadingCoupons, setIsLoadingCoupons] = useState(false);
   const [isLoadingAddCoupon, setIsLoadingAddCoupon] = useState(false);
   const [hasLoadedCoupons, setHasLoadedCoupons] = useState(false);
+  const [deleteCouponModal, setDeleteCouponModal] = useState<{
+    isOpen: boolean;
+    couponId: string;
+  }>({
+    isOpen: false,
+    couponId: "",
+  });
+  const [isLoadingDeleteCoupon, setIsLoadingDeleteCoupon] = useState(false);
 
   // Email change modal state
   const [emailChangeModal, setEmailChangeModal] = useState({
@@ -116,8 +124,15 @@ export const useSettings = () => {
             couponsData = response.data.data;
           }
         }
-        
-        setCoupons(couponsData);
+
+        // setCoupons(couponsData);
+        const uniqueCoupons = (couponsData as Coupon[]).filter((coupon: Coupon, index: number, self: Coupon[]) =>
+          index === self.findIndex((t: Coupon) => (
+            t.id === coupon.id
+          ))
+        );
+
+        setCoupons(uniqueCoupons);
         setHasLoadedCoupons(true);
       }
     } catch (error) {
@@ -383,7 +398,7 @@ export const useSettings = () => {
     setCouponFormData(prev => ({
       ...prev,
       [name]: value.trim()
-    })); 
+    }));
   };
 
   const handleAddCoupon = async () => {
@@ -417,6 +432,28 @@ export const useSettings = () => {
     }
   };
 
+  const handleDeleteCoupon = async () => {
+    if (!deleteCouponModal.couponId) return;
+
+    try {
+      setIsLoadingDeleteCoupon(true);
+      const response = await deleteCoupon(deleteCouponModal.couponId);
+
+      if (response.status === 200) {
+        renderSuccessToast(response.data.message || "Coupon deleted successfully");
+        setDeleteCouponModal({ isOpen: false, couponId: "" });
+        await loadCoupons();
+      } else {
+        renderErrorToast(response.data.message || "Failed to delete coupon");
+      }
+    } catch (error) {
+      const apiError = error as ApiError;
+      renderErrorToast(apiError.response?.data.message || "Failed to delete coupon");
+    } finally {
+      setIsLoadingDeleteCoupon(false);
+    }
+  };
+
   return {
     user,
     activeSection,
@@ -431,6 +468,9 @@ export const useSettings = () => {
     couponFormData,
     isLoadingCoupons,
     isLoadingAddCoupon,
+    isLoadingDeleteCoupon,
+    deleteCouponModal,
+    setDeleteCouponModal,
     isLoadingTwoFactor,
     isLoadingPassword,
     isLoadingEmailChange,
@@ -448,6 +488,7 @@ export const useSettings = () => {
     handleSaveProfile,
     handleUpdatePassword,
     handleAddCoupon,
+    handleDeleteCoupon,
     handleTwoFactorModalClose,
     handleTwoFactorSuccess,
     handleEmailChangeModalClose,
