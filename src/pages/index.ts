@@ -17,4 +17,4 @@ export * from "./Billing";
 export * from "./NotFound";
 export * from "./ErrorPage";
 export * from "./AcceptInvite";
-export * from "./UserManagement";
+export * from "./UserManagement";export * from "./Support";

@@ -26,7 +26,8 @@ export type SvgIconName =
   | "bell"
   | "billing"
   | "trash"
-  | "users";
+  | "users"
+  | "support";
 
 export type RobotHistoryType = {
   id: number;
@@ -60,4 +61,17 @@ export type BookingType = {
   workout_type: string;
   plagiarism_percentage: number;
   seven_days_ago_notes: string;
+};
+
+export type SupportTicket = {
+  created_at: string;
+  id: number;
+  message: string;
+  status: string;
+  subject: string;
+  user_id: number;
+  users: {
+    email: string;
+    full_name: string;
+  };
 };

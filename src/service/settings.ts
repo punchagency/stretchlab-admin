@@ -24,7 +24,7 @@ export const verifyTwoFactorDisable = async (code: string) => {
   const response = await api.post("/admin/settings/two-factor-auth/disable/verify", { code });
   return response;
 };
-  
+
 export const resendTwoFactorCode = async () => {
   const response = await api.get("/admin/settings/two-factor-auth/resend-code");
   return response;
@@ -56,7 +56,7 @@ export const changeEmailVerify = async (new_email: string, code: string) => {
 export const uploadProfilePicture = async (file: File) => {
   const formData = new FormData();
   formData.append('profile_picture', file);
-  
+
   const response = await api.post("/admin/settings/change-profile-picture", formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -88,4 +88,19 @@ export const addCoupon = async (couponData: {
 }) => {
   const response = await api.post("/admin/settings/add-coupon", couponData);
   return response;
-}; 
+};
+
+export const removeData = async () => {
+  const response = await api.delete("/admin/settings/remove-data");
+  return response;
+};
+
+export const deleteUser = async () => {
+  const response = await api.delete("/admin/settings/delete-user");
+  return response;
+};
+
+export const deleteCoupon = async (id: string) => {
+  const response = await api.delete(`/admin/settings/delete-coupon?coupon_id=${id}`);
+  return response;
+};

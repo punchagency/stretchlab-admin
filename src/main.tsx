@@ -23,6 +23,7 @@ import {
   ErrorPage,
   AcceptInvite,
   UserManagement,
+  Support,
 } from "./pages";
 import { Toaster } from "./components/ui/sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -45,7 +46,7 @@ const router = createBrowserRouter([
       },
       {
         path: "analytics",
-        element: <Analytics />, 
+        element: <Analytics />,
       },
       {
         path: "report",
@@ -53,7 +54,7 @@ const router = createBrowserRouter([
       },
       {
         path: "note-taking-app",
-        element: <NoteTakingAdmin />, 
+        element: <NoteTakingAdmin />,
       },
       {
         path: "robot-automation",
@@ -74,6 +75,10 @@ const router = createBrowserRouter([
       {
         path: "user-management",
         element: <UserManagement />,
+      },
+      {
+        path: "support",
+        element: <Support />,
       },
     ],
   },

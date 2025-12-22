@@ -1,12 +1,15 @@
- import React, { useState } from "react";
+import React, { useState } from "react";
 import { Button, Spinner, OTPInputComponent } from "../shared";
 import { verify2FALogin, resend2FAVerificationCode } from "@/service/auth";
 import type { ApiError } from "@/types";
 import { renderSuccessToast, renderErrorToast } from "../utils";
 import { useNavigate } from "react-router";
-import { setUserCookie } from "@/utils";
+import { setUserCookie, setRefreshToken } from "@/utils";
 import logo from "@/assets/images/stretchlab.png";
 import { useIsMobile } from "@/hooks/use-mobile";
+
+const redirectUrl = import.meta.env.VITE_REDIRECT_URL;
+
 
 interface TwoFactorLoginFormProps {
   userEmail: string;
@@ -50,12 +53,23 @@ export const TwoFactorLoginForm: React.FC<TwoFactorLoginFormProps> = ({
       const response = await verify2FALogin(code, userEmail);
 
       if (response.status === 200) {
-        setUserCookie(response.data.token);
+        setUserCookie(response.data.access_token);
+        if (response.data.refresh_token) {
+          setRefreshToken(response.data.refresh_token);
+        }
         renderSuccessToast(response.data.message || "2FA verification successful");
         navigate("/dashboard");
       }
     } catch (error) {
       const apiError = error as ApiError;
+      if (apiError.response.status === 403) {
+        setUserCookie(apiError.response.data.access_token as string);
+        if (apiError.response.data.refresh_token) {
+          setRefreshToken(apiError.response.data.refresh_token);
+        }
+        window.location.href = redirectUrl;
+        return;
+      }
       renderErrorToast(apiError.response?.data.message || "Invalid verification code");
     } finally {
       setIsLoading(false);
@@ -135,7 +149,7 @@ export const TwoFactorLoginForm: React.FC<TwoFactorLoginFormProps> = ({
                   )}
                 </button>
                 <p className="text-xs text-grey-4 mt-1">
-                  Code expires in 10 minutes
+                  Code expires in 5 minutes
                 </p>
               </div>
             </div>
@@ -153,7 +167,7 @@ export const TwoFactorLoginForm: React.FC<TwoFactorLoginFormProps> = ({
                 "Verify & Continue"
               )}
             </Button>
-          </form> 
+          </form>
 
           <div className="mt-8 text-center">
             <button

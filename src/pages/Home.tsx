@@ -37,6 +37,7 @@ const SidebarLogo = () => {
 export const Home = () => {
   const navigate = useNavigate();
   const userInfo = getUserInfo();
+  console.log({ userInfo });
   useEffect(() => {
     const userCookie = getUserCookie();
     if (!userCookie) {
@@ -88,6 +89,9 @@ export const Home = () => {
     }
 
     if (menu.title === "Report" && userInfo?.role_id !== 1) {
+      return false;
+    }
+    if (menu.title === "Support" && ![1, 2].includes(userInfo?.role_id ?? -1)) {
       return false;
     }
     return true;

@@ -15,7 +15,8 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { getUserInfo, deleteUserCookie } from "@/utils";
+import { getUserInfo, deleteUserCookie, getRefreshToken } from "@/utils";
+import { logout } from "@/service/auth";
 import { Modal } from "@/components/shared";
 import { useState } from "react";
 
@@ -24,7 +25,15 @@ export function NavUser() {
   const user = getUserInfo();
   const avatar = "https://github.com/shadcn.png";
   const [isOpen, setIsOpen] = useState(false);
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    const refreshToken = getRefreshToken();
+    if (refreshToken) {
+      try {
+        await logout(refreshToken);
+      } catch (error) {                       
+        console.error("Logout failed", error);
+      }
+    }
     deleteUserCookie();
     window.location.href = "/login";
   };

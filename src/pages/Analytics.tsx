@@ -199,7 +199,7 @@ export const Analytics = () => {
               /> */}
 
               <FilterDropdown
-                label="Appointment"
+                label="Performance Metric"
                 value={selectedFilters.dataset}
                 options={filterOptions.dataset || []}
                 onChange={(value) => handleFilterChange('dataset', value)}

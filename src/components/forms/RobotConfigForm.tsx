@@ -10,7 +10,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import type { ApiError, RobotConfig } from "@/types/response";
 import { Config, PaymentCollection } from "../app";
 import type { BillingInfo } from "@/types";
-import { setUserCookie } from "@/utils";
+import { setUserCookie, setRefreshToken } from "@/utils";
 import { useNavigate } from "react-router";
 
 export const RobotConfigForm = ({
@@ -192,7 +192,10 @@ export const RobotConfigForm = ({
       if (response.status === 200) {
         renderSuccessToast("Settings saved successfully");
         if (isSignupFlow) {
-          setUserCookie(response.data.token);
+          setUserCookie(response.data.access_token);
+          if (response.data.refresh_token) {
+            setRefreshToken(response.data.refresh_token);
+          }
           navigate("/dashboard");
           return;
         }

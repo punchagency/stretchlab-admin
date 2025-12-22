@@ -19,8 +19,8 @@ const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
 const CheckoutForm = ({
   onClose,
-  price, 
-  robot, 
+  price,
+  robot,
   update,
   setUpdate,
   setProceed,
@@ -46,6 +46,7 @@ const CheckoutForm = ({
     duration: number;
     valid: boolean;
     active: boolean;
+    expired: boolean;
   }>(null);
 
   const handleCheckCoupon = async () => {
@@ -160,7 +161,7 @@ const CheckoutForm = ({
       <div className="flex items-center justify-center mb-4">
         <img src={logo} alt="StretchLab" className="w-40 h-auto mx-auto" />
       </div>
-     { !updateInfo && <p className="text-sm text-gray-500 mb-4 font-medium text-center">
+      {!updateInfo && <p className="text-sm text-gray-500 mb-4 font-medium text-center">
         {`This will charge you $${price} per ${robot ? "location" : "flexologist"
           } per month.`}
       </p>}
@@ -178,7 +179,7 @@ const CheckoutForm = ({
           className="w-full px-3 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-base focus:border-transparent"
         />
       </div> */}
-      { !updateInfo && <div className="mt-4 relative">
+      {!updateInfo && <div className="mt-4 relative">
         <label
           htmlFor="coupon"
           className="block text-sm font-medium text-gray-600 mb-2"
@@ -191,7 +192,10 @@ const CheckoutForm = ({
             id="coupon"
             type="text"
             value={coupon}
-            onChange={(e) => setCoupon(e.target.value)}
+            onChange={(e) => {
+              setCoupon(e.target.value);
+              setCouponDetails(null);
+            }}
             placeholder="Enter coupon code"
             className="w-full px-3 py-3 pr-[5.5rem] border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-base focus:border-transparent"
           />
@@ -205,15 +209,14 @@ const CheckoutForm = ({
             {checkingCoupon ? <Loader2 className="animate-spin w-4 h-4" /> : "Validate Coupon"}
           </button>
         </div>
-         {couponDetails && (
+        {couponDetails && (
           <div
-            className={`mt-3 text-sm rounded-md p-3 ${
-              couponDetails.valid && couponDetails.active
-                ? "bg-green-50 text-green-700 border border-green-200"
-                : "bg-red-50 text-red-700 border border-red-200"
-            }`}
+            className={`mt-3 text-sm rounded-md p-3 ${couponDetails.active && !couponDetails.expired
+              ? "bg-green-50 text-green-700 border border-green-200"
+              : "bg-red-50 text-red-700 border border-red-200"
+              }`}
           >
-            {couponDetails.valid && couponDetails.active ? (
+            {couponDetails.active && !couponDetails.expired ? (
               <p>
                 🎉 This coupon gives you{" "}
                 <strong>{couponDetails.percent_off}% off</strong> for{" "}
@@ -221,7 +224,7 @@ const CheckoutForm = ({
                 {couponDetails.duration > 1 ? "months" : "month"}.
               </p>
             ) : (
-              <p>⚠️ This coupon is invalid or inactive.</p>
+              <p>⚠️ This coupon is invalid or expired.</p>
             )}
           </div>
         )}
@@ -240,12 +243,20 @@ const CheckoutForm = ({
         <button
           type="submit"
           className="w-full bg-primary-base font-semibold flex items-center justify-center  cursor-pointer text-white px-4 py-3 rounded-md disabled:opacity-30"
-          disabled={!stripe || !elements || loading || !paymentElementReady}
+          disabled={
+            !stripe ||
+            !elements ||
+            loading ||
+            !paymentElementReady ||
+            checkingCoupon ||
+            (coupon.trim() !== "" &&
+              (!couponDetails || !couponDetails.active || couponDetails.expired))
+          }
         >
           {loading ? (
             <>
               <Loader2 className="animate-spin" />
-              {(update || updateInfo)  ? "Updating..." : "Submitting..."}
+              {(update || updateInfo) ? "Updating..." : "Submitting..."}
             </>
           ) : (update || updateInfo) ? (
             "Update Payment Method"
@@ -267,7 +278,7 @@ export const PaymentCollection = ({
   setProceed,
   setUpdate,
   updateInfo,
-}: { 
+}: {
   show: boolean;
   onClose: () => void;
   robot: boolean;
@@ -332,7 +343,7 @@ export const PaymentCollection = ({
                   <span className="text-gray-600 font-bold">
                     {billingInfo.type?.toUpperCase() || "OTHER"}
                   </span>
-                )}    
+                )}
               </div>
 
               <div>

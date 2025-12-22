@@ -107,7 +107,7 @@ export const Dashboard = () => {
 
           </div>
 
-          {(userInfo?.role_id === 1 || userInfo?.role_id === 4) && <div className="py-4 px-3 sm:px-4 bg-[#F5F5F5] rounded-lg shadow-md">
+          {/* {(userInfo?.role_id === 1 || userInfo?.role_id === 2 ||  userInfo?.role_id === 4 || userInfo?.role_id === 8)  && <div className="py-4 px-3 sm:px-4 bg-[#F5F5F5] rounded-lg shadow-md">
             <h2 className="text-base font-semibold text-gray-900 mb-4">Activities</h2>
             <Activities
               data={activitiesData}
@@ -115,7 +115,23 @@ export const Dashboard = () => {
               error={activitiesError}
               onRetry={retryActivities}
             />
-          </div>}
+          </div>} */}
+
+
+          {userInfo?.role_id !== undefined &&
+             [1, 2, 4, 8].includes(userInfo.role_id) && (
+              <div className="py-4 px-3 sm:px-4 bg-[#F5F5F5] rounded-lg shadow-md">
+                <h2 className="text-base font-semibold text-gray-900 mb-4">
+                  Activities
+                </h2>
+                <Activities
+                  data={activitiesData}
+                  isLoading={isActivitiesLoading}
+                  error={activitiesError}
+                  onRetry={retryActivities}
+                />
+              </div>
+            )}
 
 
           <div className="bg-[#F5F5F5] rounded-lg shadow-md py-4 px-3 sm:px-4">

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
+import React, { createContext, useState, useEffect, useCallback } from "react";
 import { getProfilePicture, deleteProfilePicture } from "@/service/settings";
 import { getUserInfo } from "@/utils/user";
 
@@ -9,7 +9,7 @@ interface ProfilePictureContextType {
   deleteProfilePicture: () => Promise<void>;
 }
 
-const ProfilePictureContext = createContext<ProfilePictureContextType | undefined>(undefined);
+export const ProfilePictureContext = createContext<ProfilePictureContextType | undefined>(undefined);
 
 export const ProfilePictureProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [profilePictureUrl, setProfilePictureUrl] = useState<string | null>(null);
@@ -23,7 +23,7 @@ export const ProfilePictureProvider: React.FC<{ children: React.ReactNode }> = (
       setHasLoaded(true);
       return;
     }
-    
+
     try {
       setIsLoading(true);
       const response = await getProfilePicture();
@@ -80,12 +80,4 @@ export const ProfilePictureProvider: React.FC<{ children: React.ReactNode }> = (
       {children}
     </ProfilePictureContext.Provider>
   );
-};
-
-export const useProfilePictureContext = () => {
-  const context = useContext(ProfilePictureContext);
-  if (context === undefined) {
-    throw new Error('useProfilePictureContext must be used within a ProfilePictureProvider');
-  }
-  return context;
 }; 
