@@ -64,7 +64,7 @@ const router = createBrowserRouter([
         path: "notification",
         element: <Notification />,
       },
-      {
+      {  
         path: "billing",
         element: <Billing />,
       },

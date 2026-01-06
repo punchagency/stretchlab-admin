@@ -4,7 +4,7 @@ import {
   formatBillingDate,
   convertStripePrice,
   calculateTotal,
-  extractSubscriptionData,
+  extractSubscriptionData, 
   hasValidSubscription,
 } from "@/utils/billing";
 

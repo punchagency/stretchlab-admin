@@ -239,7 +239,7 @@ export const useDashboard = () => {
       .filter(value => typeof value === 'number' && !isNaN(value) && value >= 0);
 
     if (validValues.length === 0) return 100;
-
+     
     const maxValue = Math.max(...validValues);
     if (maxValue === 0) return 100;
 

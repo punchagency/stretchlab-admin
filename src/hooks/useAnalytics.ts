@@ -137,7 +137,7 @@ export const useAnalytics = () => {
     refetch: refetchRanking,
   } = useQuery<RankingAnalyticsResponse | null>({
     queryKey: ['rankingAnalytics', selectedFilters.dataset, selectedFilters.duration, selectedFilters.customRange, selectedFilters.filterMetric],
-    queryFn: async () => {
+    queryFn: async () => {        
       if (!selectedFilters.dataset) return null;
 
       const params: RankingAnalyticsParams = {
