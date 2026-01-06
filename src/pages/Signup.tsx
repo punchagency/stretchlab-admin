@@ -1,4 +1,4 @@
-import logo from "@/assets/images/stretchlab.png";
+import logo from "@/assets/images/stretchnote.png";
 import { SignupForm } from "@/components/forms";
 import { PricingSection } from "@/components/shared";
 import { pricingPlans } from "@/lib/pricingPlans";
@@ -8,7 +8,7 @@ export const Signup = () => {
     <div className="max-w-7xl mx-auto py-6 px-6 sm:px-10">
       <div className="flex flex-col xl:flex-row gap-12">
         <div className="sm:w-full md:w-full xl:w-1/2 flex flex-col gap-4 justify-center">
-          <img src={logo} alt="logo" className="w-36 mx-auto" />
+          <img src={logo} alt="logo" className="w-50 mx-auto" />
           <h1 className="sm:text-2xl md:text-3xl xl:text-4xl font-semibold tracking-custom text-center text-dark-1">
             Create an account
           </h1>

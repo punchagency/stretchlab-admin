@@ -8,8 +8,8 @@ import {
 } from "@/components/ui/sidebar";
 import { Sidebar } from "@/components/ui/sidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import logo from "@/assets/images/stretchlab.png";
-import logoIcon from "@/assets/images/stretchlab-favicon.png";
+import logo from "@/assets/images/stretchnote.png";
+// import logoIcon from "@/assets/images/stretchlab-favicon.png";
 import { Outlet, useNavigate } from "react-router";
 import { menuList } from "@/lib/contants";
 import { SideMenuList, LogoutMenu } from "@/components/shared";
@@ -26,9 +26,9 @@ const SidebarLogo = () => {
       onClick={() => navigate("/dashboard")}
     >
       <img
-        src={state === "expanded" ? logo : logoIcon}
+        src={state === "expanded" ? logo : logo}
         alt="logo"
-        className={state === "expanded" ? "w-24 h-10" : "w-10 h-9 ml-1"}
+        className={state === "expanded" ? "" : "w-25"}
       />
     </button>
   );
@@ -101,7 +101,7 @@ export const Home = () => {
     <ProfilePictureProvider>
       <SidebarProvider>
         <Sidebar className="border-sidebar-border" collapsible="icon">
-          <SidebarHeader className="pt-5">
+          <SidebarHeader className="pt-2">
             <SidebarLogo />
           </SidebarHeader>
           <SidebarSeparator />
