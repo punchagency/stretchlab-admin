@@ -14,7 +14,7 @@ import { useMemo, useCallback } from "react";
 
 export const useNotificationPage = () => {
   const navigate = useNavigate();
-  const {
+  const {  
     data: notificationsResponse,
     isLoading,
     error,
