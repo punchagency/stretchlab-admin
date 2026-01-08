@@ -142,7 +142,7 @@ export const HistoryInformation = ({
                 {data?.missed_sale_follow_up_rubric}
               </p>
             </div>
-          </div>
+          </div> 
         </div>
       </div>
       <div className="mt-6 md:mt-10 border border-grey-3 rounded-xl md:rounded-3xl p-2 md:p-7">

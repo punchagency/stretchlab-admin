@@ -261,7 +261,7 @@ export const RobotConfigForm = ({
                 <div className="bg-red-100 rounded-lg px-4 py-3">
                   <p className="text-red-600 text-sm font-medium text-center">
                     {error}
-                  </p>
+                  </p> 
                 </div>
               )}
 

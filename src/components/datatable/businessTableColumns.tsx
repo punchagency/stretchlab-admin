@@ -89,7 +89,7 @@ export const businessTableColumns = (onViewDetails: (businessId: number) => void
         <span className={`px-3 py-1 rounded-full text-xs font-medium ${config.color}`}>
           {config.label}
         </span>
-      );
+      ); 
     },
   },
   {
