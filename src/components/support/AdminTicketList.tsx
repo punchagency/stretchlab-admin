@@ -42,7 +42,7 @@ export const AdminTicketList = ({
                         </p>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4 text-left">
+                    <div className="grid grid-cols-1 md:grid-cols-2  gap-4 p-4 text-left">
                         {tickets.map((ticket) => (
                             <TicketCard
                                 key={ticket.id}

@@ -36,11 +36,11 @@ export const TicketCard = ({ ticket, onClick }: TicketCardProps) => {
                 </span>
             </div>
 
-            <h4 className="text-sm font-semibold text-gray-900 mb-1 truncate" title={ticket.subject}>
+            <h4 className=" text-xs md:text-sm font-semibold text-gray-900 mb-1 truncate" title={ticket.subject}>
                 {ticket.subject}
             </h4>
             <p
-                className="text-sm text-gray-500 mb-4 line-clamp-3 flex-1 break-words"
+                className=" text-xs md:text-sm text-gray-500 mb-4 line-clamp-3 flex-1 break-words"
                 title={ticket.message}
             >
                 {ticket.message}

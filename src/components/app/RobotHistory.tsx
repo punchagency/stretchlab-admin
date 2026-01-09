@@ -30,7 +30,10 @@ const userColumns: ColumnDef<RobotHistoryType>[] = [
 
     },
   },
-
+  {
+    accessorKey: "booking_id",
+    header: "Booking ID",
+  },
   {
     accessorKey: "location",
     header: "Location",

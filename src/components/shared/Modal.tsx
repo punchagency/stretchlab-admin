@@ -15,6 +15,17 @@ export const Modal: React.FC<ModalProps> = ({
   show,
   size = "md",
 }) => {
+  React.useEffect(() => {
+    if (show) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [show]);
+
   const modalContent = (
     <AnimatePresence>
       {show && (

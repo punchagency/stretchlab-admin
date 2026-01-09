@@ -64,7 +64,7 @@ export const userColumns: ColumnDef<Payment>[] = [
         4: "Declined",
         5: "Expired",
       };
-
+                  
       return status ? (
         <div className="bg-[#FEF6E7] text-[#865503] px-2 py-1.5 rounded-2xl w-20 text-center font-medium">
           {statuses[status]}
