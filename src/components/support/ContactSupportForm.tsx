@@ -23,7 +23,7 @@ export const ContactSupportForm = ({
             </h2>
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6 max-w-2xl mx-auto">
                 <div className="flex flex-col items-center mb-6">
-                    <div className="bg-primary-base/10 p-4 rounded-full mb-4">
+                    <div className="bg-primary-base/10 p-4 rounded-full mb-4"> 
                         <SvgIcon
                             name="support"
                             width={48}

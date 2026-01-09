@@ -238,7 +238,7 @@ const CheckoutForm = ({
             className="w-full bg-gray-100 font-semibold flex items-center justify-center  cursor-pointer text-gray-800 px-4 py-3 rounded-md"
           >
             Cancel
-          </button>
+          </button>    
         )}
         <button
           type="submit"
