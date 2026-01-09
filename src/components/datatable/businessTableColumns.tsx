@@ -62,7 +62,7 @@ export const businessTableColumns = (onViewDetails: (businessId: number) => void
       };
       const config = status ? statusConfig[status as keyof typeof statusConfig] ||
         { label: status, color: "bg-gray-100 text-gray-800" } :
-        { label: "None", color: "bg-gray-100 text-gray-600" };
+        { label: "None", color: "bg-gray-100 text-gray-600" }; 
 
       return (
         <span className={`px-3 py-1 rounded-full text-xs font-medium ${config.color}`}>

@@ -28,7 +28,7 @@ export const TicketModal = ({
         <Modal
             show={!!ticket}
             onClose={onClose}
-            size="md"
+            size="lg"
         >
             <div className="flex flex-col space-y-6">
                 <div className="border-b pb-4">
@@ -38,10 +38,10 @@ export const TicketModal = ({
                                 {ticket?.users?.full_name?.charAt(0).toUpperCase()}
                             </div>
                             <div>
-                                <h3 className="text-lg font-semibold text-gray-900">
+                                <h3 className="text-sm md:text-lg font-semibold text-gray-900">
                                     {ticket.subject}
                                 </h3>
-                                <div className="flex items-center gap-2 text-sm text-gray-500">
+                                <div className="flex items-center gap-2 text-xs md:text-sm text-gray-500">
                                     <span>{ticket?.users?.full_name}</span>
                                     <span>•</span>
                                     <span>{ticket?.users.email}</span>
@@ -57,20 +57,20 @@ export const TicketModal = ({
                             {ticket.status}
                         </span>
                     </div>
-                    <div className="text-sm text-gray-500">
+                    <div className=" text-xs md:text-sm text-gray-500">
                         Submitted on {format(new Date(ticket.created_at), "MMMM d, yyyy 'at' h:mm a")}
                     </div>
                 </div>
 
                 <div className="bg-gray-50 p-4 rounded-lg">
-                    <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">
+                    <p className=" text-xs md:text-sm text-gray-700 whitespace-pre-wrap leading-relaxed">
                         {ticket.message}
                     </p>
                 </div>
 
                 {role_id === 1 && (
                     <div className="border-t pt-6 space-y-4">
-                        <h4 className="font-semibold text-gray-900">Respond to Ticket</h4>
+                        <h4 className="text-sm md:text-base font-semibold text-gray-900">Respond to Ticket</h4>
                         <div className="flex gap-3 border border-border rounded-2xl p-4 transition-colors focus-within:ring-1 focus-within:ring-primary-base bg-white">
                             <div className="mt-1">
                                 <SvgIcon
@@ -83,16 +83,16 @@ export const TicketModal = ({
                             <textarea
                                 value={respondMessage}
                                 onChange={(e) => setRespondMessage(e.target.value)}
-                                rows={4}
+                                rows={5}
                                 placeholder="Write your response here..."
-                                className="w-full outline-none bg-transparent resize-none text-base text-foreground placeholder:text-sm placeholder:text-muted-foreground"
+                                className="w-full outline-none bg-transparent resize-none text-sm md:text-base text-foreground placeholder:text-sm placeholder:text-muted-foreground"
                             />
                         </div>
                         <div className="flex justify-end">
                             <Button
                                 onClick={handleRespond}
                                 disabled={isResponding || !respondMessage.trim()}
-                                className="bg-primary-base text-white hover:bg-primary-base/90 px-8 py-2.5 rounded-xl flex items-center gap-2"
+                                className="bg-primary-base text-white hover:bg-primary-base/90 px-8 py-2.5 rounded-lg flex items-center gap-2"
                             >
                                 {isResponding ? (
                                     <>
@@ -103,11 +103,11 @@ export const TicketModal = ({
                                     <>
                                         <SvgIcon
                                             name="send"
-                                            width={18}
-                                            height={18}
+                                            width={16}
+                                            height={16}
                                             fill="white"
                                         />
-                                        <span>Send Response</span>
+                                        <span className=" text-sm">Send Response</span>
                                     </>
                                 )}
                             </Button>
