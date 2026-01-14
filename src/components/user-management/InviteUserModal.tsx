@@ -14,7 +14,7 @@ import type { ApiError } from "@/types";
 interface InviteUserModalProps {
     show: boolean;
     onClose: () => void;
-    onInvite: (email: string) => Promise<boolean>;
+    onInvite: (email: string) => Promise<boolean>;   
 }
 
 export const InviteUserModal = ({ show, onClose, onInvite }: InviteUserModalProps) => {

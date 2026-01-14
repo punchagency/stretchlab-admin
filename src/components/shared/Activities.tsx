@@ -5,17 +5,19 @@ import {
   FileText,
   BarChart3,
   RefreshCcw,
+  Timer,
 } from 'lucide-react';
 import { Button, Input } from "@/components/shared";
 import { ActivitiesSkeleton, DataSection } from "./index";
 import type { ActivitiesData } from "@/types";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface ActivitiesProps {
   data: ActivitiesData | undefined;
   isLoading: boolean;
   error: any;
-  onRetry: () => void; 
+  onRetry: () => void;
 }
 
 const Activities: React.FC<ActivitiesProps> = ({ data, isLoading, error, onRetry }) => {
@@ -24,7 +26,7 @@ const Activities: React.FC<ActivitiesProps> = ({ data, isLoading, error, onRetry
   const [flexologistSubmittedPage, setFlexologistSubmittedPage] = useState(0);
   const [locationSubmittedPage, setLocationSubmittedPage] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
-  
+
   const isMobile = useIsMobile();
   const ITEMS_PER_PAGE = isMobile ? 5 : 10;
 
@@ -36,32 +38,35 @@ const Activities: React.FC<ActivitiesProps> = ({ data, isLoading, error, onRetry
   const filterEntries = (entries: [string, number][]) => {
     if (!entries || !Array.isArray(entries)) return [];
     if (!searchQuery.trim()) return entries;
-    
-    return entries.filter(([name]) => 
+
+    return entries.filter(([name]) =>
       name && typeof name === 'string' && name.toLowerCase().includes(searchQuery.toLowerCase())
     );
   };
 
-  const flexologistEntries = useMemo(() => 
-    data?.notes_analysed_per_flexologist ? filterEntries(sortEntries(data.notes_analysed_per_flexologist)) : [], 
+  const flexologistEntries = useMemo(() =>
+    data?.notes_analysed_per_flexologist ? filterEntries(sortEntries(data.notes_analysed_per_flexologist)) : [],
     [data?.notes_analysed_per_flexologist, searchQuery]
   );
-  
-  const locationEntries = useMemo(() => 
-    data?.notes_analysed_per_location ? filterEntries(sortEntries(data.notes_analysed_per_location)) : [], 
+
+  const locationEntries = useMemo(() =>
+    data?.notes_analysed_per_location ? filterEntries(sortEntries(data.notes_analysed_per_location)) : [],
     [data?.notes_analysed_per_location, searchQuery]
   );
-  
-  const flexologistSubmittedEntries = useMemo(() => 
-    data?.notes_submitted_per_flexologist ? filterEntries(sortEntries(data.notes_submitted_per_flexologist)) : [], 
+
+  const flexologistSubmittedEntries = useMemo(() =>
+    data?.notes_submitted_per_flexologist ? filterEntries(sortEntries(data.notes_submitted_per_flexologist)) : [],
     [data?.notes_submitted_per_flexologist, searchQuery]
   );
-  
-  const locationSubmittedEntries = useMemo(() => 
-    data?.notes_submitted_per_location ? filterEntries(sortEntries(data.notes_submitted_per_location)) : [], 
+
+  const locationSubmittedEntries = useMemo(() =>
+    data?.notes_submitted_per_location ? filterEntries(sortEntries(data.notes_submitted_per_location)) : [],
     [data?.notes_submitted_per_location, searchQuery]
   );
 
+  const minutes = data?.time_saved_minutes ?? 0;
+  const hours = Math.floor(minutes / 60);
+  const remainingMinutes = minutes % 60;
   React.useEffect(() => {
     setFlexologistPage(0);
     setLocationPage(0);
@@ -117,16 +122,45 @@ const Activities: React.FC<ActivitiesProps> = ({ data, isLoading, error, onRetry
         )}
       </div>
 
-      <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm">
-        <div className="flex items-center mb-2">
-          <BarChart3 className="w-5 h-5 text-gray-600 mr-2" />
-          <h3 className="text-sm font-medium text-gray-900">Total Analyzed</h3>
+      <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm flex gap-20">
+        <div className="">
+          <div className="flex items-center mb-2">
+            <BarChart3 className="w-5 h-5 text-gray-600 mr-2" />
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <h3 className="text-sm font-medium text-gray-900 cursor-help">Total Analyzed</h3>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Bookings analyzed since starting to use StretchNote</p>
+              </TooltipContent>
+            </Tooltip>
+          </div>
+          <p className="text-2xl font-bold text-gray-800">
+            {(data.total_analysed_bookings ?? 0).toLocaleString()}
+          </p>
+          <p className="text-xs text-gray-600 mt-1">Total Analysed Bookings</p>
         </div>
-        <p className="text-2xl font-bold text-gray-800">
-          {(data.total_analysed_bookings ?? 0).toLocaleString()}
-        </p>
-        <p className="text-xs text-gray-600 mt-1">Total Analysed Bookings</p>
+
+        <div className="">
+          <div className="flex items-center mb-2">
+            <Timer className="w-5 h-5 text-gray-600 mr-2" />
+            <Tooltip >
+              <TooltipTrigger asChild>
+                <h3 className="text-sm font-medium text-gray-900 cursor-help">Time Saved</h3>
+              </TooltipTrigger>
+              <TooltipContent className='max-w-[300px]'>
+                <p>This is the time your management team has been able to reallocate elsewhere to focus on higher value activities (i.e. staff coaching & development, sales, member retention, etc). Less busy work is greater job satisfaction and lower rate of burnout.</p>
+              </TooltipContent>
+            </Tooltip>
+          </div>
+          <p className="text-2xl font-bold text-gray-800">
+            {hours > 0 ? `${hours}h ` : ""}
+            {remainingMinutes}m
+          </p>
+          <p className="text-xs text-gray-600 mt-1">Time saved by using StrethNote</p>
+        </div>
       </div>
+
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
         <DataSection
@@ -158,7 +192,7 @@ const Activities: React.FC<ActivitiesProps> = ({ data, isLoading, error, onRetry
           <h3 className="text-sm font-medium text-gray-900">Notes with App</h3>
         </div>
         <p className="text-2xl font-bold text-gray-800">
-          {(data.notes_submitted_with_app ?? 0).toLocaleString()} 
+          {(data.notes_submitted_with_app ?? 0).toLocaleString()}
         </p>
         <p className="text-xs text-gray-600 mt-1">Submitted via app</p>
       </div>

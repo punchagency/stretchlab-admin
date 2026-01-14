@@ -15,7 +15,7 @@ export const useBusinessDetail = () => {
   } = useQuery<BusinessInfoResponse>({
     queryKey: ['businessInfo', selectedBusinessId],
     queryFn: () => getBusinessInfo(selectedBusinessId!),
-    enabled: !!selectedBusinessId,
+    enabled: !!selectedBusinessId,  
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: true,
   });

@@ -6,6 +6,7 @@ import {
     updateManagerAccess,
     grantOrRevokePermission,
 } from "@/service/user";
+import { updateUserStatus } from "@/service/notetaking";
 import {
     renderErrorToast,
     renderSuccessToast,
@@ -30,6 +31,7 @@ export const useUserManagement = () => {
     const [isPermissionLoading, setIsPermissionLoading] = useState<Set<string>>(
         new Set()
     );
+    const [isUpdatingFlex, setIsUpdatingFlex] = useState("");
 
     // Location modal state
     const [showLocationModal, setShowLocationModal] = useState(false);
@@ -37,6 +39,12 @@ export const useUserManagement = () => {
         userId: number;
         permissionTag: string;
         addPermission: boolean;
+    } | null>(null);
+
+    const [showFlexConfirmation, setShowFlexConfirmation] = useState(false);
+    const [pendingFlexAction, setPendingFlexAction] = useState<{
+        email: string;
+        status: boolean;
     } | null>(null);
 
     const resendInvite = async (email: string, onSuccess?: () => void) => {
@@ -165,6 +173,34 @@ export const useUserManagement = () => {
         }
     };
 
+    const handleFlexAccess = async (email: string, status: boolean) => {
+        setPendingFlexAction({ email, status });
+        setShowFlexConfirmation(true);
+    };
+
+    const confirmUpdateFlex = async () => {
+        if (!pendingFlexAction) return;
+        const { email, status } = pendingFlexAction;
+
+        setIsUpdatingFlex(email);
+        try {
+            const response = await updateUserStatus(email, status, "manager");
+            if (response.status === 200) {
+                renderSuccessToast(response.data.message);
+                refetch();
+            }
+        } catch (error) {
+            const apiError = error as ApiError;
+            renderErrorToast(
+                apiError.response?.data?.message || "Error updating flex access"
+            );
+        } finally {
+            setIsUpdatingFlex("");
+            setShowFlexConfirmation(false);
+            setPendingFlexAction(null);
+        }
+    };
+
     const sendInvite = async (email: string) => {
         const response = await inviteManager(email);
         if (response.status === 200) {
@@ -193,5 +229,11 @@ export const useUserManagement = () => {
         setPendingPermission,
         handleLocationConfirm,
         sendInvite,
+        handleFlexAccess,
+        isUpdatingFlex,
+        showFlexConfirmation,
+        setShowFlexConfirmation,
+        pendingFlexAction,
+        confirmUpdateFlex,
     };
 };

@@ -17,6 +17,7 @@ export * from "./NavUser";
 export * from "./NotificationDropdown";
 export * from "./OTPInputComponent";
 export * from "./RechartsBarChart";
+export * from "./RechartsLineChart";
 export * from "./Sidebar";
 export * from "./SideMenuList";
 export * from "./Spinner";

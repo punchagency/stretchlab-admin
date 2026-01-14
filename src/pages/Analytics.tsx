@@ -2,12 +2,14 @@ import { FilterDropdown, DateRangeFilter, Button } from '../components/shared';
 import { OpportunityBarChart, RankingBarChart, Drilldown, MetricsDisplay } from '../components/analytics';
 import { useAnalytics } from '@/hooks/useAnalytics';
 import { RefreshCcw } from 'lucide-react';
+import { useNavigate } from "react-router";
 import { DataTable } from '@/components/datatable';
 import { getLocationTableColumns } from '@/components/analytics';
 import { TableSkeleton } from '@/components/shared';
 
 
 export const Analytics = () => {
+  const navigate = useNavigate();
   const {
     selectedFilters,
     filterOptions,
@@ -17,7 +19,7 @@ export const Analytics = () => {
     drilldownData,
     rankingData,
     rpaAuditData,
-    isFiltersLoading, 
+    isFiltersLoading,
     isRPAAuditLoading,
     isRPAAuditDetailsLoading,
     isRankingLoading,
@@ -173,6 +175,11 @@ export const Analytics = () => {
                       isLoading={isRPAAuditDetailsLoading || isRPAAuditLoading}
                       hasInitialData={!!rpaAuditData}
                       onLocationClick={handleDrilldownLocationClick}
+                      onFlexologistClick={(name) => {
+                        const params = new URLSearchParams();
+                        params.set("flex", name);
+                        navigate(`/robot-automation?${params.toString()}`);
+                      }}
                       activeLocation={selectedFilters.location}
                       onClearLocation={clearLocationFilter}
                     />
