@@ -10,6 +10,7 @@ import { Loader2 } from "lucide-react";
 import { DateRangeFilter } from "../shared/DateRangeFilter";
 import type { DurationOption } from "@/types/dashboard";
 import { AnimatePresence, motion } from "framer-motion";
+import { useSearchParams } from "react-router";
 
 
 const userColumns: ColumnDef<RobotHistoryType>[] = [
@@ -162,10 +163,16 @@ const unloggedColumns: ColumnDef<RobotHistoryType>[] = [
 ];
 
 export const RobotHistory = ({ configId }: { configId: number }) => {
+  const [searchParams] = useSearchParams();
+  const flexologistSearch = searchParams.get("flex") || "";
+  const initialRange = searchParams.get("range") || "yesterday";
+  const initialStart = searchParams.get("start") || "";
+  const initialEnd = searchParams.get("end") || "";
+
   const [showModal, setShowModal] = useState(false);
-  const [selectedRange, setSelectedRange] = useState("yesterday");
-  const [customStartDate, setCustomStartDate] = useState("");
-  const [customEndDate, setCustomEndDate] = useState("");
+  const [selectedRange, setSelectedRange] = useState(initialRange);
+  const [customStartDate, setCustomStartDate] = useState(initialStart);
+  const [customEndDate, setCustomEndDate] = useState(initialEnd);
   const [bookingId, setBookingId] = useState<number | null>(null);
   const [viewMode, setViewMode] = useState<
     "noteAutomation" | "unloggedBookings"
@@ -301,7 +308,7 @@ export const RobotHistory = ({ configId }: { configId: number }) => {
                 Fetching data...
               </motion.div>
             </AnimatePresence>
-          )}          
+          )}
           {viewMode === "noteAutomation" ? (
             <DataTable
               columns={userColumns}
@@ -315,7 +322,7 @@ export const RobotHistory = ({ configId }: { configId: number }) => {
               opportunityOptions={opportunities}
               selectedOpportunities={selectedOpportunities}
               onOpportunityChange={setSelectedOpportunities}
-
+              initialGlobalFilter={flexologistSearch}
             />
           ) : (
             <DataTable

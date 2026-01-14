@@ -21,11 +21,11 @@ export const updateUserAccess = async (email: string, status: number) => {
   return response;
 };
 
-export const updateUserStatus = async (email: string, restrict: boolean) => {
+export const updateUserStatus = async (email: string, status: boolean, position: string = "flexologist") => {
   const response = await api.post("/admin/settings/update-permissions", {
     email,
-    position: "flexologist",
-    status: restrict,
+    position,
+    status,
   });
   return response;
 };

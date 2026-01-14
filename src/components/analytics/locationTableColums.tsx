@@ -1,13 +1,13 @@
 import { type ColumnDef } from "@tanstack/react-table";
-import type { LocationAnalyticsItem, } from "@/types";
+import type { LocationAnalyticsItem } from "@/types";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-
+import { RatingTooltipContent } from "./RatingTooltipContent";
 
 const getDescription = (dataSet: string | undefined) => {
     switch (dataSet) {
         case "% App Submissions":
             return {
-                valueColumn: "Average Note Quality %",
+                valueColumn: "Average Note Rating %",
                 totalColumn: "Total Flexologist Appointment",
                 hoveredValueText: "% of Appointment Submitted with the App",
             }
@@ -44,7 +44,7 @@ interface LocationTableColumnsProps {
 export const getLocationTableColumns = (props?: LocationTableColumnsProps): ColumnDef<LocationAnalyticsItem>[] => {
     const { metric, selectedLocation } = props || {};
     const { valueColumn, totalColumn, hoveredValueText } = getDescription(metric);
-    
+
     const columns: ColumnDef<LocationAnalyticsItem>[] = [
         {
             accessorKey: "name",
@@ -58,7 +58,21 @@ export const getLocationTableColumns = (props?: LocationTableColumnsProps): Colu
         },
         {
             accessorKey: "value",
-            header: valueColumn,
+            header: () => {
+                if (valueColumn === "Average Note Rating %") {
+                    return (
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <span className="cursor-help ">{valueColumn}</span>
+                            </TooltipTrigger>
+                            <TooltipContent className="max-w-none">
+                                <RatingTooltipContent />
+                            </TooltipContent>
+                        </Tooltip>
+                    );
+                }
+                return valueColumn;
+            },
             cell: ({ row }) => {
                 const value = row.getValue("value") as number;
 

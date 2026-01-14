@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getChartData, getUserTableData, getDashboardMetrics, getBusinessTableData, getActivitiesData } from "@/service/dashboard";
+import { fetchLocations } from "@/service/user";
 import { getChartFilters } from "@/service/analytics";
 import type {
   ChartFiltersResponse,
@@ -12,8 +13,13 @@ import type {
   ActivitiesResponse,
   FilterState,
   FilterOptions,
-  MetricCardData 
+  MetricCardData
 } from "@/types";
+
+interface LocationsResponse {
+  locations: string[];
+  status: string;
+}
 import { getUserInfo } from "@/utils";
 
 export const useDashboard = () => {
@@ -29,6 +35,7 @@ export const useDashboard = () => {
 
   const [myTeamDuration, setMyTeamDuration] = useState("yesterday");
   const [myTeamCustomRange, setMyTeamCustomRange] = useState<{ start: string; end: string } | null>(null);
+  const [comparisonSelections, setComparisonSelections] = useState<string[]>([]);
 
   const {
     data: dashboardMetricsData,
@@ -90,7 +97,19 @@ export const useDashboard = () => {
     queryKey: ['activitiesData'],
     queryFn: getActivitiesData,
     refetchOnWindowFocus: "always",
-    
+
+  });
+
+  const {
+    data: locationsData,
+  } = useQuery<LocationsResponse>({
+    queryKey: ['locations'],
+    queryFn: async () => {
+      const response = await fetchLocations();
+      return response.data;
+    },
+    refetchOnWindowFocus: false,
+    staleTime: Infinity,
   });
 
   const processFilterOptions = () => {
@@ -151,7 +170,7 @@ export const useDashboard = () => {
     if (!selectedFilters.dataset) return null;
 
     let datasetValue = filtersMap.datasetMap.get(selectedFilters.dataset) || selectedFilters.dataset;
-        if (selectedFilters.dataset === "Avg Note Quality %" && selectedFilters.filterMetric) {
+    if (selectedFilters.dataset === "Avg Note Quality %" && selectedFilters.filterMetric) {
       datasetValue = `${datasetValue}${selectedFilters.filterMetric}`;
     }
 
@@ -218,6 +237,7 @@ export const useDashboard = () => {
         // buttonText: "See Sessions",
         buttonVariant: "primary",
         showCurrency: false,
+        tooltip: "Bookings in the last 30-days and % change vs. the prior period",
       },
       // {
       //   title: "Security Incidents",
@@ -239,7 +259,7 @@ export const useDashboard = () => {
       .filter(value => typeof value === 'number' && !isNaN(value) && value >= 0);
 
     if (validValues.length === 0) return 100;
-     
+
     const maxValue = Math.max(...validValues);
     if (maxValue === 0) return 100;
 
@@ -257,6 +277,11 @@ export const useDashboard = () => {
       ...prev,
       [filterKey]: value
     }));
+
+    // Clear comparison selections when switching filterBy or selecting specific location/flexologist
+    if (filterKey === 'filterBy' || filterKey === 'location' || filterKey === 'flexologist') {
+      setComparisonSelections([]);
+    }
   };
 
   const handleCustomRangeChange = (start: string, end: string) => {
@@ -272,6 +297,10 @@ export const useDashboard = () => {
 
   const handleMyTeamCustomRangeChange = (start: string, end: string) => {
     setMyTeamCustomRange({ start, end });
+  };
+
+  const handleComparisonChange = (selections: string[]) => {
+    setComparisonSelections(selections);
   };
 
   // const generateChartData = (): ChartDataPoint[] => {
@@ -339,5 +368,10 @@ export const useDashboard = () => {
     retryUserTable: refetchUserTable,
     retryBusinessTable: refetchBusinessTable,
     retryActivities: refetchActivities,
+    locations: locationsData?.locations || [],
+    comparisonSelections,
+    handleComparisonChange,
+    shouldShowComparison: (selectedFilters.filterBy === "Location" && selectedFilters.location === "All") ||
+      (selectedFilters.filterBy === "Flexologist" && selectedFilters.flexologist === "All"),
   };
-}; 
+};

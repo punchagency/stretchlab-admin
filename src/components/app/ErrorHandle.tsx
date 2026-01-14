@@ -14,5 +14,5 @@ export const ErrorHandle = ({ retry }: { retry: () => void }) => {
         Retry
       </Button>
     </div>    
-  );
+  );   
 };
