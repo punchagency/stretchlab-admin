@@ -73,7 +73,7 @@ export interface DashboardMetricsResponse {
   data: {
     balance_info: BalanceInfo;
     bookings_info: BookingsInfo;
-    subscriptions_info : SubscriptionInfo;
+    subscriptions_info: SubscriptionInfo;
   };
   status: string;
 }
@@ -129,6 +129,7 @@ export interface MetricCardData {
   buttonText?: string;
   buttonVariant: "primary" | "secondary" | "success" | "warning";
   showCurrency: boolean;
+  tooltip?: string;
 }
 
 export interface BusinessData {
@@ -201,6 +202,7 @@ export interface ActivitiesData {
   total_analysed_bookings: number;
   notes_submitted_per_flexologist: Record<string, number>;
   notes_submitted_per_location: Record<string, number>;
+  time_saved_minutes: number;
 }
 
 export interface ActivitiesResponse {
@@ -208,4 +210,3 @@ export interface ActivitiesResponse {
   status: string;
 }
 
- 

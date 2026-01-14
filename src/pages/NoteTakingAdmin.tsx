@@ -91,7 +91,7 @@ export const NoteTakingAdmin = () => {
 
   // Clear selected users
   const clearSelectedUsers = () => {
-    setSelectedUsers([]); 
+    setSelectedUsers([]);
   };
 
   const getTooltipDescription = (status: number) => {
@@ -252,18 +252,18 @@ export const NoteTakingAdmin = () => {
     {
       accessorKey: "full_name",
       header: "Name",
-      cell: ({ row }) => {    
-       
+      cell: ({ row }) => {
+
         const name = row.getValue("full_name") as string;
-        const decodedName =  name ? decodeURIComponent(name) : "";
+        const decodedName = name ? decodeURIComponent(name) : "";
         const locations = row.original.locations?.list ?? [];
-      
+
         // Find the index of the active location
         const activeLocationIndex =
           locations.findIndex((l) => l.active && !l.primary) !== -1
             ? locations.findIndex((l) => l.active && !l.primary)
             : locations.findIndex((l) => l.active && l.primary);
-      
+
         return (
           <Tooltip>
             <TooltipTrigger>
@@ -276,7 +276,7 @@ export const NoteTakingAdmin = () => {
                 <div className="space-y-1">
                   {locations.map((loc, idx) => {
                     const isActive = idx === activeLocationIndex;
-      
+
                     return (
                       <div key={`${loc.name}-${idx}`} className="flex items-center gap-2">
                         <span className="text-white/90 capitalize">{loc.name}</span>
@@ -298,7 +298,7 @@ export const NoteTakingAdmin = () => {
             </TooltipContent>
           </Tooltip>
         );
-      },      
+      },
     },
     {
       accessorKey: "email",
@@ -566,7 +566,7 @@ export const NoteTakingAdmin = () => {
         const user = row.original as any;
         const status = user.status as number;
         const id = user.id as number;
-        const disabled = status !== 3 || isDeleting === email;
+        const disabled = (status !== 3 && status !== 5) || isDeleting === email;
         return (
           <Tooltip>
             <TooltipTrigger asChild>

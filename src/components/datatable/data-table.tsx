@@ -62,6 +62,7 @@ interface DataTableProps<TData extends { id: number | string }, TValue> {
   opportunityOptions?: string[];
   selectedOpportunities?: string[];
   onOpportunityChange?: (values: string[]) => void;
+  initialGlobalFilter?: string;
 }
 
 export function DataTable<TData extends { id: number | string }, TValue>({
@@ -89,13 +90,14 @@ export function DataTable<TData extends { id: number | string }, TValue>({
   durationOptions = [],
   opportunityOptions,
   selectedOpportunities,
-  onOpportunityChange
+  onOpportunityChange,
+  initialGlobalFilter
 
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const [globalFilter, setGlobalFilter] = useState("");
+  const [globalFilter, setGlobalFilter] = useState(initialGlobalFilter || "");
   const userInfo = getUserInfo();
   const customGlobalFilterFn = (row: any, _columnId: string, filterValue: string) => {
     if (!filterValue) return true;

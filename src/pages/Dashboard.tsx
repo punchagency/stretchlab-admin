@@ -1,4 +1,4 @@
-import { MetricCard, RechartsBarChart, FilterDropdown, DateRangeFilter, MetricCardsSkeleton, BusinessDetailModal, Button, TableSkeleton, Activities } from "@/components/shared";
+import { MetricCard, RechartsLineChart, FilterDropdown, MultiSelectDropdown, DateRangeFilter, MetricCardsSkeleton, BusinessDetailModal, Button, TableSkeleton, Activities } from "@/components/shared";
 import { DataTable, userTableColumns, businessTableColumns } from "@/components/datatable";
 import { ChartSkeleton } from "@/components/shared/ChartSkeleton";
 import { useDashboard } from "@/hooks/useDashboard";
@@ -48,6 +48,10 @@ export const Dashboard = () => {
     retryUserTable,
     retryBusinessTable,
     retryActivities,
+    locations,
+    comparisonSelections,
+    handleComparisonChange,
+    shouldShowComparison,
   } = useDashboard();
 
   const {
@@ -62,6 +66,11 @@ export const Dashboard = () => {
   const handleMetricClick = (title: string) => {
     console.log(`Clicked on ${title}`);
   };
+
+  // Filter locations based on comparison selections
+  const filteredLocations = comparisonSelections.length > 0
+    ? locations.filter(loc => comparisonSelections.includes(loc))
+    : locations;
   return (
     <div className="min-h-screen bg-white">
       <div className="">
@@ -95,6 +104,7 @@ export const Dashboard = () => {
                     buttonText={metric.buttonText}
                     buttonVariant={metric.buttonVariant}
                     showCurrency={metric.showCurrency}
+                    tooltip={metric.tooltip}
                     onButtonClick={() => handleMetricClick(metric.title)}
                   />
 
@@ -119,7 +129,7 @@ export const Dashboard = () => {
 
 
           {userInfo?.role_id !== undefined &&
-             [1, 2, 4, 8].includes(userInfo.role_id) && (
+            [1, 2, 4, 8].includes(userInfo.role_id) && (
               <div className="py-4 px-3 sm:px-4 bg-[#F5F5F5] rounded-lg shadow-md">
                 <h2 className="text-base font-semibold text-gray-900 mb-4">
                   Activities
@@ -214,7 +224,20 @@ export const Dashboard = () => {
                       onChange={(value) => handleFilterChange('filterMetric', value)}
                       className="flex-1"
                     />}
+
                   </div>
+                  {shouldShowComparison && (
+                    <MultiSelectDropdown
+                      label={selectedFilters.filterBy === "Location" ? "Compare Locations" : "Compare Flexologists"}
+                      options={selectedFilters.filterBy === "Location" ? filterOptions.location.filter(l => l !== "All") : filterOptions.flexologist.filter(f => f !== "All")}
+                      selectedValues={comparisonSelections}
+                      onMultiChange={handleComparisonChange}
+                      className="w-[250px]"
+                      // showSearch={true}
+                      multiSelect={true}
+                      placeholder={`Select to compare`}
+                    />
+                  )}
                   <div className="p-1 relative">
                     {isChartLoading && (
                       <ChartSkeleton />
@@ -233,18 +256,19 @@ export const Dashboard = () => {
                     )}
 
                     {!chartError && !isChartLoading && (
-                      <>
+                      <div className="mt-4">
 
-                        <RechartsBarChart
+                        <RechartsLineChart
                           data={chartData}
+                          locations={filteredLocations}
                           title=""
                           maxValue={maxValue}
                           dataSet={selectedFilters.dataset}
                         />
-                      </>
+                      </div>
 
                     )}
-                  </div> 
+                  </div>
                 </>
               )}
             </div>

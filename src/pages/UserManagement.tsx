@@ -2,6 +2,7 @@ import {
   Button as Button2,
   ContainLoader,
   SvgIcon,
+  Modal,
 } from "@/components/shared";
 import { DataTable } from "@/components/datatable";
 import { ErrorHandle } from "@/components/app";
@@ -31,6 +32,12 @@ export const UserManagement = () => {
     setPendingPermission,
     handleLocationConfirm,
     sendInvite,
+    handleFlexAccess,
+    isUpdatingFlex,
+    showFlexConfirmation,
+    setShowFlexConfirmation,
+    pendingFlexAction,
+    confirmUpdateFlex,
   } = useUserManagement();
 
   const [showInviteModal, setShowInviteModal] = useState(false);
@@ -57,6 +64,8 @@ export const UserManagement = () => {
     handlePermissionChange,
     setPendingPermission,
     setShowLocationModal,
+    handleFlexAccess,
+    isUpdatingFlex,
   });
 
   return (
@@ -124,6 +133,28 @@ export const UserManagement = () => {
             : []
         }
       />
+
+      <Modal show={showFlexConfirmation} onClose={() => setShowFlexConfirmation(false)} size="sm">
+        <div className="flex flex-col gap-4 py-4 px-2 md:px-6">
+          <h1 className="text-lg md:text-xl font-semibold text-center mb-2">Confirm Flex Access Change</h1>
+          <p className="text-gray-600 text-center mb-4">
+            Are you sure you want to {pendingFlexAction?.status ? "give" : "restrict"} flex access for{" "}
+            <span className="font-semibold">{pendingFlexAction?.email}</span>?
+          </p>
+          <div className="flex gap-3 justify-center">
+            <Button2 onClick={() => setShowFlexConfirmation(false)} className="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-lg">
+              Cancel
+            </Button2>
+            <Button2
+              onClick={confirmUpdateFlex}
+              disabled={isUpdatingFlex === pendingFlexAction?.email}
+              className={`px-6 py-2 rounded-lg text-white ${pendingFlexAction?.status ? "bg-primary-base hover:bg-primary-base/80" : "bg-red-500 hover:bg-red-600"}`}
+            >
+              {isUpdatingFlex === pendingFlexAction?.email ? "Updating..." : pendingFlexAction?.status ? "Give Access" : "Restrict"}
+            </Button2>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };

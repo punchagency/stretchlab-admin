@@ -1,5 +1,7 @@
+import { Fragment } from "react";
 import type { BookingType } from "@/types/shared";
-import { Fragment } from "react/jsx-runtime";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { RubricTooltipContent } from "./RubricTooltipContent";
 
 export const HistoryInformation = ({
   data,
@@ -127,9 +129,23 @@ export const HistoryInformation = ({
               </p>
             </div>
             <div>
-              <h3 className="text-[#344054] font-semibold text-lg">
-                Session Notes Rubric Score
-              </h3>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <h3 className="text-[#344054] font-semibold text-lg cursor-help">
+                    Session Notes Rubric Score
+                  </h3>
+                </TooltipTrigger>
+                <TooltipContent className="max-w-[200px]">
+                  <RubricTooltipContent
+                    isFirstTimer={data?.first_timer?.toLowerCase() === "yes"}
+                    opportunities={
+                      data?.note_oppurtunities && data?.note_oppurtunities !== "N/A"
+                        ? JSON.parse(data.note_oppurtunities as string)
+                        : []
+                    }
+                  />
+                </TooltipContent>
+              </Tooltip>
               <p className="text-dark-1 text-base">
                 {data?.session_notes_rubric}
               </p>
@@ -142,7 +158,7 @@ export const HistoryInformation = ({
                 {data?.missed_sale_follow_up_rubric}
               </p>
             </div>
-          </div> 
+          </div>
         </div>
       </div>
       <div className="mt-6 md:mt-10 border border-grey-3 rounded-xl md:rounded-3xl p-2 md:p-7">

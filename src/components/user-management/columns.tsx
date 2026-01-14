@@ -17,6 +17,7 @@ export interface Manager {
     invited_at: string;
     permissions: any[];
     excluded_locations?: string[];
+    role_id?: number;
 }
 
 interface UserColumnsProps {
@@ -33,6 +34,8 @@ interface UserColumnsProps {
     ) => void;
     setPendingPermission: (value: any) => void;
     setShowLocationModal: (value: boolean) => void;
+    handleFlexAccess: (email: string, status: boolean) => void;
+    isUpdatingFlex: string;
 }
 
 export const getUserColumns = ({
@@ -45,6 +48,8 @@ export const getUserColumns = ({
     handlePermissionChange,
     setPendingPermission,
     setShowLocationModal,
+    handleFlexAccess,
+    isUpdatingFlex,
 }: UserColumnsProps): ColumnDef<Manager>[] => [
         {
             accessorKey: "full_name",
@@ -153,6 +158,34 @@ export const getUserColumns = ({
                     >
                         <SvgIcon name="email-send" fill="#98A2B3" />
                         {!status ? "Send Invite" : "Resend"}
+                    </Button>
+                );
+            },
+        },
+        {
+            id: "flex_access",
+            header: "Flex Access",
+            cell: ({ row }) => {
+                const email = row.original.email;
+                const role_id = row.original.role_id;
+                const status = row.original.status;
+                const hasFlexAccess = role_id === 8;
+
+                return (
+                    <Button
+                        onClick={() => handleFlexAccess(email, !hasFlexAccess)}
+                        className={`cursor-pointer w-32 ${hasFlexAccess
+                            ? "bg-red-500 text-white hover:bg-red-600 transition-all duration-300 border-red-500 hover:text-white"
+                            : "bg-primary-base text-white hover:bg-primary-base/80 transition-all duration-300 border-primary-base hover:text-white"
+                            }`}
+                        variant="outline"
+                        disabled={status !== 1 || isUpdatingFlex === email}
+                    >
+                        {isUpdatingFlex === email
+                            ? "Updating..."
+                            : hasFlexAccess
+                                ? "Restrict"
+                                : "Grant"}
                     </Button>
                 );
             },
@@ -269,4 +302,5 @@ export const getUserColumns = ({
                 );
             },
         },
+
     ];

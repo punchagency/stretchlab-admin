@@ -1,4 +1,6 @@
 import React from 'react';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { RatingTooltipContent } from './RatingTooltipContent';
 
 interface MetricsDisplayProps {
   totalNotes: number;
@@ -9,6 +11,16 @@ interface MetricsDisplayProps {
   isLoading: boolean;
 }
 
+interface Metric {
+  title: string;
+  value: string;
+  subtitle: string;
+  color: string;
+  percentage?: number;
+  showPercentage?: boolean;
+  tooltip?: React.ReactNode;
+}
+
 export const MetricsDisplay: React.FC<MetricsDisplayProps> = ({
   totalNotes,
   totalNotesWithOpportunities,
@@ -16,7 +28,7 @@ export const MetricsDisplay: React.FC<MetricsDisplayProps> = ({
   totalNotesWithOpportunitiesPercentage,
   totalQualityNotesPercentage,
   isLoading
-}) => {  
+}) => {
   if (isLoading) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
@@ -30,7 +42,7 @@ export const MetricsDisplay: React.FC<MetricsDisplayProps> = ({
     );
   }
 
-  const metrics = [
+  const metrics: Metric[] = [
     {
       title: "Total",
       value: totalNotes.toLocaleString(),
@@ -50,7 +62,8 @@ export const MetricsDisplay: React.FC<MetricsDisplayProps> = ({
       value: totalQualityNotes.toLocaleString(),
       percentage: totalQualityNotesPercentage,
       subtitle: "Average appointment rating (%)",
-      color: "bg-green-50 border-green-200"
+      color: "bg-green-50 border-green-200",
+      tooltip: <RatingTooltipContent />
     }
   ];
 
@@ -61,29 +74,69 @@ export const MetricsDisplay: React.FC<MetricsDisplayProps> = ({
           key={index}
           className={`${metric.color} border rounded-lg p-4 shadow-sm`}
         >
-          <h3 className="text-sm font-medium text-gray-600 mb-1">
-            {metric.title}
-          </h3>
-          <p className="text-2xl font-bold text-gray-900">
-            {metric.percentage ? (
-              metric.showPercentage ? (
-                <>
-                  {metric.value}{" "}
-                  <span className="text-xs text-gray-500">/ {Math.round(metric.percentage)}%</span>
-                </>
-              ) : (
-                <span>{Math.round(metric.percentage)}%</span>
-              )
-            ) : (
-              metric.value
-            )}
-          </p>
+          {metric.tooltip ? (
+            <Tooltip>
 
-          <p className="text-xs text-gray-500 mt-1">
-            {metric.subtitle}
-          </p>
+              <div className="cursor-help">
+
+                <h3 className="text-sm font-medium text-gray-600 mb-1">
+                  {metric.title}
+                </h3>
+
+                <p className="text-2xl font-bold text-gray-900">
+                  <TooltipTrigger asChild>
+                    {metric.percentage ? (
+                      metric.showPercentage ? (
+                        <>
+                          {metric.value}{" "}
+                          <span className="text-xs text-gray-500">/ {Math.round(metric.percentage)}%</span>
+                        </>
+                      ) : (
+                        <span>{Math.round(metric.percentage)}%</span>
+                      )
+                    ) : (
+                      metric.value
+                    )}
+                  </TooltipTrigger>
+                </p>
+
+                <p className="text-xs text-gray-500 mt-1">
+                  {metric.subtitle}
+                </p>
+
+              </div>
+
+              <TooltipContent className="max-w-none">
+                {metric.tooltip}
+              </TooltipContent>
+            </Tooltip>
+          ) : (
+            <>
+              <h3 className="text-sm font-medium text-gray-600 mb-1">
+                {metric.title}
+              </h3>
+              <p className="text-2xl font-bold text-gray-900">
+                {metric.percentage ? (
+                  metric.showPercentage ? (
+                    <>
+                      {metric.value}{" "}
+                      <span className="text-xs text-gray-500">/ {Math.round(metric.percentage)}%</span>
+                    </>
+                  ) : (
+                    <span>{Math.round(metric.percentage)}%</span>
+                  )
+                ) : (
+                  metric.value
+                )}
+              </p>
+              <p className="text-xs text-gray-500 mt-1">
+                {metric.subtitle}
+              </p>
+            </>
+          )}
         </div>
-      ))}
-    </div>
+      ))
+      }
+    </div >
   );
-}; 
+};

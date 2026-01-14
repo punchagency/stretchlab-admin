@@ -17,6 +17,7 @@ interface DrilldownProps {
   isLoading: boolean;
   hasInitialData: boolean;
   onLocationClick?: (locationName: string) => void;
+  onFlexologistClick?: (flexologistName: string) => void;
   activeLocation?: string | null;
   onClearLocation?: () => void;
 }
@@ -26,6 +27,7 @@ export const Drilldown: React.FC<DrilldownProps> = ({
   data,
   isLoading,
   onLocationClick,
+  onFlexologistClick,
   activeLocation,
   onClearLocation,
 }) => {
@@ -140,6 +142,7 @@ export const Drilldown: React.FC<DrilldownProps> = ({
     selected,
     text,
     onItemClick,
+    itemType,
     activeLocation,
     onClearLocation,
   }: {
@@ -153,6 +156,7 @@ export const Drilldown: React.FC<DrilldownProps> = ({
     selected: string | null;
     text: string;
     onItemClick?: (name: string) => void;
+    itemType?: 'location' | 'flexologist';
     activeLocation?: string | null;
     onClearLocation?: () => void;
   }) => {
@@ -170,6 +174,27 @@ export const Drilldown: React.FC<DrilldownProps> = ({
     };
 
     const colors = colorClasses[colorScheme];
+
+
+    const getItemStyle = (item: any) => {
+
+      if (!selected) return {};
+      const val = parseFloat(item?.percentage_note_quality?.replace('%', ''));
+      if (isNaN(val)) return {};
+
+      // Calculate intensity in 10% steps for more noticeable differences
+      const step = Math.ceil(val / 10) * 10;
+      const intensity = step / 100;
+
+      if (intensity === 0) return { background: '#fff', borderColor: '#e5e7eb' };
+
+      return {
+        background: `linear-gradient(90deg, #fff 0%, #fff 15%, rgba(239, 68, 68, ${intensity * 0.45}) 100%)`,
+        borderColor: `rgba(239, 68, 68, ${Math.max(intensity * 0.8, 0.3)})`,
+        borderWidth: intensity > 0.5 ? '2px' : '1px',
+        boxShadow: intensity > 0.7 ? `0 0 12px rgba(239, 68, 68, ${intensity * 0.15})` : 'none',
+      };
+    };
 
     return (
       <div className="space-y-3">
@@ -192,27 +217,39 @@ export const Drilldown: React.FC<DrilldownProps> = ({
 
         {items.length > 0 ? (
           <div className="space-y-2">
-            {getPaginatedData(items, currentPage).map((item: any, idx: number) => (
-              <div
-                key={idx}
-                className={`flex justify-between items-center p-3 rounded-lg border transition-colors ${colors.item} ${onItemClick ? 'cursor-pointer' : ''}`}
-                onClick={onItemClick ? () => onItemClick(item.name) : undefined}
-              >
-                <span className="text-sm font-medium text-gray-700 truncate flex-1 mr-3 capitalize">
-                  {item.name}
-                </span>
-                {selected ? <div className='flex items-center gap-2 bg-white px-2 py-1 rounded-md border'>
-                  <span className='text-sm font-bold text-gray-900 '>{item.percentage_note_quality}</span>
-                  <div>
-                    <span className='text-sm text-gray-500 font-medium'>({item.particular_count} / {item.total_count})</span>
-                  </div>
-                </div>
+            {getPaginatedData(items, currentPage).map((item: any, idx: number) => {
 
-                  : <span className="text-sm font-bold text-gray-900 bg-white px-2 py-1 rounded-md border">
-                    {item.value}
-                  </span>}
-              </div>
-            ))}
+              const val = parseFloat(item?.percentage_note_quality?.replace('%', ''));
+              return (
+                <div
+                  key={idx}
+                  className={`flex justify-between items-center p-3 rounded-lg border transition-all duration-300 ${onItemClick ? 'cursor-pointer' : ''} ${!selected ? colors.item : 'hover:shadow-md'}`}
+                  style={getItemStyle(item)}
+                  onClick={onItemClick ? () => onItemClick(item.name) : undefined}
+                >
+                  <span className={`text-sm font-medium truncate flex-1 mr-3 capitalize ${onItemClick && itemType === 'flexologist' ? 'text-primary-base hover:underline' : 'text-gray-700'}`}>
+                    {item.name}
+                  </span>
+                  {selected ? <div className='flex items-center gap-2 bg-white px-2 py-1 rounded-md border shadow-sm'>
+                    <span
+                      className="text-sm font-bold"
+                      style={{
+                        color: `rgb(${Math.min(220, 150 + (val * 0.7))}, ${Math.max(0, 100 - val)}, ${Math.max(0, 100 - val)})`
+                      }}
+                    >
+                      {item.percentage_note_quality}
+                    </span>
+                    <div>
+                      <span className='text-sm text-gray-500 font-medium'>({item.particular_count} / {item.total_count})</span>
+                    </div>
+                  </div>
+
+                    : <span className="text-sm font-bold text-gray-900 bg-white px-2 py-1 rounded-md border">
+                      {item.value}
+                    </span>}
+                </div>
+              )
+            })}
             <PaginationControls
               currentPage={currentPage}
               totalPages={totalPages}
@@ -246,7 +283,7 @@ export const Drilldown: React.FC<DrilldownProps> = ({
                 <>Percent of appointments with opportunities: <span className="font-medium text-primary-base">{selected}</span></>
               ) : (
                 'Overall distribution across locations and flexologists'
-              )}  
+              )}
             </p>
           </div>
         </div>
@@ -269,6 +306,8 @@ export const Drilldown: React.FC<DrilldownProps> = ({
 
 
         </div>}
+
+
 
 
 
@@ -298,6 +337,8 @@ export const Drilldown: React.FC<DrilldownProps> = ({
             icon={<User className="w-4 h-4 text-green-600" />}
             selected={selected}
             text="Flexologists"
+            onItemClick={onFlexologistClick}
+            itemType="flexologist"
           />
         </div>
       </div>
