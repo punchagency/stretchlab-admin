@@ -15,6 +15,11 @@ export const menuList = [
     link: "/note-taking-app",
   },
   {
+    title: "Note Formatting",
+    icon: "edit",
+    link: "/note-formatting",
+  },
+  {
     title: "Audit Details",
     icon: "robot",
     link: "/robot-automation",

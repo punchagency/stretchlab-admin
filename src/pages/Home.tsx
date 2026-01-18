@@ -91,6 +91,9 @@ export const Home = () => {
     if (menu.title === "Report" && userInfo?.role_id !== 1) {
       return false;
     }
+    if (menu.title === "Note Formatting" && userInfo?.role_id !== 1) {
+      return false;
+    }
     if (menu.title === "Support" && ![1, 2].includes(userInfo?.role_id ?? -1)) {
       return false;
     }

@@ -14,7 +14,7 @@ import { useMemo, useCallback } from "react";
 
 export const useNotificationPage = () => {
   const navigate = useNavigate();
-  const {  
+  const {
     data: notificationsResponse,
     isLoading,
     error,
@@ -28,7 +28,6 @@ export const useNotificationPage = () => {
   const originalNotifications = notificationsResponse?.notifications || [];
   const transformedNotifications = originalNotifications.map(transformNotification);
 
-  // Sort notifications: unread first, then by creation date (newest first)
   const notifications = [...transformedNotifications].sort((a, b) => {
     if (a.isRead !== b.isRead) {
       return a.isRead ? 1 : -1;
@@ -77,11 +76,6 @@ export const useNotificationPage = () => {
         break;
     }
   }, [navigate]);
-
-
-
-  // Cell components defined outside the hook to prevent recreation on every render
-  // and satisfy HMR requirements.
 
   const columns = useMemo<ColumnDef<Notification>[]>(() => [
     {

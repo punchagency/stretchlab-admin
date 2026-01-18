@@ -24,6 +24,7 @@ import {
   AcceptInvite,
   UserManagement,
   Support,
+  NoteFormatting,
 } from "./pages";
 import { Toaster } from "./components/ui/sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -57,6 +58,10 @@ const router = createBrowserRouter([
         element: <NoteTakingAdmin />,
       },
       {
+        path: "note-formatting",
+        element: <NoteFormatting />,
+      },
+      {
         path: "robot-automation",
         element: <RobotAutomation />,
       },
@@ -64,7 +69,7 @@ const router = createBrowserRouter([
         path: "notification",
         element: <Notification />,
       },
-      {  
+      {
         path: "billing",
         element: <Billing />,
       },
