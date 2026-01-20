@@ -11,7 +11,7 @@ import {
 import { useState, useEffect } from "react";
 import { renderErrorToast, renderSuccessToast } from "../utils";
 import { AnimatePresence, motion } from "framer-motion";
-import type { ApiError } from "@/types/response";
+import type { ApiError, Location } from "@/types/response";
 
 interface BookingBridgeConfig {
     id: number;
@@ -41,7 +41,7 @@ export const BookingBridgeConfigForm = ({
     const [saving, setSaving] = useState(false);
     const [webhookUrl, setWebhookUrl] = useState<string | null>(null);
 
-    const parseLocations = (locationData: any): string[] => {
+    const parseLocations = (locationData: any): Location[] => {
         if (Array.isArray(locationData)) return locationData;
         if (typeof locationData === 'string') {
             try {
@@ -55,9 +55,8 @@ export const BookingBridgeConfigForm = ({
         return [];
     };
 
-    const [locations, setLocations] = useState<string[]>(parseLocations(data?.locations));
-    const [selectedLocations, setSelectedLocations] = useState<string[]>(parseLocations(data?.selected_locations));
-    console.log("data", data);
+    const [locations, setLocations] = useState<Location[]>(parseLocations(data?.locations));
+    const [selectedLocations, setSelectedLocations] = useState<Location[]>(parseLocations(data?.selected_locations));
     useEffect(() => {
         if (data) {
             const locs = parseLocations(data.locations);
@@ -93,13 +92,15 @@ export const BookingBridgeConfigForm = ({
         });
     };
 
-    const handleLocationSelect = (location: string) => {
+    const handleLocationSelect = (location: Location) => {
         setSelectedLocations(prev => {
-            if (prev.includes(location) && prev.length === 1) {
+            const isSelected = prev.some(loc => loc.location_id === location.location_id);
+            if (isSelected && prev.length === 1) {
                 return prev;
             }
-            const newSelected = prev.includes(location)
-                ? prev.filter(loc => loc !== location)
+
+            const newSelected = isSelected
+                ? prev.filter(loc => loc.location_id !== location.location_id)
                 : [...prev, location];
 
             return newSelected;
@@ -340,32 +341,37 @@ export const BookingBridgeConfigForm = ({
                                         </p>
 
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-2  border rounded-lg p-2">
-                                            {locations.map((location, _) => (
-                                                <div
-                                                    key={location}
-                                                    onClick={() => handleLocationSelect(location)}
-                                                    className={`p-2 rounded-md border cursor-pointer transition-all duration-200 text-xs ${selectedLocations.includes(location)
-                                                        ? "border-green-500 bg-green-50 text-green-700"
-                                                        : "border-gray-200 bg-white hover:border-gray-300"
-                                                        }`}
-                                                >
-                                                    <div className="flex items-center justify-between">
-                                                        <div>
-                                                            <h5 className="font-medium text-xs">{location}</h5>
-                                                        </div>
-                                                        <div className={`w-3 h-3 rounded-full border flex items-center justify-center ${selectedLocations.includes(location)
-                                                            ? "border-green-500 bg-green-500"
-                                                            : "border-gray-300"
-                                                            }`}>
-                                                            {selectedLocations.includes(location) && (
-                                                                <svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                                                </svg>
-                                                            )}
+                                            {locations.map((location) => {
+                                                const isSelected = selectedLocations.some(
+                                                    (loc) => loc.location_id === location.location_id
+                                                );
+                                                return (
+                                                    <div
+                                                        key={location.location_id}
+                                                        onClick={() => handleLocationSelect(location)}
+                                                        className={`p-2 rounded-md border cursor-pointer transition-all duration-200 text-xs ${isSelected
+                                                            ? "border-green-500 bg-green-50 text-green-700"
+                                                            : "border-gray-200 bg-white hover:border-gray-300"
+                                                            }`}
+                                                    >
+                                                        <div className="flex items-center justify-between">
+                                                            <div>
+                                                                <h5 className="font-medium text-xs">{location.location_name}</h5>
+                                                            </div>
+                                                            <div className={`w-3 h-3 rounded-full border flex items-center justify-center ${isSelected
+                                                                ? "border-green-500 bg-green-500"
+                                                                : "border-gray-300"
+                                                                }`}>
+                                                                {isSelected && (
+                                                                    <svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                                                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                                                    </svg>
+                                                                )}
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            ))}
+                                                );
+                                            })}
                                         </div>
 
                                     </div>

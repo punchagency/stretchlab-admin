@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ChevronDown, Search, X } from "lucide-react";
+import type { Location } from "@/types/response";
 
 interface FilterOption {
   value: string;
@@ -9,7 +10,7 @@ interface FilterOption {
 interface FilterDropdownProps {
   label?: string;
   value?: string;
-  options: string[] | FilterOption[];
+  options: (string | FilterOption | Location)[];
   onChange?: (value: string) => void;
   className?: string;
   showLabel?: boolean;
@@ -36,9 +37,15 @@ export const MultiSelectDropdown = ({
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
-  const normalizedOptions: FilterOption[] = options.map((option) =>
-    typeof option === "string" ? { value: option, label: option } : option
-  );
+  const normalizedOptions: FilterOption[] = options.map((option) => {
+    if (typeof option === "string") {
+      return { value: option, label: option };
+    }
+    if ('location_name' in (option as any) && 'location_id' in (option as any)) {
+      return { value: (option as any).location_name, label: (option as any).location_name };
+    }
+    return option as FilterOption;
+  });
 
   const filteredOptions =
     showSearch && searchTerm
