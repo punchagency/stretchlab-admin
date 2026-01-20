@@ -43,6 +43,12 @@ export const LoginForm = () => {
       if (response.status === 200) {
         const loginData = response.data as LoginResponse;
         if (loginData.access_token) {
+          if (loginData.user.role_id === 5) {
+
+            setUserCookie(loginData.access_token);
+            console.log(loginData.user);
+            navigate("/booking-bridge");
+          }
           if (
             loginData.user.is_verified &&
             loginData.user.is_clubready_verified
@@ -61,7 +67,9 @@ export const LoginForm = () => {
             if (loginData.refresh_token) {
               setRefreshToken(loginData.refresh_token);
             }
-            navigate("/robot-setup");
+            else {
+              navigate("/robot-setup");
+            }
           } else {
             setUserCookie(loginData.access_token);
             if (loginData.refresh_token) {
@@ -136,3 +144,4 @@ export const LoginForm = () => {
     </form>
   );
 };
+

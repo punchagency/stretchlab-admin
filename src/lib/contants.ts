@@ -25,6 +25,11 @@ export const menuList = [
     link: "/robot-automation",
   },
   {
+    title: "Booking Bridge",
+    icon: "rpa",
+    link: "/booking-bridge",
+  },
+  {
     title: "User Management",
     icon: "users",
     link: "/user-management",

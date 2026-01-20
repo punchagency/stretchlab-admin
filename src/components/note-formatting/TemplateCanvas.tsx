@@ -63,7 +63,6 @@ export const TemplateCanvas = ({
 
                 {isCreating ? (
                     <div className="p-6">
-                        {/* Template Name Input */}
                         <div className="mb-6">
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                                 Template Name
@@ -76,7 +75,6 @@ export const TemplateCanvas = ({
                             />
                         </div>
 
-                        {/* Sections Area */}
                         <div className="mb-6">
                             <div className="flex items-center justify-between mb-4">
                                 <label className="block text-sm font-medium text-gray-700">
@@ -92,6 +90,13 @@ export const TemplateCanvas = ({
                                         Add Custom Section
                                     </Button>
                                 </div>
+                            </div>
+
+                            <div className="mb-4 p-3 bg-orange-50 border border-orange-100 rounded-lg">
+                                <p className="text-xs text-orange-700 leading-relaxed">
+                                    <span className="font-semibold mr-1">💡 Tip:</span>
+                                    Ensure section descriptions are robust and descriptive. The more clarity you provide in the description, the better the AI can understand and give better result.
+                                </p>
                             </div>
 
                             {/* Drag and Drop Area */}

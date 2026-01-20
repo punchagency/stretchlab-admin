@@ -46,7 +46,6 @@ export const NoteFormatting = () => {
 
     const [editingSectionKey, setEditingSectionKey] = useState<string | null>(null);
 
-    // Get default template sections (for creating new sections)
     const defaultTemplate = data?.data?.template?.find((t) => !t.is_custom);
     const allTemplates = data?.data?.template || [];
     const sortedTemplates = [

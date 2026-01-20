@@ -28,6 +28,7 @@ export interface User {
   role_id: number;
   username: string;
   is_clubready_verified: boolean;
+  is_booking_bridge_only?: boolean;
 }
 
 export interface LoginResponse {

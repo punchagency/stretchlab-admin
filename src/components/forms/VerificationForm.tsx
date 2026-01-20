@@ -13,13 +13,14 @@ export const VerificationForm = () => {
   const [isResending, setIsResending] = useState(false);
   const navigate = useNavigate();
   const tempUserInfo = getTempUserInfo();
-  console.log({ tempUserInfo });
+
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!code) {
       setError("Code is required");
       return;
-    } 
+    }
     if (code.length !== 6) {
       setError("Code must be 6 digits");
       return;
@@ -27,15 +28,24 @@ export const VerificationForm = () => {
     try {
       setIsLoading(true);
       const response = await verify(code);
+
       if (response.status === 200) {
-        renderSuccessToast(response.data.message);
         if (tempUserInfo?.role_id === 4) {
+          renderSuccessToast(response.data.message);
           const tempToken = getTempUserCookie();
           if (tempToken) {
             setUserCookie(tempToken);
             navigate("/dashboard");
           }
+
+        } else if (tempUserInfo?.role_id === 5) {
+          renderSuccessToast("Email verified successfully, please login");
+          setTimeout(() => {
+            navigate("/login");
+          }, 2000);
+
         } else {
+          renderSuccessToast(response.data.message);
           navigate("/robot-setup");
         }
       } else {

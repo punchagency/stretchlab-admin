@@ -10,7 +10,7 @@ import { Sidebar } from "@/components/ui/sidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import logo from "@/assets/images/stretchnote.png";
 // import logoIcon from "@/assets/images/stretchlab-favicon.png";
-import { Outlet, useNavigate } from "react-router";
+import { Outlet, useNavigate, Navigate } from "react-router";
 import { menuList } from "@/lib/contants";
 import { SideMenuList, LogoutMenu } from "@/components/shared";
 import { useEffect } from "react";
@@ -20,13 +20,14 @@ import { ProfilePictureProvider } from "@/contexts/ProfilePictureContext";
 
 const SidebarLogo = () => {
   const { state } = useSidebar();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const userInfo = getUserInfo();
   return (
     <button
-      onClick={() => navigate("/dashboard")}
+      onClick={() => navigate(userInfo?.role_id === 5 ? "/booking-bridge" : "/dashboard")}
     >
       <img
-        src={state === "expanded" ? logo : logo}
+        src={logo}
         alt="logo"
         className={state === "expanded" ? "" : "w-25"}
       />
@@ -50,29 +51,35 @@ export const Home = () => {
     if (userInfo?.requires_2fa) {
       navigate(`/2fa-login?email=${encodeURIComponent(userInfo.email)}`);
     }
-    if ((userInfo?.rpa_verified && !userInfo?.rpa_verified) && userInfo?.role_id !== 1) {
+    const isRpaVerifiedCheckExists = Object.keys(userInfo as object).find((key) => key === "rpa_verified");
+
+    if (
+      isRpaVerifiedCheckExists &&
+      !userInfo?.rpa_verified &&
+      userInfo?.role_id !== 1 &&
+      userInfo?.role_id !== 8 &&
+      userInfo?.role_id !== 4 &&
+      userInfo?.role_id !== 5
+    ) {
       navigate("/robot-setup");
     }
-    // add the is_verified and rpa_verified to the token
+
     if (
       Object.keys(userInfo as object).find((key) => key === "is_verified") &&
       !userInfo?.is_verified
     ) {
       navigate(`/verification`);
     }
-    if (userInfo?.requires_2fa) {
-      navigate(`/2fa-login?email=${encodeURIComponent(userInfo.email)}`);
-    }
-    if (
-      Object.keys(userInfo as object).find((key) => key === "rpa_verified") &&
-      !userInfo?.rpa_verified &&
-      userInfo?.role_id !== 1 &&
-      userInfo?.role_id !== 8 &&
-      userInfo?.role_id !== 4
-    ) {
-      navigate("/robot-setup");
-    }
+
   }, []);
+
+  if (!getUserCookie()) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (userInfo?.role_id === 5 && (window.location.pathname === "/" || window.location.pathname === "/dashboard")) {
+    return <Navigate to="/booking-bridge" replace />;
+  }
 
   const filteredMenuList = menuList.filter((menu) => {
     if (
@@ -94,9 +101,14 @@ export const Home = () => {
     if (menu.title === "Note Formatting" && userInfo?.role_id !== 1) {
       return false;
     }
-    if (menu.title === "Support" && ![1, 2].includes(userInfo?.role_id ?? -1)) {
+    if (menu.title === "Support" && ![1, 2, 5].includes(userInfo?.role_id ?? -1)) {
       return false;
     }
+    if (userInfo?.role_id === 5) {
+      const allowed = ["Booking Bridge", "Notification", "Support", "Settings"];
+      if (!allowed.includes(menu.title)) return false;
+    }
+
     return true;
   });
 

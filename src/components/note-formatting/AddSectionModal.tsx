@@ -50,6 +50,10 @@ export const AddSectionModal = ({
                             onChange={(e) => setDescription(e.target.value)}
                             placeholder="e.g., Session goals and objectives"
                         />
+                        <p className="mt-1.5 text-xs text-gray-500 italic flex items-start gap-1">
+                            <span className="text-primary-base font-semibold">Note:</span>
+                            Description must be robust and descriptive to ensure the AI can effectively generate better result.
+                        </p>
                     </div>
                 </div>
                 <div className="flex gap-3 mt-6">
