@@ -15,7 +15,6 @@ export const ErrorPage = () => {
         console.error(error);
         errorMessage = 'Unknown error';
     }
-    console.error('Application Error:', errorMessage, error);
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-primary-secondary/20 to-primary-tertiary/30 py-8">
@@ -31,7 +30,7 @@ export const ErrorPage = () => {
                         </h2>
                         <p className="text-base text-gray-600 mb-8 max-w-6xl mx-auto">
                             Sorry, an unexpected error has occurred.            </p>
-                            <p className="text-base text-gray-600 mb-8 max-w-6xl mx-auto">
+                        <p className="text-base text-gray-600 mb-8 max-w-6xl mx-auto">
                             {errorMessage}            </p>
                         <div className="flex gap-4 justify-center">
 

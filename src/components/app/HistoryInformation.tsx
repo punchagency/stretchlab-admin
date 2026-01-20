@@ -131,7 +131,7 @@ export const HistoryInformation = ({
             <div>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <h3 className="text-[#344054] font-semibold text-lg cursor-help">
+                  <h3 className="underline decoration-dotted underline-offset-4 text-[#344054] font-semibold text-lg cursor-help">
                     Session Notes Rubric Score
                   </h3>
                 </TooltipTrigger>

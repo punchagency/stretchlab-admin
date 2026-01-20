@@ -73,7 +73,7 @@ export const NoteTakingAdminModals = (props: NoteTakingAdminModalsProps) => {
 
   return (
     <>
-    
+
       <Modal show={showModal} onClose={onCloseModal}>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4 py-4 px-2 md:px-10">
           <h1 className="text-lg md:text-2xl font-semibold text-center mb-4">Invite Flexologist</h1>
@@ -121,7 +121,7 @@ export const NoteTakingAdminModals = (props: NoteTakingAdminModalsProps) => {
         </div>
       </Modal>
 
-    
+
       <Modal show={showStatusConfirmation} onClose={onCloseStatus} size="sm">
         <div className="flex flex-col gap-4 py-4 px-2 md:px-6">
           <h1 className="text-lg md:text-xl font-semibold text-center mb-2">Confirm Admin Access Change</h1>

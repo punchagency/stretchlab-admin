@@ -16,8 +16,10 @@ import type {
   MetricCardData
 } from "@/types";
 
+import type { Location } from "@/types/response";
+
 interface LocationsResponse {
-  locations: string[];
+  locations: Location[];
   status: string;
 }
 import { getUserInfo } from "@/utils";
@@ -244,7 +246,6 @@ export const useDashboard = () => {
       //   value: "87%",
       //   subtitle: "+1% Vs Last Month",
       //   // buttonText: "Utilization",
-      //   buttonVariant: "primary",
       //   showCurrency: false,
       // }
     );

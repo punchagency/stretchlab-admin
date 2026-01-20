@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ChevronDown, Search } from "lucide-react";
+import type { Location } from "@/types/response";
 
 interface FilterOption {
   value: string;
@@ -9,10 +10,10 @@ interface FilterOption {
 interface FilterDropdownProps {
   label?: string;
   value: string;
-  options: string[] | FilterOption[];
+  options: (string | FilterOption | Location)[];
   onChange: (value: string) => void;
   className?: string;
-  showLabel?: boolean; 
+  showLabel?: boolean;
   showSearch?: boolean;
 }
 
@@ -32,7 +33,11 @@ export const FilterDropdown = ({
     if (typeof option === 'string') {
       return { value: option, label: option };
     }
-    return option;
+    if ('location_name' in option && 'location_id' in option) {
+      // Use location_name as value to satisfy requirement of sending name as string
+      return { value: option.location_name, label: option.location_name };
+    }
+    return option as FilterOption;
   });
 
   const sortOptionsWithSpecialFirst = (optionsToSort: FilterOption[]) => {
@@ -89,7 +94,7 @@ export const FilterDropdown = ({
                     <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                     <input
                       type="text"
-                      placeholder="Search options..." 
+                      placeholder="Search options..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                       className="w-full pl-8 pr-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-primary-base focus:border-primary-base"
@@ -106,8 +111,8 @@ export const FilterDropdown = ({
                         handleClose();
                       }}
                       className={`w-full px-3 py-2 text-left text-sm focus:outline-none transition-colors rounded-sm capitalize ${option.value === value
-                          ? 'bg-primary-base text-white'
-                          : 'text-gray-900 hover:bg-gray-100 focus:bg-gray-100'
+                        ? 'bg-primary-base text-white'
+                        : 'text-gray-900 hover:bg-gray-100 focus:bg-gray-100'
                         }`}
                     >
                       {option.label}

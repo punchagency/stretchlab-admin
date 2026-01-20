@@ -6,6 +6,11 @@ export interface DefaultResponse extends AxiosResponse {
   message: string;
 }
 
+export interface Location {
+  location_id: string;
+  location_name: string;
+}
+
 export interface ApiError {
   response: {
     data: {
@@ -28,6 +33,7 @@ export interface User {
   role_id: number;
   username: string;
   is_clubready_verified: boolean;
+  is_booking_bridge_only?: boolean;
 }
 
 export interface LoginResponse {
@@ -49,8 +55,8 @@ export interface RobotConfig {
   run_time: string;
   unlogged_booking: boolean;
   status: string;
-  selected_locations: string[];
-  locations: string[];
+  selected_locations: Location[] | string;
+  locations: Location[] | string;
   excluded_names: string[];
   users: {
     clubready_username: string;

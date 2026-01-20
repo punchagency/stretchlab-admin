@@ -1,4 +1,5 @@
 import { useState } from "react";
+import type { Location } from "@/types/response";
 import { Button } from "../shared";
 import { MultiSelectDropdown } from "../shared/MultiDropdown";
 import { ContainLoader } from "@/components/shared/FullLoader";
@@ -13,7 +14,7 @@ interface Manager {
 
 interface ConfigurationSetupProps {
     managers: Manager[];
-    locations: string[];
+    locations: Location[] | string[];
     onSubmit: (configs: StudioManagerConfig[]) => void;
     isLoading: boolean;
     isFetchingData: boolean;
@@ -226,7 +227,7 @@ export const ConfigurationSetup = ({
                             />
 
                             <MultiSelectDropdown
-                                options={locations}
+                                options={locations.map(loc => typeof loc === 'string' ? loc : loc.location_name)}
                                 selectedValues={tempLocations}
                                 onMultiChange={setTempLocations}
                                 multiSelect={true}
