@@ -15,10 +15,20 @@ export const menuList = [
     link: "/note-taking-app",
   },
   {
+    title: "Note Formatting",
+    icon: "edit",
+    link: "/note-formatting",
+  },
+  {
     title: "Audit Details",
     icon: "robot",
     link: "/robot-automation",
   },
+  // {
+  //   title: "Booking Bridge",
+  //   icon: "rpa",
+  //   link: "/booking-bridge",
+  // },
   {
     title: "User Management",
     icon: "users",

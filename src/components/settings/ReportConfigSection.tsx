@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import type { Location } from "@/types/response";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getRobotConfig, addStudioManagers, type StudioManagerConfig } from "@/service/report";
 import { fetchManagers, fetchLocations } from "@/service/user";
@@ -38,7 +39,7 @@ export const ReportConfigSection = () => {
         queryFn: fetchManagers,
         staleTime: 5 * 60 * 1000,
     });
-    const { data: locationsData, isLoading: isLoadingLocations } = useQuery({
+    const { data: locationsData, isLoading: isLoadingLocations } = useQuery<any>({
         queryKey: ["locations"],
         queryFn: fetchLocations,
         staleTime: 5 * 60 * 1000,
@@ -97,7 +98,7 @@ export const ReportConfigSection = () => {
                     id: crypto.randomUUID(),
                     managers: tempManagers,
                     locations: tempLocations,
-                    isEditing: false,  
+                    isEditing: false,
                 },
             ]);
             setIsAddingNew(false);
@@ -146,7 +147,7 @@ export const ReportConfigSection = () => {
 
     const isValid = configs.length > 0;
     const managers = managersData?.data?.data?.managers || [];
-    const locations = locationsData?.data?.locations || [];
+    const locations: (Location | string)[] = locationsData?.data?.locations || [];
     const isLoadingData = isLoadingConfig || isLoadingManagers || isLoadingLocations;
 
     if (isLoadingData) {
@@ -245,10 +246,14 @@ export const ReportConfigSection = () => {
                                         />
                                         <MultiSelectDropdown
                                             label="Select Locations"
-                                            options={locations}
-                                            selectedValues={config.locations.map(loc =>
-                                                locations.find((l: string) => l.toLowerCase() === loc.toLowerCase()) || loc
-                                            )}
+                                            options={locations.map((loc: any) => typeof loc === 'string' ? loc : loc.location_name)}
+                                            selectedValues={config.locations.map(loc => {
+                                                const locName = typeof loc === 'string' ? loc : (loc as any).location_name;
+                                                const found = locations.find((l: any) =>
+                                                    (typeof l === 'string' ? l.toLowerCase() : l.location_name.toLowerCase()) === locName.toLowerCase()
+                                                );
+                                                return typeof found === 'string' ? found : found?.location_name || locName;
+                                            })}
                                             onMultiChange={(values) => updateConfigLocations(config.id, values)}
                                             multiSelect={true}
                                             showSearch={true}
@@ -339,7 +344,7 @@ export const ReportConfigSection = () => {
                             />
                             <MultiSelectDropdown
                                 // label="Select Locations"
-                                options={locations}
+                                options={locations.map((loc: any) => typeof loc === 'string' ? loc : loc.location_name)}
                                 selectedValues={tempLocations}
                                 onMultiChange={setTempLocations}
                                 multiSelect={true}

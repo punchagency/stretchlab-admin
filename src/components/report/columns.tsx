@@ -378,7 +378,7 @@ export const getReportColumns = ({
                                 <TooltipTrigger asChild>
                                     <Flag size={16}
                                         fill="currentColor"
-                                        // stroke="none"
+
                                         className="text-red-600 cursor-pointer" />
                                 </TooltipTrigger>
                                 <TooltipContent side="right">

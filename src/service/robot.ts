@@ -1,4 +1,5 @@
 import { api } from "./api";
+import type { Location } from "@/types/response";
 
 export const verifyCredentials = async (data: {
   username: string;
@@ -13,8 +14,8 @@ export const saveSettings = async (data: {
   numberOfStudioLocations: number;
   clubReadyUsername: string;
   clubReadyPassword: string;
-  selectedStudioLocations: string[];
-  studioLocations: string[];
+  selectedStudioLocations: Location[];
+  studioLocations: Location[];
   excludedNames: string[];
 }) => {
   const response = await api.post("/admin/process/save-robot-config", data);
@@ -26,8 +27,8 @@ export const updateSettings = async (data: {
   numberOfStudioLocations: number;
   clubReadyUsername: string;
   clubReadyPassword: string;
-  selectedStudioLocations: string[];
-  studioLocations: string[];
+  selectedStudioLocations: Location[];
+  studioLocations: Location[];
   excludedNames: string[];
 }) => {
   const response = await api.post("/admin/process/update-robot-config", data);
@@ -51,16 +52,16 @@ export const getRobotHistory = async (
   endDate?: string
 ) => {
   let queryParams = `?duration=${duration}`;
-  
+
   if (duration === "custom" && startDate && endDate) {
     queryParams += `&start_date=${startDate}&end_date=${endDate}`;
   }
-  
+
   const response = await api.get(`/admin/process/get-rpa-history/${configId}${queryParams}`);
   return response;
 };
 
 export const getOpportunities = async () => {
   const response = await api.get("/admin/process/get-opportunities");
-  return response.data?.opportunites?? [];
+  return response.data?.opportunites ?? [];
 };

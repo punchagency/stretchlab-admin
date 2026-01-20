@@ -21,6 +21,9 @@ export const Settings = () => {
       if (item.id === "coupon" && person?.role_id !== 1) return false;
       if (item.id === "reportconfig" && person?.role_id !== 1) return false;
       if (item.id === "account_deletion" && person?.role_id !== 2) return false;
+      if (person?.role_id === 5) {
+        return ["profile", "password"].includes(item.id);
+      }
       return true;
     }
   );

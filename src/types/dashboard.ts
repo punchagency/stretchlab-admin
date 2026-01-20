@@ -8,11 +8,13 @@ export interface Flexologist {
   id: number;
 }
 
+import type { Location } from "./response";
+
 export interface ChartFiltersResponse {
   data: {
     filters: FilterOption[];
     flexologists: string[];
-    locations: string[];
+    locations: Location[] | string[];
   };
   status: string;
 }
@@ -101,7 +103,7 @@ export interface DurationOption {
 export interface FilterOptions {
   filterBy: string[];
   duration: DurationOption[];
-  location: string[];
+  location: (string | Location)[];
   flexologist: string[];
   dataset?: string[];
   filterMetric?: DurationOption[];

@@ -580,7 +580,7 @@ export const NoteTakingAdmin = () => {
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>{status === 3 ? "Delete Flexologist" : "Only invited (status 3) can be removed"}</p>
+              <p>{status === 3 ? "Delete Flexologist" : "Only invited and pending can be deleted"}</p>
             </TooltipContent>
           </Tooltip>
         );
@@ -664,7 +664,6 @@ export const NoteTakingAdmin = () => {
 
       {/* Centralized modals */}
       <NoteTakingAdminModals
-        // Invite Flexologist
         showModal={showModal}
         onCloseModal={() => setShowModal(false)}
         email={email}
@@ -672,21 +671,15 @@ export const NoteTakingAdmin = () => {
         formError={formError}
         isLoading={isLoading}
         handleSubmit={handleSubmit}
-
-        // Access Confirmation
         showAccessConfirmation={showAccessConfirmation}
         onCloseAccess={() => setShowAccessConfirmation(false)}
         pendingAction={pendingAction}
         isAccessing={isAccessing}
         confirmUpdateAccess={confirmUpdateAccess}
-
-        // Status Confirmation
         showStatusConfirmation={showStatusConfirmation}
         onCloseStatus={() => setShowStatusConfirmation(false)}
         isUpdating={isUpdating}
         confirmUpdateUserStatus={confirmUpdateUserStatus}
-
-        // Delete Confirmation
         showDeleteConfirmation={showDeleteConfirmation}
         onCloseDelete={() => setShowDeleteConfirmation(false)}
         isDeleting={isDeleting}

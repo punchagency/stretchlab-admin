@@ -67,10 +67,12 @@ export const Dashboard = () => {
     console.log(`Clicked on ${title}`);
   };
 
-  // Filter locations based on comparison selections
+  // Filter locations based on comparison selections and map to names for the chart
   const filteredLocations = comparisonSelections.length > 0
-    ? locations.filter(loc => comparisonSelections.includes(loc))
-    : locations;
+    ? locations
+      .filter(loc => comparisonSelections.includes(typeof loc === 'string' ? loc : loc.location_name))
+      .map(loc => typeof loc === 'string' ? loc : loc.location_name)
+    : locations.map(loc => typeof loc === 'string' ? loc : loc.location_name);
   return (
     <div className="min-h-screen bg-white">
       <div className="">

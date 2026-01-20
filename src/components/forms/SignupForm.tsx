@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Input, Button, Spinner } from "../shared";
-import { checkUsername, signup } from "@/service/auth";
+// import { Checkbox } from "@/components/ui/checkbox";
+import { checkUsername, signup, registerBookingBridge } from "@/service/auth";
 import type { ApiError } from "@/types";
 import { setTempUserCookie, setRefreshToken } from "@/utils";
 import { useNavigate } from "react-router";
@@ -19,6 +20,7 @@ export const SignupForm = () => {
   const [usernameError, setUsernameError] = useState("");
   const [checkingUsername, setCheckingUsername] = useState(false);
   const [usernameSuccess, setUsernameSuccess] = useState("");
+  const [isBookingBridgeOnly] = useState(false);
 
   const isValidPassword = (password: string) => {
     const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
@@ -99,16 +101,25 @@ export const SignupForm = () => {
     }
     try {
       setIsLoading(true);
-      const response = await signup(
-        formData.email,
-        formData.password,
-        formData.username
-      );
+      let response;
+      if (isBookingBridgeOnly) {
+        response = await registerBookingBridge(
+          formData.email,
+          formData.password,
+          formData.username
+        );
+      } else {
+        response = await signup(
+          formData.email,
+          formData.password,
+          formData.username
+        );
+      }
       if (response.status === 201) {
         setTempUserCookie(response.data.access_token);
         if (response.data.refresh_token) {
           setRefreshToken(response.data.refresh_token);
-        } 
+        }
         renderSuccessToast("Account created successfully");
         navigate("/verification");
       }
@@ -145,6 +156,8 @@ export const SignupForm = () => {
           checking={checkingUsername}
           success={usernameSuccess}
         />
+
+
         <p className="text-grey-5 text-sm">
           This will be your sub-domain name e.g.{" "}
           <span>
@@ -159,7 +172,7 @@ export const SignupForm = () => {
         type="password"
         name="password"
         placeholder="Enter password"
-        value={formData.password} 
+        value={formData.password}
         onChange={handleChange}
       />
       <Input
@@ -179,6 +192,16 @@ export const SignupForm = () => {
           </p>
         </div>
       )}
+      {/* <div className="flex items-center gap-2">
+        <Checkbox
+          id="bookingBridgeOnly"
+          checked={isBookingBridgeOnly}
+          onCheckedChange={(checked) => setIsBookingBridgeOnly(checked === true)}
+        />
+        <label htmlFor="bookingBridgeOnly" className="text-sm text-gray-700">
+          Sign up for Booking Bridge only
+        </label>
+      </div> */}
       <Button
         disabled={isLoading || !validUsername}
         className="bg-primary-base  phone:mt-2 tablet:mt-6 laptop:mt-6 py-4 text-white flex items-center justify-center gap-2"

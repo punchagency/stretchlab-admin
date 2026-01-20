@@ -5,13 +5,14 @@ import { MapPin, X, Check } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { fetchLocations as fetchLocationsService } from "@/service/user";
 import type { ApiError } from "@/types";
+import type { Location } from "@/types/response";
 
 interface LocationSelectionModalProps {
     show: boolean;
     onClose: () => void;
     onConfirm: (selectedLocations: string[]) => void;
     isLoading?: boolean;
-    initialSelectedLocations?: string[]; 
+    initialSelectedLocations?: string[];
 }
 
 export const LocationSelectionModal = ({
@@ -21,8 +22,8 @@ export const LocationSelectionModal = ({
     isLoading = false,
     initialSelectedLocations = [],
 }: LocationSelectionModalProps) => {
-    const [locations, setLocations] = useState<string[]>([]);
-    const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
+    const [locations, setLocations] = useState<Location[]>([]);
+    const [selectedLocations, setSelectedLocations] = useState<Location[]>([]);
     const [isFetching, setIsFetching] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -37,7 +38,7 @@ export const LocationSelectionModal = ({
             const normalizedInitialSelections = initialSelectedLocations.map(loc => loc.toLowerCase());
 
             const matchedLocations = locations.filter(location =>
-                normalizedInitialSelections.includes(location.toLowerCase())      
+                normalizedInitialSelections.includes(location.location_name.toLowerCase())
             );
 
             setSelectedLocations(matchedLocations);
@@ -64,17 +65,17 @@ export const LocationSelectionModal = ({
         }
     };
 
-    const toggleLocation = (location: string) => {
+    const toggleLocation = (location: Location) => {
         setSelectedLocations((prev) =>
-            prev.includes(location)
-                ? prev.filter((l) => l !== location)
+            prev.some(l => l.location_id === location.location_id)
+                ? prev.filter((l) => l.location_id !== location.location_id)
                 : [...prev, location]
         );
     };
 
     const handleConfirm = () => {
-        const lowercaseLocations = selectedLocations.map((loc) => loc.toLowerCase());
-        onConfirm(lowercaseLocations);
+        const locationNames = selectedLocations.map((loc) => loc.location_name.toLowerCase());
+        onConfirm(locationNames);
     };
 
     const handleClose = () => {
@@ -138,10 +139,10 @@ export const LocationSelectionModal = ({
                             ) : (
                                 <AnimatePresence>
                                     {locations.map((location, index) => {
-                                        const isSelected = selectedLocations.includes(location);
+                                        const isSelected = selectedLocations.some(l => l.location_id === location.location_id);
                                         return (
                                             <motion.div
-                                                key={location}
+                                                key={location.location_id}
                                                 initial={{ opacity: 0, y: 10 }}
                                                 animate={{ opacity: 1, y: 0 }}
                                                 transition={{ delay: index * 0.03 }}
@@ -185,7 +186,7 @@ export const LocationSelectionModal = ({
                                   ${isSelected ? "text-primary-base" : "text-dark-1 group-hover:text-primary-base"}
                                 `}
                                                             >
-                                                                {location}
+                                                                {location.location_name}
                                                             </span>
                                                         </div>
                                                     </div>

@@ -19,6 +19,20 @@ export const signup = async (
   return response;
 };
 
+export const registerBookingBridge = async (
+  email: string,
+  password: string,
+  username: string
+) => {
+  const response = await api.post("/admin/auth/booking-bridge/register", {
+    email,
+    password,
+    username,
+    role_id: 5,
+  });
+  return response;
+};
+
 export const checkUsername = async (username: string) => {
   const response = await api.get(
     `/admin/auth/check-username?username=${username}`
