@@ -179,7 +179,7 @@ interface LocationSummary {
 }
 
 export interface BusinessInfo {
-  business_all_locations: string[] | null;
+  business_all_locations: (Location | string)[] | null;
   business_created_at: string;
   business_flexologists_count: number;
   business_flexologists_info: BusinessFlexologistInfo[];
@@ -187,7 +187,7 @@ export interface BusinessInfo {
   business_note_sub_status: string | null;
   business_rpa_sub_details: BusinessRpaSubDetails | null;
   business_rpa_sub_status: string | null;
-  business_selected_locations: string[] | null;
+  business_selected_locations: (Location | string)[] | null;
   business_username: string;
   locations_summary?: LocationSummary[];
 }

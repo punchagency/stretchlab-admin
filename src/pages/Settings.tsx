@@ -31,7 +31,7 @@ export const Settings = () => {
   const renderContent = () => {
     if (!user) {
       return (
-        <div className="text-center py-12">
+        <div className="text-center py-12">.
           <p className="text-gray-500">Loading user data...</p>
         </div>
       );

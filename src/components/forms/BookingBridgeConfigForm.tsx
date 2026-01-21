@@ -12,6 +12,7 @@ import { useState, useEffect } from "react";
 import { renderErrorToast, renderSuccessToast } from "../utils";
 import { AnimatePresence, motion } from "framer-motion";
 import type { ApiError, Location } from "@/types/response";
+import { getUserInfo } from "@/utils";
 
 interface BookingBridgeConfig {
     id: number;
@@ -34,7 +35,7 @@ export const BookingBridgeConfigForm = ({
 }) => {
     const [verified, setVerified] = useState(false);
     const [verifying, setVerifying] = useState(false);
-
+    const userInfo = getUserInfo();
     const isEditing = !!data;
     const [error, setError] = useState("");
     const [formError, setFormError] = useState("");
@@ -249,7 +250,7 @@ export const BookingBridgeConfigForm = ({
                     <h2 className="text-lg md:text-xl font-semibold">
                         {isEditing ? "Update Booking Bridge Config" : "Setup Booking Bridge"}
                     </h2>
-                    {!isEditing && (
+                    {!isEditing && userInfo?.role_id !== 5 && (
                         <Button
                             type="button"
                             onClick={handleUseRPAConfig}
