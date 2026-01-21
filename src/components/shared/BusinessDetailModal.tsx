@@ -66,7 +66,7 @@ export const BusinessDetailModal: React.FC<BusinessDetailModalProps> = ({
                 {isLoading ? (
                     <BusinessDetailSkeleton />
                 ) : businessInfo ? (
-                    <div className="space-y-6"> 
+                    <div className="space-y-6">
                         <div className="bg-[#F5F5F5] p-4 rounded-lg">
                             <h3 className="text-lg font-semibold text-gray-900 mb-4">Basic Information</h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -127,7 +127,7 @@ export const BusinessDetailModal: React.FC<BusinessDetailModalProps> = ({
                                         <div>
                                             <label className="text-sm font-medium text-gray-600">Currency</label>
                                             <p className="text-gray-900 uppercase">{businessInfo.business_rpa_sub_details.currency}</p>
-                                        </div> 
+                                        </div>
                                         {/* <div>
                                             <label className="text-sm font-medium text-gray-600">Start Date</label>
                                             <p className="text-gray-900">{formatTimestamp(businessInfo.business_rpa_sub_details.start_date)}</p>
@@ -176,33 +176,41 @@ export const BusinessDetailModal: React.FC<BusinessDetailModalProps> = ({
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
                                     <label className="text-sm font-medium text-gray-600 mb-2 block">All Locations</label>
-                                    {businessInfo.business_all_locations ? <div className="space-y-1">
-                                        {businessInfo.business_all_locations?.map((location, index) => (
-                                            <div key={index} className="text-gray-900 bg-white px-3 py-2 rounded border text-sm">
-                                                {location}
-                                            </div>
-                                        ))}
-                                    </div> : <p className="text-gray-600 text-xs font-medium px-2 italic">
-                                        No locations found
-                                    </p>}
+                                    {businessInfo.business_all_locations && businessInfo.business_all_locations.length > 0 ? (
+                                        <div className="space-y-1">
+                                            {businessInfo.business_all_locations.map((location, index) => (
+                                                <div key={index} className="text-gray-900 bg-white px-3 py-2 rounded border text-sm capitalize">
+                                                    {typeof location === 'string' ? location : location.location_name}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <p className="text-gray-600 text-xs font-medium px-2 italic">
+                                            No locations found
+                                        </p>
+                                    )}
                                 </div>
                                 <div>
                                     <label className="text-sm font-medium text-gray-600 mb-2 block">Selected Locations</label>
-                                    {businessInfo.business_selected_locations ? <div className="space-y-1">
-                                        {businessInfo.business_selected_locations?.map((location, index) => (
-                                            <div key={index} className="text-gray-900 bg-white px-3 py-2 rounded border text-sm">
-                                                {location}
-                                            </div>
-                                        ))}
-                                    </div> : <p className="text-gray-600 text-xs font-medium px-2 italic">
-                                        No Selected locations found
-                                    </p>}
+                                    {businessInfo.business_selected_locations && businessInfo.business_selected_locations.length > 0 ? (
+                                        <div className="space-y-1">
+                                            {businessInfo.business_selected_locations.map((location, index) => (
+                                                <div key={index} className="text-gray-900 bg-white px-3 py-2 rounded border text-sm capitalize">
+                                                    {typeof location === 'string' ? location : location.location_name}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <p className="text-gray-600 text-xs font-medium px-2 italic">
+                                            No Selected locations found
+                                        </p>
+                                    )}
                                 </div>
                             </div>
                         </div>
 
                         {businessInfo.business_flexologists_info.filter(flexologist => flexologist.status === 1).length > 0 && (
-                            <div className="bg-[#F5F5F5] p-4 rounded-lg">
+                            <div className="bg-[#F5F5F5] p-4 rounded-lg mt-6">
                                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Flexologists</h3>
                                 <div className="space-y-3">
                                     {businessInfo.business_flexologists_info
@@ -238,6 +246,51 @@ export const BusinessDetailModal: React.FC<BusinessDetailModalProps> = ({
                                 </div>
                             </div>
                         )}
+
+                        {businessInfo.locations_summary && businessInfo.locations_summary.length > 0 && (
+                            <div className="bg-[#F5F5F5] p-4 rounded-lg mt-6">
+                                <h3 className="text-lg font-semibold text-gray-900 mb-4">Locations Summary</h3>
+                                <div className="space-y-6">
+                                    {businessInfo.locations_summary.map((loc, index) => (
+                                        <div key={index} className="bg-white rounded-lg border p-4 shadow-sm">
+                                            {/* Location Header */}
+                                            <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-3">
+                                                <h4 className="text-md font-semibold text-gray-900 capitalize">{loc.location}</h4>
+                                                <div className="flex space-x-4 mt-2 md:mt-0">
+                                                    <div>
+                                                        <span className="text-sm font-medium text-gray-600">Total Bookings:</span>{" "}
+                                                        <span className="text-gray-900 font-semibold">{loc.total_bookings_in_location}</span>
+                                                    </div>
+                                                    <div>
+                                                        <span className="text-sm font-medium text-gray-600">Submitted:</span>{" "}
+                                                        <span className="text-gray-900 font-semibold">{loc.total_submitted_by_location}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Flexologists */}
+                                            {loc.flexologists && loc.flexologists.length > 0 ? (
+                                                <div className="mt-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                                                    {loc.flexologists.map((flex, fIndex) => (
+                                                        <div key={fIndex} className="p-3 rounded-lg border bg-gray-50">
+                                                            <p className="font-medium text-gray-900">{flex.name}</p>
+                                                            <p className="text-sm text-gray-600 mt-1">
+                                                                <span className="font-medium text-gray-700">Bookings:</span> {flex.total_bookings}
+                                                            </p>
+                                                            <p className="text-sm text-gray-600">
+                                                                <span className="font-medium text-gray-700">Submitted With App:</span> {flex.total_submitted}
+                                                            </p>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            ) : (
+                                                <p className="text-sm text-gray-600 italic mt-2">No flexologist data available</p>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
                     </div>
                 ) : (
                     <div className="text-center py-8 flex items-center justify-center flex-col">
@@ -253,52 +306,7 @@ export const BusinessDetailModal: React.FC<BusinessDetailModalProps> = ({
                         )}
                     </div>
                 )}
-                {businessInfo?.locations_summary && businessInfo.locations_summary.length > 0 && (
-                    <div className="bg-[#F5F5F5] p-4 rounded-lg mt-6">
-                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Locations Summary</h3>
-                        <div className="space-y-6">
-                            {businessInfo.locations_summary.map((loc, index) => (
-                                <div key={index} className="bg-white rounded-lg border p-4 shadow-sm">
-                                    {/* Location Header */}
-                                    <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-3">
-                                        <h4 className="text-md font-semibold text-gray-900 capitalize">{loc.location}</h4>
-                                        <div className="flex space-x-4 mt-2 md:mt-0">
-                                            <div>
-                                                <span className="text-sm font-medium text-gray-600">Total Bookings:</span>{" "}
-                                                <span className="text-gray-900 font-semibold">{loc.total_bookings_in_location}</span>
-                                            </div>
-                                            <div>
-                                                <span className="text-sm font-medium text-gray-600">Submitted:</span>{" "}
-                                                <span className="text-gray-900 font-semibold">{loc.total_submitted_by_location}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {/* Flexologists */}
-                                    {loc.flexologists && loc.flexologists.length > 0 ? (
-                                        <div className="mt-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                                            {loc.flexologists.map((flex, fIndex) => (
-                                                <div key={fIndex} className="p-3 rounded-lg border bg-gray-50">
-                                                    <p className="font-medium text-gray-900">{flex.name}</p>
-                                                    <p className="text-sm text-gray-600 mt-1">
-                                                        <span className="font-medium text-gray-700">Bookings:</span> {flex.total_bookings}
-                                                    </p>
-                                                    <p className="text-sm text-gray-600">
-                                                        <span className="font-medium text-gray-700">Submitted With App:</span> {flex.total_submitted}
-                                                    </p>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    ) : (
-                                        <p className="text-sm text-gray-600 italic mt-2">No flexologist data available</p>
-                                    )}
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                )}
             </div>
-
-        </Modal>
+        </Modal >
     );
-}; 
+};
