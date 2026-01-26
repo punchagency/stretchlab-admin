@@ -206,7 +206,7 @@ export const BulkInviteModal = ({
           </div>
         </div>
       </Modal>
-     { paymentInfo && <PaymentCollection
+      {paymentInfo && <PaymentCollection
         show={paymentInfo}
         onClose={() => setPaymentInfo(false)}
         robot={false}

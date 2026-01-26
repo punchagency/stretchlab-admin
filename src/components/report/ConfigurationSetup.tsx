@@ -227,7 +227,7 @@ export const ConfigurationSetup = ({
                             />
 
                             <MultiSelectDropdown
-                                options={locations.map(loc => typeof loc === 'string' ? loc : loc.location_name)}
+                                options={locations}
                                 selectedValues={tempLocations}
                                 onMultiChange={setTempLocations}
                                 multiSelect={true}

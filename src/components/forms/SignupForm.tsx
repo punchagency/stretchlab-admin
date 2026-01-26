@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Input, Button, Spinner } from "../shared";
-// import { Checkbox } from "@/components/ui/checkbox";
+import { Checkbox } from "@/components/ui/checkbox";
 import { checkUsername, signup, registerBookingBridge } from "@/service/auth";
 import type { ApiError } from "@/types";
 import { setTempUserCookie, setRefreshToken } from "@/utils";
@@ -20,7 +20,7 @@ export const SignupForm = () => {
   const [usernameError, setUsernameError] = useState("");
   const [checkingUsername, setCheckingUsername] = useState(false);
   const [usernameSuccess, setUsernameSuccess] = useState("");
-  const [isBookingBridgeOnly] = useState(false);
+  const [isBookingBridgeOnly, setIsBookingBridgeOnly] = useState(false);
 
   const isValidPassword = (password: string) => {
     const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
@@ -192,7 +192,7 @@ export const SignupForm = () => {
           </p>
         </div>
       )}
-      {/* <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2">
         <Checkbox
           id="bookingBridgeOnly"
           checked={isBookingBridgeOnly}
@@ -201,7 +201,7 @@ export const SignupForm = () => {
         <label htmlFor="bookingBridgeOnly" className="text-sm text-gray-700">
           Sign up for Booking Bridge only
         </label>
-      </div> */}
+      </div>
       <Button
         disabled={isLoading || !validUsername}
         className="bg-primary-base  phone:mt-2 tablet:mt-6 laptop:mt-6 py-4 text-white flex items-center justify-center gap-2"

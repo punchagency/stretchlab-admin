@@ -10,7 +10,7 @@ export const BookingBridge = () => {
         queryFn: getBookingBridgeConfig,
         refetchOnWindowFocus: false,
         staleTime: 5 * 60 * 1000,
-    });
+    }); 
 
     if (isPending) {
         return (

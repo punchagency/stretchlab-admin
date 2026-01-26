@@ -24,11 +24,11 @@ export const menuList = [
     icon: "robot",
     link: "/robot-automation",
   },
-  // {
-  //   title: "Booking Bridge",
-  //   icon: "rpa",
-  //   link: "/booking-bridge",
-  // },
+  {
+    title: "Booking Bridge",
+    icon: "rpa",
+    link: "/booking-bridge",
+  },
   {
     title: "User Management",
     icon: "users",

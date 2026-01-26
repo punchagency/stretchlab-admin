@@ -85,7 +85,7 @@ export const Report = () => {
   if (isCheckingConfig || hasConfiguration === null) {
     return (
       <div className="w-full h-[90vh]">
-        <ContainLoader text="Loading ..." />
+        <ContainLoader text="Loading ...." />
       </div>
     );
   }
