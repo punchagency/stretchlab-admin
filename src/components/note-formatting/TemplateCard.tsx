@@ -20,11 +20,11 @@ export const TemplateCard = ({
     return (
         <div className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
             {/* Template Header */}
-            <div className="bg-gradient-to-r from-primary-base to-primary-tertiary p-5">
+            <div className="bg-gradient-to-r from-primary-base to-primary-tertiary p-3 md:p-5">
                 <div className="flex items-start justify-between">
                     <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
-                            <h5 className="font-bold text-white text-xl">
+                            <h5 className="font-bold text-white text-base md:text-xl">
                                 {template.name}
                             </h5>
                             {!template.is_custom && (
@@ -89,12 +89,12 @@ export const TemplateCard = ({
             </div>
 
             {/* Sections List */}
-            <div className="p-5">
+            <div className="p-3 md:p-5">
                 <div className="space-y-3">
                     {template.sections.map((section) => (
                         <div
                             key={section.key}
-                            className={`border rounded-lg p-4 transition-all ${section.enabled
+                            className={`border rounded-lg p-2 md:p-4 transition-all ${section.enabled
                                 ? 'border-gray-200 bg-white hover:shadow-sm'
                                 : 'border-gray-200 bg-gray-50'
                                 }`}

@@ -64,7 +64,7 @@ export const UserManagement = () => {
     handlePermissionChange,
     setPendingPermission,
     setShowLocationModal,
-    handleFlexAccess,
+    handleFlexAccess,    
     isUpdatingFlex,
   });
 

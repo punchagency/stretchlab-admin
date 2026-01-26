@@ -46,7 +46,7 @@ export const NoteTakingAdminModals = (props: NoteTakingAdminModalsProps) => {
     isLoading,
     handleSubmit,
 
-
+ 
     showAccessConfirmation,
     onCloseAccess,
     pendingAction,

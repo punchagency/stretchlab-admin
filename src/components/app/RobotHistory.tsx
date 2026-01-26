@@ -323,6 +323,7 @@ export const RobotHistory = ({ configId }: { configId: number }) => {
               selectedOpportunities={selectedOpportunities}
               onOpportunityChange={setSelectedOpportunities}
               initialGlobalFilter={flexologistSearch}
+              tableContainerClassName="min-h-[40vh]"
             />
           ) : (
             <DataTable

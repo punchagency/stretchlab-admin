@@ -250,7 +250,7 @@ export const RobotConfigForm = ({
 
               <Input
                 label="ClubReady Username"
-                type="text"
+                type="text" 
                 name="clubReadyUsername"
                 disabled={verified || verifying}
                 placeholder="Enter your ClubReady username"

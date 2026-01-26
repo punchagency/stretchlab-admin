@@ -34,7 +34,7 @@ export const TemplateList = ({
                         const isActive = template.active || (!hasActive && !template.is_custom);
 
                         return (
-                            <TemplateCard
+                            <TemplateCard 
                                 key={template.id || 'default'}
                                 template={{ ...template, active: isActive }}
                                 isActivating={activatingId === template.id}

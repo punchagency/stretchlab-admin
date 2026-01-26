@@ -43,7 +43,7 @@ export const TemplateCanvas = ({
         <div className="mb-8">
             <div className="bg-white rounded-lg shadow-md border border-gray-200 min-h-[400px]">
                 <div className="border-b border-gray-200 p-4 flex items-center justify-between">
-                    <h4 className="text-lg font-semibold text-gray-800">
+                    <h4 className="text-base md:text-lg font-semibold text-gray-800">
                         {isCreating
                             ? isEditMode
                                 ? "Edit Template"
@@ -62,7 +62,7 @@ export const TemplateCanvas = ({
                 </div>
 
                 {isCreating ? (
-                    <div className="p-6">
+                    <div className="p-3 md:p-6">
                         <div className="mb-6">
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                                 Template Name
@@ -106,7 +106,7 @@ export const TemplateCanvas = ({
                                         <div
                                             {...provided.droppableProps}
                                             ref={provided.innerRef}
-                                            className={`min-h-[200px] border-2 border-dashed rounded-lg p-4 transition-colors ${snapshot.isDraggingOver
+                                            className={`min-h-[200px] border-2 border-dashed rounded-lg p-2 md:p-4 transition-colors ${snapshot.isDraggingOver
                                                 ? "border-primary-base bg-primary-light"
                                                 : "border-gray-300 bg-gray-50"
                                                 }`}
@@ -137,7 +137,7 @@ export const TemplateCanvas = ({
                                                                             : "border-gray-200 bg-gray-50 opacity-60"
                                                                         }`}
                                                                 >
-                                                                    <div className="flex items-start gap-3">
+                                                                    <div className="flex items-start gap-3 flex-col md:flex-row">
                                                                         <div
                                                                             {...provided.dragHandleProps}
                                                                             className="cursor-grab active:cursor-grabbing pt-1"
@@ -172,8 +172,8 @@ export const TemplateCanvas = ({
                                                                             </div>
                                                                         </div>
 
-                                                                        <div className="flex items-center gap-2 pt-1">
-                                                                            <div className="flex flex-col items-center gap-1">
+                                                                        <div className="flex items-center gap-2 pt-1 justify-between md:justify-start w-full md:w-auto">
+                                                                            <div className="flex flex-row md:flex-col items-center gap-1">
                                                                                 <Switch
                                                                                     checked={section.enabled}
                                                                                     onCheckedChange={() => onToggleSection(section.key)}
@@ -183,7 +183,7 @@ export const TemplateCanvas = ({
                                                                                     {section.enabled ? 'On' : 'Off'}
                                                                                 </span>
                                                                             </div>
-                                                                            <div className="flex flex-col gap-1">
+                                                                            <div className="flex flex-row md:flex-col gap-1">
                                                                                 <Button
                                                                                     onClick={() => onEditSection(section.key)}
                                                                                     variant="ghost"

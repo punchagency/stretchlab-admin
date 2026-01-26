@@ -27,7 +27,7 @@ export const Settings = () => {
       return true;
     }
   );
-
+  
   const renderContent = () => {
     if (!user) {
       return (
