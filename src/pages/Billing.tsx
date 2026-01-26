@@ -126,7 +126,7 @@ export const Billing = () => {
                   onRefresh={refetch}
                   noteTakingData={noteTakingData}
                   rpaData={rpaData}
-                />  
+                />
 
                 <MonthlyCharges
                   flexologistQuantity={flexologistQuantity}

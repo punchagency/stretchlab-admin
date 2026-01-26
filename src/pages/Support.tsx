@@ -50,7 +50,7 @@ export const Support = () => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
-
+    
     const handleContactSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!formData.subject || !formData.message) {
@@ -67,7 +67,7 @@ export const Support = () => {
             } else {
                 renderErrorToast("Failed to send support request");
             }
-        } catch (error) {
+        } catch (error) { 
             console.error(error);
             renderErrorToast("An error occurred while sending the request");
         } finally {
@@ -93,7 +93,7 @@ export const Support = () => {
                 renderErrorToast("Failed to send response");
             }
         } catch (error) {
-            console.error(error);
+          
             renderErrorToast("An error occurred while sending the response");
         } finally {
             setIsResponding(false);

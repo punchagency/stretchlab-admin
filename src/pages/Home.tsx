@@ -38,7 +38,6 @@ const SidebarLogo = () => {
 export const Home = () => {
   const navigate = useNavigate();
   const userInfo = getUserInfo();
-  console.log({ userInfo });
   useEffect(() => {
     const userCookie = getUserCookie();
     if (!userCookie) {
@@ -102,6 +101,12 @@ export const Home = () => {
       return false;
     }
     if (menu.title === "Support" && ![1, 2, 5].includes(userInfo?.role_id ?? -1)) {
+      return false;
+    }
+    if (
+      menu.title === "Booking Bridge" &&
+      ![1, 2].includes(userInfo?.role_id ?? -1)
+    ) {
       return false;
     }
     if (userInfo?.role_id === 5) {

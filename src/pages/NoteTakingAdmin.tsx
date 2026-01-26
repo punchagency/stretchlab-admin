@@ -233,7 +233,7 @@ export const NoteTakingAdmin = () => {
     setIsSendingInvite(email);
     try {
       const response = await inviteFlexologist(email, false);
-      if (response.status === 200) {
+      if (response.status === 200) {  
         renderSuccessToast(response.data.message);
         // refetch();
       }

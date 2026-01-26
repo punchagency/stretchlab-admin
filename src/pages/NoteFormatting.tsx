@@ -271,7 +271,7 @@ export const NoteFormatting = () => {
     }
 
     return (
-        <div className="px-7 py-6">
+        <div className=" px-4 py-3 md:px-7 md:py-6">
             <div className="mb-8">
                 <h3 className="md:text-2xl text-lg font-semibold mb-2">
                     Note Formatting

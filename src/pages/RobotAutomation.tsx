@@ -21,7 +21,7 @@ export const RobotAutomation = () => {
         <ContainLoader text="Checking for robot config..." />
       </div>
     );
-  }
+  } 
   return (
     <div className="px-7">
       {isFetching && !isPending && (
